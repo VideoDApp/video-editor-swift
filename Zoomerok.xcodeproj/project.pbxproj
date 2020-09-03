@@ -1,0 +1,599 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */; };
+		984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */; };
+		984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF42501A2AD007DBAF4 /* ContentView.swift */; };
+		984C5CF72501A2AF007DBAF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CF62501A2AF007DBAF4 /* Assets.xcassets */; };
+		984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CF92501A2AF007DBAF4 /* Preview Assets.xcassets */; };
+		984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */; };
+		984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */; };
+		984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		984C5D042501A2AF007DBAF4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 984C5CE52501A2AD007DBAF4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 984C5CEC2501A2AD007DBAF4;
+			remoteInfo = Zoomerok;
+		};
+		984C5D0F2501A2AF007DBAF4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 984C5CE52501A2AD007DBAF4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 984C5CEC2501A2AD007DBAF4;
+			remoteInfo = Zoomerok;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		984C5CED2501A2AD007DBAF4 /* Zoomerok.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zoomerok.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		984C5CF42501A2AD007DBAF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		984C5CF62501A2AF007DBAF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		984C5CF92501A2AF007DBAF4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		984C5CFC2501A2AF007DBAF4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		984C5CFE2501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		984C5D032501A2AF007DBAF4 /* ZoomerokTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokTests.swift; sourceTree = "<group>"; };
+		984C5D092501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokUITests.swift; sourceTree = "<group>"; };
+		984C5D142501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		984C5CEA2501A2AD007DBAF4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5D002501A2AF007DBAF4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5D0B2501A2AF007DBAF4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		984C5CE42501A2AD007DBAF4 = {
+			isa = PBXGroup;
+			children = (
+				984C5CEF2501A2AD007DBAF4 /* Zoomerok */,
+				984C5D062501A2AF007DBAF4 /* ZoomerokTests */,
+				984C5D112501A2AF007DBAF4 /* ZoomerokUITests */,
+				984C5CEE2501A2AD007DBAF4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		984C5CEE2501A2AD007DBAF4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				984C5CED2501A2AD007DBAF4 /* Zoomerok.app */,
+				984C5D032501A2AF007DBAF4 /* ZoomerokTests.xctest */,
+				984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		984C5CEF2501A2AD007DBAF4 /* Zoomerok */ = {
+			isa = PBXGroup;
+			children = (
+				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
+				984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */,
+				984C5CF42501A2AD007DBAF4 /* ContentView.swift */,
+				984C5CF62501A2AF007DBAF4 /* Assets.xcassets */,
+				984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */,
+				984C5CFE2501A2AF007DBAF4 /* Info.plist */,
+				984C5CF82501A2AF007DBAF4 /* Preview Content */,
+			);
+			path = Zoomerok;
+			sourceTree = "<group>";
+		};
+		984C5CF82501A2AF007DBAF4 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				984C5CF92501A2AF007DBAF4 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		984C5D062501A2AF007DBAF4 /* ZoomerokTests */ = {
+			isa = PBXGroup;
+			children = (
+				984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */,
+				984C5D092501A2AF007DBAF4 /* Info.plist */,
+			);
+			path = ZoomerokTests;
+			sourceTree = "<group>";
+		};
+		984C5D112501A2AF007DBAF4 /* ZoomerokUITests */ = {
+			isa = PBXGroup;
+			children = (
+				984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */,
+				984C5D142501A2AF007DBAF4 /* Info.plist */,
+			);
+			path = ZoomerokUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		984C5CEC2501A2AD007DBAF4 /* Zoomerok */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 984C5D172501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "Zoomerok" */;
+			buildPhases = (
+				984C5CE92501A2AD007DBAF4 /* Sources */,
+				984C5CEA2501A2AD007DBAF4 /* Frameworks */,
+				984C5CEB2501A2AD007DBAF4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Zoomerok;
+			productName = Zoomerok;
+			productReference = 984C5CED2501A2AD007DBAF4 /* Zoomerok.app */;
+			productType = "com.apple.product-type.application";
+		};
+		984C5D022501A2AF007DBAF4 /* ZoomerokTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 984C5D1A2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokTests" */;
+			buildPhases = (
+				984C5CFF2501A2AF007DBAF4 /* Sources */,
+				984C5D002501A2AF007DBAF4 /* Frameworks */,
+				984C5D012501A2AF007DBAF4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				984C5D052501A2AF007DBAF4 /* PBXTargetDependency */,
+			);
+			name = ZoomerokTests;
+			productName = ZoomerokTests;
+			productReference = 984C5D032501A2AF007DBAF4 /* ZoomerokTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		984C5D0D2501A2AF007DBAF4 /* ZoomerokUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 984C5D1D2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokUITests" */;
+			buildPhases = (
+				984C5D0A2501A2AF007DBAF4 /* Sources */,
+				984C5D0B2501A2AF007DBAF4 /* Frameworks */,
+				984C5D0C2501A2AF007DBAF4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				984C5D102501A2AF007DBAF4 /* PBXTargetDependency */,
+			);
+			name = ZoomerokUITests;
+			productName = ZoomerokUITests;
+			productReference = 984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		984C5CE52501A2AD007DBAF4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1170;
+				LastUpgradeCheck = 1170;
+				ORGANIZATIONNAME = "Shadurin Organization";
+				TargetAttributes = {
+					984C5CEC2501A2AD007DBAF4 = {
+						CreatedOnToolsVersion = 11.7;
+					};
+					984C5D022501A2AF007DBAF4 = {
+						CreatedOnToolsVersion = 11.7;
+						TestTargetID = 984C5CEC2501A2AD007DBAF4;
+					};
+					984C5D0D2501A2AF007DBAF4 = {
+						CreatedOnToolsVersion = 11.7;
+						TestTargetID = 984C5CEC2501A2AD007DBAF4;
+					};
+				};
+			};
+			buildConfigurationList = 984C5CE82501A2AD007DBAF4 /* Build configuration list for PBXProject "Zoomerok" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 984C5CE42501A2AD007DBAF4;
+			productRefGroup = 984C5CEE2501A2AD007DBAF4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				984C5CEC2501A2AD007DBAF4 /* Zoomerok */,
+				984C5D022501A2AF007DBAF4 /* ZoomerokTests */,
+				984C5D0D2501A2AF007DBAF4 /* ZoomerokUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		984C5CEB2501A2AD007DBAF4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
+				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
+				984C5CF72501A2AF007DBAF4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5D012501A2AF007DBAF4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5D0C2501A2AF007DBAF4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		984C5CE92501A2AD007DBAF4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
+				984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */,
+				984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5CFF2501A2AF007DBAF4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984C5D0A2501A2AF007DBAF4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		984C5D052501A2AF007DBAF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 984C5CEC2501A2AD007DBAF4 /* Zoomerok */;
+			targetProxy = 984C5D042501A2AF007DBAF4 /* PBXContainerItemProxy */;
+		};
+		984C5D102501A2AF007DBAF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 984C5CEC2501A2AD007DBAF4 /* Zoomerok */;
+			targetProxy = 984C5D0F2501A2AF007DBAF4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				984C5CFC2501A2AF007DBAF4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		984C5D152501A2AF007DBAF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		984C5D162501A2AF007DBAF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		984C5D182501A2AF007DBAF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Zoomerok/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		984C5D192501A2AF007DBAF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = Zoomerok/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		984C5D1B2501A2AF007DBAF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				INFOPLIST_FILE = ZoomerokTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.ZoomerokTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zoomerok.app/Zoomerok";
+			};
+			name = Debug;
+		};
+		984C5D1C2501A2AF007DBAF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				INFOPLIST_FILE = ZoomerokTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.ZoomerokTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Zoomerok.app/Zoomerok";
+			};
+			name = Release;
+		};
+		984C5D1E2501A2AF007DBAF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				INFOPLIST_FILE = ZoomerokUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.ZoomerokUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Zoomerok;
+			};
+			name = Debug;
+		};
+		984C5D1F2501A2AF007DBAF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 966L8B5X3V;
+				INFOPLIST_FILE = ZoomerokUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.ZoomerokUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Zoomerok;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		984C5CE82501A2AD007DBAF4 /* Build configuration list for PBXProject "Zoomerok" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				984C5D152501A2AF007DBAF4 /* Debug */,
+				984C5D162501A2AF007DBAF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		984C5D172501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "Zoomerok" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				984C5D182501A2AF007DBAF4 /* Debug */,
+				984C5D192501A2AF007DBAF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		984C5D1A2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				984C5D1B2501A2AF007DBAF4 /* Debug */,
+				984C5D1C2501A2AF007DBAF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		984C5D1D2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				984C5D1E2501A2AF007DBAF4 /* Debug */,
+				984C5D1F2501A2AF007DBAF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 984C5CE52501A2AD007DBAF4 /* Project object */;
+}

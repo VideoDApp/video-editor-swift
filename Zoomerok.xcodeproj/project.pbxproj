@@ -15,6 +15,13 @@
 		984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */; };
 		984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */; };
 		984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */; };
+		98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D72502A03F00240003 /* ImagePicker.swift */; };
+		98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D92502A07900240003 /* OverlayVideo.swift */; };
+		98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DB2502A08E00240003 /* OverlayData.swift */; };
+		98A5D3DE2502A0B100240003 /* Montage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DD2502A0B100240003 /* Montage.swift */; };
+		98A5D3E12502A0EE00240003 /* VideoRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */; };
+		98A5D3E52502A16200240003 /* TestVideo.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E32502A16200240003 /* TestVideo.mov */; };
+		98A5D3E62502A16200240003 /* TestVideo2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E42502A16200240003 /* TestVideo2.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +56,13 @@
 		984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokUITests.swift; sourceTree = "<group>"; };
 		984C5D142501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		98A5D3D72502A03F00240003 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		98A5D3D92502A07900240003 /* OverlayVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVideo.swift; sourceTree = "<group>"; };
+		98A5D3DB2502A08E00240003 /* OverlayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayData.swift; sourceTree = "<group>"; };
+		98A5D3DD2502A0B100240003 /* Montage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Montage.swift; sourceTree = "<group>"; };
+		98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRangeSliderView.swift; sourceTree = "<group>"; };
+		98A5D3E32502A16200240003 /* TestVideo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo.mov; sourceTree = "<group>"; };
+		98A5D3E42502A16200240003 /* TestVideo2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo2.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo2.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +113,8 @@
 		984C5CEF2501A2AD007DBAF4 /* Zoomerok */ = {
 			isa = PBXGroup;
 			children = (
+				98A5D3E22502A13800240003 /* Assets */,
+				98A5D3DF2502A0D900240003 /* Component */,
 				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
 				984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */,
 				984C5CF42501A2AD007DBAF4 /* ContentView.swift */,
@@ -106,6 +122,10 @@
 				984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */,
 				984C5CFE2501A2AF007DBAF4 /* Info.plist */,
 				984C5CF82501A2AF007DBAF4 /* Preview Content */,
+				98A5D3D72502A03F00240003 /* ImagePicker.swift */,
+				98A5D3D92502A07900240003 /* OverlayVideo.swift */,
+				98A5D3DB2502A08E00240003 /* OverlayData.swift */,
+				98A5D3DD2502A0B100240003 /* Montage.swift */,
 			);
 			path = Zoomerok;
 			sourceTree = "<group>";
@@ -134,6 +154,23 @@
 				984C5D142501A2AF007DBAF4 /* Info.plist */,
 			);
 			path = ZoomerokUITests;
+			sourceTree = "<group>";
+		};
+		98A5D3DF2502A0D900240003 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		98A5D3E22502A13800240003 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				98A5D3E32502A16200240003 /* TestVideo.mov */,
+				98A5D3E42502A16200240003 /* TestVideo2.mov */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +277,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A5D3E52502A16200240003 /* TestVideo.mov in Resources */,
 				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
+				98A5D3E62502A16200240003 /* TestVideo2.mov in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
 				984C5CF72501A2AF007DBAF4 /* Assets.xcassets in Resources */,
 			);
@@ -267,9 +306,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
+				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
+				98A5D3DE2502A0B100240003 /* Montage.swift in Sources */,
+				98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */,
 				984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */,
 				984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */,
+				98A5D3E12502A0EE00240003 /* VideoRangeSliderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

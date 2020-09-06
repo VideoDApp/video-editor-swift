@@ -19,14 +19,22 @@ struct ContentView: View {
     @State private var offset: CGFloat = .zero
 
     @State private var image: UIImage?
+    private var isSimulator: Bool = false
 
     init() {
+        #if targetEnvironment(simulator)
+            // your simulator code
+            self.isSimulator = true
+        #else
+            // your real device code
+            self.isSimulator = false
+        #endif
         // 1.
         //UINavigationBar.appearance().backgroundColor = .yellow
 
         // 2.
         UINavigationBar.appearance().largeTitleTextAttributes = [
-            .foregroundColor: UIColor.white
+                .foregroundColor: UIColor.white
         ]
 
         // 3.
@@ -65,10 +73,10 @@ struct ContentView: View {
         var player: AVPlayer?
         do {
             let item = try montageInstance
-                    .setTopPart(startTime: 1, endTime: 3)
-                    .setBottomPart(startTime: 3, endTime: 12)
-                    .cropTopPart(rect: rect)
-                    .getAVPlayerItem()
+                .setTopPart(startTime: 1, endTime: 3)
+                .setBottomPart(startTime: 3, endTime: 12)
+                .cropTopPart(rect: rect)
+                .getAVPlayerItem()
 
             player = AVPlayer(playerItem: item)
         } catch {
@@ -84,9 +92,9 @@ struct ContentView: View {
         var player: AVPlayer?
         do {
             let item = try montageInstance
-                    //.setTopPart(startTime: 1, endTime: 12)
-                    .setBottomPart(startTime: 3, endTime: 11)
-                    .getAVPlayerItem()
+            //.setTopPart(startTime: 1, endTime: 12)
+            .setBottomPart(startTime: 3, endTime: 11)
+                .getAVPlayerItem()
 
             player = AVPlayer(playerItem: item)
         } catch {
@@ -123,16 +131,16 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 /*Image(systemName: "square.and.arrow.down.fill")
-                    .padding(.vertical)
-                    .frame(width: 30.0, height: 100.0)
-                    .font(.system(size: 30))
-                        .foregroundColor(SwiftUI.Color.white)
-                        .onTapGesture {
-                            print("Export file")
-                        }*/
+                 .padding(.vertical)
+                 .frame(width: 30.0, height: 100.0)
+                 .font(.system(size: 30))
+                 .foregroundColor(SwiftUI.Color.white)
+                 .onTapGesture {
+                 print("Export file")
+                 }*/
 
                 CustomPlayer(url: $videoUrl, isPlay: $isPlay, montage: $montageInstance, playerController: $playerController)
-                        .frame(height: UIScreen.main.bounds.height / 2)
+                    .frame(height: UIScreen.main.bounds.height / 2)
 
 
                 /*ScrollPreviewView() { (result) -> () in
@@ -146,40 +154,40 @@ struct ContentView: View {
                 VideoRangeSliderView(asset: $previewAsset, duration: 10, onResize: { result in
                     print(result)
                 }, onChangeCursorPosition: { result in
-                    print(result)
-                })
+                        print(result)
+                    })
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 3) {
 
                         Text("SCR")
-                                .foregroundColor(.white)
-                                .font(.title)
-                                .frame(width: 60, height: 60)
-                                .background(Color.red)
-                                .onTapGesture {
-                                    print("Screamer button clicked")
-                                }
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .frame(width: 60, height: 60)
+                            .background(Color.red)
+                            .onTapGesture {
+                                print("Screamer button clicked")
+                        }
 
                         Text("SMP")
-                                .foregroundColor(.white)
-                                .font(.title)
-                                .frame(width: 60, height: 60)
-                                .background(Color.red)
-                                .onTapGesture {
-                                    let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
-                                    self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-                                }
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .frame(width: 60, height: 60)
+                            .background(Color.red)
+                            .onTapGesture {
+                                let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+                                self.playerController.player = self.makeSimplePlayer(url: fileUrl)
+                        }
 
                         Text("CRP")
-                                .foregroundColor(.white)
-                                .font(.title)
-                                .frame(width: 60, height: 60)
-                                .background(Color.red)
-                                .onTapGesture {
-                                    let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
-                                    self.playerController.player = self.makeCropPlayer(url: fileUrl)
-                                }
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .frame(width: 60, height: 60)
+                            .background(Color.red)
+                            .onTapGesture {
+                                let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+                                self.playerController.player = self.makeCropPlayer(url: fileUrl)
+                        }
 
                     }
                 }
@@ -193,44 +201,51 @@ struct ContentView: View {
                 Button("Choose Video") {
                     self.showSheet = true
                 }.padding()
-                        .actionSheet(isPresented: $showSheet) {
-                            ActionSheet(title: Text("Select Photo"), message: Text("Choose"), buttons: [
-                                .default(Text("LOCAL TEST")) {
+                    .actionSheet(isPresented: $showSheet) {
+                        var buttons: [ActionSheet.Button] = [
+
+                                .default(Text("Video Library")) {
+                                    self.showImagePicker = true
+                                    self.sourceType = .photoLibrary
+                            },
+                                .cancel()
+                        ]
+
+                        if self.isSimulator {
+                            buttons.insert(.default(Text("LOCAL TEST")) {
                                     let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
                                     print(fileUrl)
                                     self.videoUrl = fileUrl
                                     self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-                                },
-                                .default(Text("Video Library")) {
-                                    self.showImagePicker = true
-                                    self.sourceType = .photoLibrary
-                                },
-                                .default(Text("Camera")) {
+                                }, at: 0)
+                        } else {
+                            buttons.insert(.default(Text("Camera")) {
                                     self.showImagePicker = true
                                     self.sourceType = .camera
-                                },
-                                .cancel()
-                            ])
-                        }.foregroundColor(SwiftUI.Color.white)
+                                }, at: buttons.count - 2)
+                        }
+
+                        return ActionSheet(title: Text("Select Video"), message: Text("Choose an option"), buttons: buttons)
+                    }.foregroundColor(SwiftUI.Color.white)
 
                 Spacer()
             }
 
 
-                    //.navigationBarTitle("Xux Editor")
-                    .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
+            //.navigationBarTitle("Xux Editor")
+            .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
 
-                    // for NavigationView. Two properties for removing space from top
-                    // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview
-                    .navigationBarTitle("")
-                    .navigationBarHidden(true)
+            // for NavigationView. Two properties for removing space from top
+            // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview
+            .navigationBarTitle("")
+                .navigationBarHidden(true)
         }
 
 
-                // for View
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePicker(image: self.$image, isShown: self.$showImagePicker, sourceType: self.sourceType)
-                }
+        // for View
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(image: self.$image, isShown: self.$showImagePicker, sourceType: self.sourceType)
+        }
     }
 }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>952747000602-oiqfgt2g479kbsegcli9t8flmafjl0tq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.952747000602-oiqfgt2g479kbsegcli9t8flmafjl0tq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDZbktkJSnGgHxTr0rcu3bCT00-ZRlqWiU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>952747000602</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.icorp.Zoomerok</string>
+	<key>PROJECT_ID</key>
+	<string>ios-zoomerok-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ios-zoomerok-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:952747000602:ios:dccf09b51883aeec7622a3</string>
+	<key>DATABASE_URL</key>
+	<string>https://ios-zoomerok-app.firebaseio.com</string>
+</dict>
+</plist>

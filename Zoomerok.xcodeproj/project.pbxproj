@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2BD7067E8FD5D5943269744E /* Pods_Zoomerok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A848720A04573EB0D178101E /* Pods_Zoomerok.framework */; };
+		2D6875772B980E6B753F0616 /* Pods_ZoomerokTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49ACE32E7313D408DCA076BD /* Pods_ZoomerokTests.framework */; };
+		9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9839F6362503E430000DE7C0 /* GoogleService-Info.plist */; };
 		984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */; };
 		984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */; };
 		984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF42501A2AD007DBAF4 /* ContentView.swift */; };
@@ -22,6 +25,7 @@
 		98A5D3E12502A0EE00240003 /* VideoRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */; };
 		98A5D3E52502A16200240003 /* TestVideo.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E32502A16200240003 /* TestVideo.mov */; };
 		98A5D3E62502A16200240003 /* TestVideo2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E42502A16200240003 /* TestVideo2.mov */; };
+		D5B37C0DCB78870CE68DEA71 /* Pods_Zoomerok_ZoomerokUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FDA5D81331AE33F64FE43B /* Pods_Zoomerok_ZoomerokUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +46,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		165BEDE5BA266CD69F5FAA1C /* Pods-ZoomerokTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZoomerokTests.release.xcconfig"; path = "Target Support Files/Pods-ZoomerokTests/Pods-ZoomerokTests.release.xcconfig"; sourceTree = "<group>"; };
+		3FC42B05285C7F2CDDE3366E /* Pods-Zoomerok-ZoomerokUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; path = "Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		49ACE32E7313D408DCA076BD /* Pods_ZoomerokTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZoomerokTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49FDA5D81331AE33F64FE43B /* Pods_Zoomerok_ZoomerokUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok_ZoomerokUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C8BED821BEA9966846EC4A2 /* Pods-Zoomerok-ZoomerokUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok-ZoomerokUITests.release.xcconfig"; path = "Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests.release.xcconfig"; sourceTree = "<group>"; };
+		5259F84F30CD2000BEBC83AA /* Pods-Zoomerok.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok.release.xcconfig"; path = "Target Support Files/Pods-Zoomerok/Pods-Zoomerok.release.xcconfig"; sourceTree = "<group>"; };
+		9839F6312503E1CF000DE7C0 /* Zoomerok-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zoomerok-Bridging-Header.h"; sourceTree = "<group>"; };
+		9839F6362503E430000DE7C0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		984C5CED2501A2AD007DBAF4 /* Zoomerok.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zoomerok.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +75,9 @@
 		98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRangeSliderView.swift; sourceTree = "<group>"; };
 		98A5D3E32502A16200240003 /* TestVideo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo.mov; sourceTree = "<group>"; };
 		98A5D3E42502A16200240003 /* TestVideo2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo2.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo2.mov; sourceTree = "<group>"; };
+		994998F34C90C7682D1FB7B9 /* Pods-ZoomerokTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZoomerokTests.debug.xcconfig"; path = "Target Support Files/Pods-ZoomerokTests/Pods-ZoomerokTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A848720A04573EB0D178101E /* Pods_Zoomerok.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD06C81AFC34349DCBF4A975 /* Pods-Zoomerok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok.debug.xcconfig"; path = "Target Support Files/Pods-Zoomerok/Pods-Zoomerok.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD7067E8FD5D5943269744E /* Pods_Zoomerok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D6875772B980E6B753F0616 /* Pods_ZoomerokTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,12 +101,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5B37C0DCB78870CE68DEA71 /* Pods_Zoomerok_ZoomerokUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28ECAF14C5741C6A777A813D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DD06C81AFC34349DCBF4A975 /* Pods-Zoomerok.debug.xcconfig */,
+				5259F84F30CD2000BEBC83AA /* Pods-Zoomerok.release.xcconfig */,
+				3FC42B05285C7F2CDDE3366E /* Pods-Zoomerok-ZoomerokUITests.debug.xcconfig */,
+				4C8BED821BEA9966846EC4A2 /* Pods-Zoomerok-ZoomerokUITests.release.xcconfig */,
+				994998F34C90C7682D1FB7B9 /* Pods-ZoomerokTests.debug.xcconfig */,
+				165BEDE5BA266CD69F5FAA1C /* Pods-ZoomerokTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		984C5CE42501A2AD007DBAF4 = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +128,8 @@
 				984C5D062501A2AF007DBAF4 /* ZoomerokTests */,
 				984C5D112501A2AF007DBAF4 /* ZoomerokUITests */,
 				984C5CEE2501A2AD007DBAF4 /* Products */,
+				F72CAFF54DA902B584BE1EF5 /* Frameworks */,
+				28ECAF14C5741C6A777A813D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,6 +146,7 @@
 		984C5CEF2501A2AD007DBAF4 /* Zoomerok */ = {
 			isa = PBXGroup;
 			children = (
+				9839F6362503E430000DE7C0 /* GoogleService-Info.plist */,
 				98A5D3E22502A13800240003 /* Assets */,
 				98A5D3DF2502A0D900240003 /* Component */,
 				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
@@ -126,6 +160,7 @@
 				98A5D3D92502A07900240003 /* OverlayVideo.swift */,
 				98A5D3DB2502A08E00240003 /* OverlayData.swift */,
 				98A5D3DD2502A0B100240003 /* Montage.swift */,
+				9839F6312503E1CF000DE7C0 /* Zoomerok-Bridging-Header.h */,
 			);
 			path = Zoomerok;
 			sourceTree = "<group>";
@@ -173,6 +208,16 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		F72CAFF54DA902B584BE1EF5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A848720A04573EB0D178101E /* Pods_Zoomerok.framework */,
+				49FDA5D81331AE33F64FE43B /* Pods_Zoomerok_ZoomerokUITests.framework */,
+				49ACE32E7313D408DCA076BD /* Pods_ZoomerokTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -180,9 +225,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 984C5D172501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "Zoomerok" */;
 			buildPhases = (
+				F908142C5CBC2C8094E3504B /* [CP] Check Pods Manifest.lock */,
 				984C5CE92501A2AD007DBAF4 /* Sources */,
 				984C5CEA2501A2AD007DBAF4 /* Frameworks */,
 				984C5CEB2501A2AD007DBAF4 /* Resources */,
+				835F2C154E30DFA492218F1A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -197,6 +244,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 984C5D1A2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokTests" */;
 			buildPhases = (
+				F2342062DF0A7BDF45BE2E14 /* [CP] Check Pods Manifest.lock */,
 				984C5CFF2501A2AF007DBAF4 /* Sources */,
 				984C5D002501A2AF007DBAF4 /* Frameworks */,
 				984C5D012501A2AF007DBAF4 /* Resources */,
@@ -215,9 +263,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 984C5D1D2501A2AF007DBAF4 /* Build configuration list for PBXNativeTarget "ZoomerokUITests" */;
 			buildPhases = (
+				4489723961B8D2D8338B88BE /* [CP] Check Pods Manifest.lock */,
 				984C5D0A2501A2AF007DBAF4 /* Sources */,
 				984C5D0B2501A2AF007DBAF4 /* Frameworks */,
 				984C5D0C2501A2AF007DBAF4 /* Resources */,
+				DACB4DC948B43106E8405E58 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -241,6 +291,7 @@
 				TargetAttributes = {
 					984C5CEC2501A2AD007DBAF4 = {
 						CreatedOnToolsVersion = 11.7;
+						LastSwiftMigration = 1170;
 					};
 					984C5D022501A2AF007DBAF4 = {
 						CreatedOnToolsVersion = 11.7;
@@ -282,6 +333,7 @@
 				98A5D3E62502A16200240003 /* TestVideo2.mov in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
 				984C5CF72501A2AF007DBAF4 /* Assets.xcassets in Resources */,
+				9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +352,109 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4489723961B8D2D8338B88BE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Zoomerok-ZoomerokUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		835F2C154E30DFA492218F1A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Zoomerok/Pods-Zoomerok-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Zoomerok/Pods-Zoomerok-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Zoomerok/Pods-Zoomerok-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DACB4DC948B43106E8405E58 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F2342062DF0A7BDF45BE2E14 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ZoomerokTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F908142C5CBC2C8094E3504B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Zoomerok-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		984C5CE92501A2AD007DBAF4 /* Sources */ = {
@@ -476,8 +631,10 @@
 		};
 		984C5D182501A2AF007DBAF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD06C81AFC34349DCBF4A975 /* Pods-Zoomerok.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
@@ -489,6 +646,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -496,8 +655,10 @@
 		};
 		984C5D192501A2AF007DBAF4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5259F84F30CD2000BEBC83AA /* Pods-Zoomerok.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
@@ -509,6 +670,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -516,6 +678,7 @@
 		};
 		984C5D1B2501A2AF007DBAF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 994998F34C90C7682D1FB7B9 /* Pods-ZoomerokTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -538,6 +701,7 @@
 		};
 		984C5D1C2501A2AF007DBAF4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 165BEDE5BA266CD69F5FAA1C /* Pods-ZoomerokTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -560,6 +724,7 @@
 		};
 		984C5D1E2501A2AF007DBAF4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FC42B05285C7F2CDDE3366E /* Pods-Zoomerok-ZoomerokUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -580,6 +745,7 @@
 		};
 		984C5D1F2501A2AF007DBAF4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C8BED821BEA9966846EC4A2 /* Pods-Zoomerok-ZoomerokUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

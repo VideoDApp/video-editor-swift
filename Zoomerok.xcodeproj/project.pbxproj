@@ -25,6 +25,8 @@
 		98A5D3E12502A0EE00240003 /* VideoRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */; };
 		98A5D3E52502A16200240003 /* TestVideo.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E32502A16200240003 /* TestVideo.mov */; };
 		98A5D3E62502A16200240003 /* TestVideo2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98A5D3E42502A16200240003 /* TestVideo2.mov */; };
+		98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD525054759006FB952 /* DownloadTestContent.swift */; };
+		98D98CD825063BC6006FB952 /* MontageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD725063BC6006FB952 /* MontageTests.swift */; };
 		D5B37C0DCB78870CE68DEA71 /* Pods_Zoomerok_ZoomerokUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49FDA5D81331AE33F64FE43B /* Pods_Zoomerok_ZoomerokUITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +77,9 @@
 		98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRangeSliderView.swift; sourceTree = "<group>"; };
 		98A5D3E32502A16200240003 /* TestVideo.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo.mov; sourceTree = "<group>"; };
 		98A5D3E42502A16200240003 /* TestVideo2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = TestVideo2.mov; path = ../../../VideoEditor/VideoEditor/Assets/TestVideo2.mov; sourceTree = "<group>"; };
+		98D98CD525054759006FB952 /* DownloadTestContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTestContent.swift; sourceTree = "<group>"; };
+		98D98CD725063BC6006FB952 /* MontageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageTests.swift; sourceTree = "<group>"; };
+		98D98CD925065CA9006FB952 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		994998F34C90C7682D1FB7B9 /* Pods-ZoomerokTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZoomerokTests.debug.xcconfig"; path = "Target Support Files/Pods-ZoomerokTests/Pods-ZoomerokTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A848720A04573EB0D178101E /* Pods_Zoomerok.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD06C81AFC34349DCBF4A975 /* Pods-Zoomerok.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok.debug.xcconfig"; path = "Target Support Files/Pods-Zoomerok/Pods-Zoomerok.debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,6 +129,7 @@
 		984C5CE42501A2AD007DBAF4 = {
 			isa = PBXGroup;
 			children = (
+				98D98CD925065CA9006FB952 /* README.md */,
 				984C5CEF2501A2AD007DBAF4 /* Zoomerok */,
 				984C5D062501A2AF007DBAF4 /* ZoomerokTests */,
 				984C5D112501A2AF007DBAF4 /* ZoomerokUITests */,
@@ -146,6 +152,7 @@
 		984C5CEF2501A2AD007DBAF4 /* Zoomerok */ = {
 			isa = PBXGroup;
 			children = (
+				98D98CD42505472B006FB952 /* Libs */,
 				9839F6362503E430000DE7C0 /* GoogleService-Info.plist */,
 				98A5D3E22502A13800240003 /* Assets */,
 				98A5D3DF2502A0D900240003 /* Component */,
@@ -178,6 +185,7 @@
 			children = (
 				984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */,
 				984C5D092501A2AF007DBAF4 /* Info.plist */,
+				98D98CD725063BC6006FB952 /* MontageTests.swift */,
 			);
 			path = ZoomerokTests;
 			sourceTree = "<group>";
@@ -206,6 +214,14 @@
 				98A5D3E42502A16200240003 /* TestVideo2.mov */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		98D98CD42505472B006FB952 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				98D98CD525054759006FB952 /* DownloadTestContent.swift */,
+			);
+			path = Libs;
 			sourceTree = "<group>";
 		};
 		F72CAFF54DA902B584BE1EF5 /* Frameworks */ = {
@@ -461,6 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
 				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
@@ -477,6 +494,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */,
+				98D98CD825063BC6006FB952 /* MontageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

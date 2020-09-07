@@ -24,7 +24,9 @@ struct ContentView: View {
     init() {
         #if targetEnvironment(simulator)
             // your simulator code
+            print("Document directory", DownloadTestContent.getDocumentsDirectory())
             self.isSimulator = true
+            //DownloadTestContent.downloadAll()
         #else
             // your real device code
             self.isSimulator = false

@@ -92,4 +92,8 @@ class DownloadTestContent {
     static func getFilePath(_ fileName: String) -> URL {
         return getDocumentsDirectory().appendingPathComponent(fileName)
     }
+
+    static func isFileExists(_ fileName: String) -> Bool {
+        return FileManager.default.fileExists(atPath: getFilePath(fileName).path)
+    }
 }

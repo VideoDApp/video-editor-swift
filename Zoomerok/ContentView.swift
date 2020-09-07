@@ -5,7 +5,7 @@ struct ContentView: View {
     @State private var showSheet: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera
-    @State var videoUrl: URL? = Bundle.main.url(forResource: "TestVideo2", withExtension: "mov")!
+    @State var videoUrl: URL?
     @State var player: AVPlayer?
     @State var isPlay: Bool = false
     @State var montageInstance = Montage()
@@ -24,6 +24,7 @@ struct ContentView: View {
     init() {
         #if targetEnvironment(simulator)
             // your simulator code
+            initTestVideoForSimulator()
             print("Document directory", DownloadTestContent.getDocumentsDirectory())
             self.isSimulator = true
             //DownloadTestContent.downloadAll()
@@ -31,26 +32,20 @@ struct ContentView: View {
             // your real device code
             self.isSimulator = false
         #endif
-        // 1.
-        //UINavigationBar.appearance().backgroundColor = .yellow
 
-        // 2.
         UINavigationBar.appearance().largeTitleTextAttributes = [
                 .foregroundColor: UIColor.white
         ]
 
-        // 3.
-        /*UINavigationBar.appearance().titleTextAttributes = [
-         .font : UIFont(name: "HelveticaNeue-Thin", size: 20)!]*/
-        //playerController.player = makeSimplePlayer(url: videoUrl!)
-        //playerController.showsPlaybackControls = false
+        self.playerController.showsPlaybackControls = false
+    }
 
-        let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+    func initTestVideoForSimulator() {
+        let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
         print("previewAsset")
         self.previewAsset = AVAsset(url: fileUrl)
         self.videoUrl = fileUrl
         self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-        self.playerController.showsPlaybackControls = false
 
         self.playerController.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { (_) in
             print("OBSERVE")
@@ -177,7 +172,7 @@ struct ContentView: View {
                             .frame(width: 60, height: 60)
                             .background(Color.red)
                             .onTapGesture {
-                                let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+                                let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
                                 self.playerController.player = self.makeSimplePlayer(url: fileUrl)
                         }
 
@@ -187,10 +182,9 @@ struct ContentView: View {
                             .frame(width: 60, height: 60)
                             .background(Color.red)
                             .onTapGesture {
-                                let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+                                let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
                                 self.playerController.player = self.makeCropPlayer(url: fileUrl)
                         }
-
                     }
                 }
 
@@ -215,7 +209,7 @@ struct ContentView: View {
 
                         if self.isSimulator {
                             buttons.insert(.default(Text("LOCAL TEST")) {
-                                    let fileUrl = Bundle.main.url(forResource: "TestVideo", withExtension: "mov")!
+                                    let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
                                     print(fileUrl)
                                     self.videoUrl = fileUrl
                                     self.playerController.player = self.makeSimplePlayer(url: fileUrl)

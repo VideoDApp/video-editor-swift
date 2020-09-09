@@ -2,15 +2,15 @@ import SwiftUI
 import AVKit
 
 struct ContentView: View {
-    @State private var showSheet: Bool = false
-    @State private var showImagePicker: Bool = false
-    @State private var sourceType: UIImagePickerController.SourceType = .camera
+//    @State private var showImagePicker: Bool = false
+//    @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State var videoUrl: URL?
     @State var player: AVPlayer?
-    @State var isPlay: Bool = false
     @State var montageInstance = Montage()
     @State var playerController = AVPlayerViewController()
     @State var previewAsset: AVAsset?
+    // todo how to use var direct from PreviewControlView?
+    @State var isPlay: Bool = false
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero
@@ -18,7 +18,7 @@ struct ContentView: View {
     //var scrollPosition: CGFloat = .zero
     @State private var offset: CGFloat = .zero
 
-    @State private var image: UIImage?
+//    @State private var image: UIImage?
     private var isSimulator: Bool = false
 
     init() {
@@ -154,82 +154,21 @@ struct ContentView: View {
                         print(result)
                     })
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 3) {
+                EffectSelectorView()
 
-                        Text("SCR")
-                            .foregroundColor(.white)
-                            .font(.title)
-                            .frame(width: 60, height: 60)
-                            .background(Color.red)
-                            .onTapGesture {
-                                print("Screamer button clicked")
-                        }
-
-                        Text("SMP")
-                            .foregroundColor(.white)
-                            .font(.title)
-                            .frame(width: 60, height: 60)
-                            .background(Color.red)
-                            .onTapGesture {
-                                let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
-                                self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-                        }
-
-                        Text("CRP")
-                            .foregroundColor(.white)
-                            .font(.title)
-                            .frame(width: 60, height: 60)
-                            .background(Color.red)
-                            .onTapGesture {
-                                let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
-                                self.playerController.player = self.makeCropPlayer(url: fileUrl)
-                        }
-                    }
-                }
-
-
-                Button(self.isPlay ? "Pause" : "Play") {
-                    print("play / pause")
-                    self.isPlay.toggle()
-                }.foregroundColor(SwiftUI.Color.white)
-
-                Button("Choose Video") {
-                    self.showSheet = true
-                }.padding()
-                    .actionSheet(isPresented: $showSheet) {
-                        var buttons: [ActionSheet.Button] = [
-
-                                .default(Text("Video Library")) {
-                                    self.showImagePicker = true
-                                    self.sourceType = .photoLibrary
-                            },
-                                .cancel()
-                        ]
-
-                        if self.isSimulator {
-                            buttons.insert(.default(Text("LOCAL TEST")) {
-                                    let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
-                                    print(fileUrl)
-                                    self.videoUrl = fileUrl
-                                    self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-                                }, at: 0)
-                        } else {
-                            buttons.insert(.default(Text("Camera")) {
-                                    self.showImagePicker = true
-                                    self.sourceType = .camera
-                                }, at: buttons.count - 2)
-                        }
-
-                        return ActionSheet(title: Text("Select Video"), message: Text("Choose an option"), buttons: buttons)
-                    }.foregroundColor(SwiftUI.Color.white)
+                PreviewControlView(isSimulator: isSimulator,
+                    onPlayPause: { result in
+                        self.isPlay = result
+                    },
+                    onContentChanged: { result in
+                        self.videoUrl = result
+                        self.playerController.player = self.makeSimplePlayer(url: result)
+                    })
 
                 Spacer()
             }
 
-
-            //.navigationBarTitle("Xux Editor")
-            .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
+                .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
 
             // for NavigationView. Two properties for removing space from top
             // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview
@@ -239,9 +178,9 @@ struct ContentView: View {
 
 
         // for View
-        .sheet(isPresented: $showImagePicker) {
-            ImagePicker(image: self.$image, isShown: self.$showImagePicker, sourceType: self.sourceType)
-        }
+//        .sheet(isPresented: $showImagePicker) {
+//            ImagePicker(image: self.$image, isShown: self.$showImagePicker, sourceType: self.sourceType)
+//        }
     }
 }
 

@@ -20,6 +20,8 @@
 		9896B6E22506ABCD007B7C40 /* SpiderAttack.mov in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E12506ABCD007B7C40 /* SpiderAttack.mov */; };
 		9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E52506C6E1007B7C40 /* Assets.xcassets */; };
 		9896B6E82506CF8D007B7C40 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E72506CF8C007B7C40 /* 1024.png */; };
+		9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */; };
+		9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6EB2508C637007B7C40 /* PreviewControlView.swift */; };
 		98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D72502A03F00240003 /* ImagePicker.swift */; };
 		98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D92502A07900240003 /* OverlayVideo.swift */; };
 		98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DB2502A08E00240003 /* OverlayData.swift */; };
@@ -72,6 +74,8 @@
 		9896B6E12506ABCD007B7C40 /* SpiderAttack.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = SpiderAttack.mov; sourceTree = "<group>"; };
 		9896B6E52506C6E1007B7C40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9896B6E72506CF8C007B7C40 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1024.png; path = Zoomerok/Assets.xcassets/AppIcon.appiconset/1024.png; sourceTree = SOURCE_ROOT; };
+		9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSelectorView.swift; sourceTree = "<group>"; };
+		9896B6EB2508C637007B7C40 /* PreviewControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewControlView.swift; sourceTree = "<group>"; };
 		98A5D3D72502A03F00240003 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		98A5D3D92502A07900240003 /* OverlayVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayVideo.swift; sourceTree = "<group>"; };
 		98A5D3DB2502A08E00240003 /* OverlayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayData.swift; sourceTree = "<group>"; };
@@ -211,6 +215,8 @@
 			isa = PBXGroup;
 			children = (
 				98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */,
+				9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */,
+				9896B6EB2508C637007B7C40 /* PreviewControlView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -487,6 +493,8 @@
 			files = (
 				98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
+				9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */,
+				9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
 				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
 				98A5D3DE2502A0B100240003 /* Montage.swift in Sources */,

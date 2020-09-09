@@ -2,17 +2,17 @@ import SwiftUI
 import AVKit
 
 struct VideoRangeSliderView: View {
-    @Binding var asset : AVAsset?
+    @Binding var asset: AVAsset?
     private var adapterAsset: Binding<AVAsset> {
         Binding<AVAsset>(get: {
             //self.willUpdate()
             print("---get adapter")
             return self.asset!
         }, set: {
-            print("---set adapter")
-            self.asset = $0
-            //self.didModify()
-        })
+                print("---set adapter")
+                self.asset = $0
+                //self.didModify()
+            })
     }
 
     @State var widthLeft: CGFloat = 0
@@ -28,10 +28,10 @@ struct VideoRangeSliderView: View {
     var onChangeCursorPosition: (CGFloat) -> ()
 
     init(
-            asset: Binding<AVAsset?>,
-            duration: CGFloat,
-            @ViewBuilder onResize: @escaping (CGFloat) -> (),
-            onChangeCursorPosition: @escaping (CGFloat) -> ()) {
+        asset: Binding<AVAsset?>,
+        duration: CGFloat,
+        @ViewBuilder onResize: @escaping (CGFloat) -> (),
+        onChangeCursorPosition: @escaping (CGFloat) -> ()) {
         print("Video range INIT called")
         //self.asset = asset
 
@@ -41,16 +41,16 @@ struct VideoRangeSliderView: View {
         self.onChangeCursorPosition = onChangeCursorPosition
 
         //print("asset", self.asset )
-        /*if self.asset != nil {
-            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
-                DispatchQueue.main.async {
-                    print("image received")
-                    print(image as Any)
-                    //guard let image = image else { return }
-                    //self?.imageView.image = image
-                }
-            }
-        }*/
+//        if self.asset != nil {
+//            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
+//                DispatchQueue.main.async {
+//                    print("image received")
+//                    print(image as Any)
+//                    //guard let image = image else { return }
+//                    //self?.imageView.image = image
+//                }
+//            }
+//        }
     }
 
     // todo округлять если маленькие граничные значения ( почти влево почти вправо)
@@ -62,61 +62,61 @@ struct VideoRangeSliderView: View {
     // как определить сколько preview нужно для полного заполнения?
     var body: some View {
         VStack {
-            Text("Value")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color.white)
+//            Text("Value")
+//                    .font(.title)
+//                    .fontWeight(.bold)
+//                    .foregroundColor(Color.white)
 
             Text("\(self.widthLeft / self.totalWidth) - \(self.widthRight / self.totalWidth)")
-                    .foregroundColor(Color.white)
+                .foregroundColor(Color.white)
 
             ZStack(alignment: .leading) {
                 Rectangle()
-                        .fill(Color.white.opacity(0.2))
-                        .frame(height: cornerSize.height - marginTopBottom)
-                        .offset(x: 3)
+                    .fill(Color.white.opacity(0.2))
+                    .frame(height: cornerSize.height - marginTopBottom)
+                    .offset(x: 3)
 
                 Rectangle()
-                        .fill(Color.white)
-                        .border(/*@START_MENU_TOKEN@*/Color.red/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                        .frame(width: self.widthRight - self.widthLeft, height: cornerSize.height - marginTopBottom)
-                        .offset(x: self.widthLeft + cornerSize.width)
+                    .fill(Color.white)
+                    .border(/*@START_MENU_TOKEN@*/Color.red/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                    .frame(width: self.widthRight - self.widthLeft, height: cornerSize.height - marginTopBottom)
+                    .offset(x: self.widthLeft + cornerSize.width)
 
                 HStack(spacing: 0) {
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
-                            .fill(Color.red)
-                            .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.widthLeft + 3)
-                            .gesture(
-                                    DragGesture()
-                                            .onChanged({ value in
-                                                if value.location.x >= 0 && value.location.x <= self.widthRight {
-                                                    self.widthLeft = value.location.x
-                                                }
+                        .fill(Color.red)
+                        .frame(width: cornerSize.width, height: cornerSize.height)
+                        .offset(x: self.widthLeft + 3)
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ value in
+                                    if value.location.x >= 0 && value.location.x <= self.widthRight {
+                                        self.widthLeft = value.location.x
+                                    }
 
-                                                self.onResize(111)
-                                            })
-                            )
+                                    self.onResize(111)
+                                })
+                        )
 
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
-                            .fill(Color.red)
-                            .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.widthRight - 3)
-                            .gesture(
-                                    DragGesture()
-                                            .onChanged({ value in
-                                                if value.location.x <= self.totalWidth && value.location.x >= self.widthLeft {
-                                                    self.widthRight = value.location.x
-                                                }
+                        .fill(Color.red)
+                        .frame(width: cornerSize.width, height: cornerSize.height)
+                        .offset(x: self.widthRight - 3)
+                        .gesture(
+                            DragGesture()
+                                .onChanged({ value in
+                                    if value.location.x <= self.totalWidth && value.location.x >= self.widthLeft {
+                                        self.widthRight = value.location.x
+                                    }
 
-                                                self.onResize(222)
-                                            })
-                            )
+                                    self.onResize(222)
+                                })
+                        )
                 }
             }
         }
-                .padding()
-                .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
+            .padding()
+            .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
     }
 }
 

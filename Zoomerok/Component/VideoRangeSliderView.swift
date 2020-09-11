@@ -1,8 +1,23 @@
 import SwiftUI
 import AVKit
 
+struct EffectState {
+    public var previewUrl: String
+
+    init(_ previewUrl: String) {
+        self.previewUrl = previewUrl
+    }
+}
+
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
+    @Binding var effectState: EffectState
+
+    @State var widthLeft: CGFloat = 0
+    @State var widthRight: CGFloat = UIScreen.main.bounds.width - 45
+    //@State var effectXOffset: CGFloat = 0
+    @State private var effectPosition = CGPoint(x: 0, y: 50)
+
     private var adapterAsset: Binding<AVAsset> {
         Binding<AVAsset>(get: {
             //self.willUpdate()
@@ -15,12 +30,12 @@ struct VideoRangeSliderView: View {
             })
     }
 
-    @State var widthLeft: CGFloat = 0
-    @State var widthRight: CGFloat = UIScreen.main.bounds.width - 45
-
     var totalWidth = UIScreen.main.bounds.width - 45 // minus right left margins?
     var cornerSize = CGSize(width: 11, height: 53)
     var marginTopBottom: CGFloat = 3
+    //var effectYOffset: CGFloat = 20
+    var effectElementSize = CGSize(width: 60, height: 30)
+
 
     //var asset: AVAsset?
     var duration: CGFloat
@@ -30,11 +45,13 @@ struct VideoRangeSliderView: View {
     init(
         asset: Binding<AVAsset?>,
         duration: CGFloat,
+        effectState: Binding<EffectState>,
         @ViewBuilder onResize: @escaping (CGFloat) -> (),
         onChangeCursorPosition: @escaping (CGFloat) -> ()) {
         print("Video range INIT called")
         //self.asset = asset
 
+        self._effectState = effectState
         self._asset = asset
         self.duration = duration
         self.onResize = onResize
@@ -71,11 +88,13 @@ struct VideoRangeSliderView: View {
 //                .foregroundColor(Color.white)
 
             ZStack(alignment: .leading) {
+                // muted timeline (background)
                 Rectangle()
                     .fill(Color.white.opacity(0.2))
                     .frame(height: cornerSize.height - marginTopBottom)
                     .offset(x: 3)
 
+                // active timeline
                 Rectangle()
                     .fill(Color.white)
                     .border(/*@START_MENU_TOKEN@*/Color.red/*@END_MENU_TOKEN@*/, width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
@@ -83,6 +102,7 @@ struct VideoRangeSliderView: View {
                     .offset(x: self.widthLeft + cornerSize.width)
 
                 HStack(spacing: 0) {
+                    // left timeline control
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .fill(Color.red)
                         .frame(width: cornerSize.width, height: cornerSize.height)
@@ -98,6 +118,7 @@ struct VideoRangeSliderView: View {
                                 })
                         )
 
+                    // right timeline control
                     RoundedRectangle(cornerRadius: 25, style: .continuous)
                         .fill(Color.red)
                         .frame(width: cornerSize.width, height: cornerSize.height)
@@ -112,6 +133,28 @@ struct VideoRangeSliderView: View {
                                     self.onResize(222)
                                 })
                         )
+
+                    // effect control
+                    if !self.effectState.previewUrl.isEmpty {
+                        //Text(self.effectState.previewUrl)
+                        Image(self.effectState.previewUrl)
+                            .resizable()
+                            .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
+                            .offset(x: self.effectPosition.x, y: self.effectPosition.y)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged({ value in
+                                        print("Drag val ", value.location, self.totalWidth)
+                                        if value.location.x <= self.totalWidth - self.effectElementSize.width && value.location.x >= self.widthLeft {
+                                            self.effectPosition.x = value.location.x
+                                        }
+                                    })
+                            )
+//                            .onTapGesture {
+//                                print("Effect11 button clicked!!!")
+//                                //self.onEffectSelected(item)
+//                        }
+                    }
                 }
             }
         }

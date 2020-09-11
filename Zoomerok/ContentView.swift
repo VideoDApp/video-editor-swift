@@ -154,7 +154,9 @@ struct ContentView: View {
                         print(result)
                     })
 
-                EffectSelectorView()
+                EffectSelectorView(onEffectSelected: {result in
+                    print(result)
+                })
 
                 PreviewControlView(isSimulator: isSimulator,
                     onPlayPause: { result in

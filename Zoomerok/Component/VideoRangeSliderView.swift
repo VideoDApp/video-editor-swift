@@ -67,8 +67,8 @@ struct VideoRangeSliderView: View {
 //                    .fontWeight(.bold)
 //                    .foregroundColor(Color.white)
 
-            Text("\(self.widthLeft / self.totalWidth) - \(self.widthRight / self.totalWidth)")
-                .foregroundColor(Color.white)
+//            Text("\(self.widthLeft / self.totalWidth) - \(self.widthRight / self.totalWidth)")
+//                .foregroundColor(Color.white)
 
             ZStack(alignment: .leading) {
                 Rectangle()

@@ -25,8 +25,8 @@ struct ContentView: View {
     init() {
         #if targetEnvironment(simulator)
             // your simulator code
-            initTestVideoForSimulator()
             print("Document directory", DownloadTestContent.getDocumentsDirectory())
+            initTestVideoForSimulator()
             self.isSimulator = true
             //DownloadTestContent.downloadAll()
         #else
@@ -42,8 +42,15 @@ struct ContentView: View {
     }
 
     func initTestVideoForSimulator() {
-        let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
-        print("previewAsset")
+        let testFileName = "test-files/1VideoBig.mov"
+        let fileUrl = DownloadTestContent.getFilePath(testFileName)
+        if !DownloadTestContent.isFileExists(testFileName) {
+            print("Test file not found in simulator mode")
+            return
+        }
+
+        print("initTestVideoForSimulator")
+        // todo check is file exists
         self.previewAsset = AVAsset(url: fileUrl)
         self.videoUrl = fileUrl
         self.playerController.player = self.makeSimplePlayer(url: fileUrl)
@@ -149,7 +156,7 @@ struct ContentView: View {
                  //self.playerController.player?.seek(to: CMTimeMakeWithSeconds(10, preferredTimescale: 60))
                  }*/
 
-                VideoRangeSliderView(asset: $previewAsset, duration: 10, effectState: self.$effectState, onResize: { result in
+                VideoRangeSliderView(asset: self.$previewAsset, duration: 10, effectState: self.$effectState, onResize: { result in
                     print(result)
                 }, onChangeCursorPosition: { result in
                         print(result)
@@ -223,7 +230,7 @@ struct CustomPlayer: UIViewControllerRepresentable {
 struct ChangeObserver<Base: View, Value: Equatable>: View {
     let base: Base
     let value: Value
-    let action: (Value)->Void
+    let action: (Value) -> Void
 
     @State var model = Model()
 
@@ -276,7 +283,7 @@ extension View {
     ///   - action: A closure to run when the value changes.
     ///   - newValue: The new value that failed the comparison check.
     /// - Returns: A modified version of this view
-    func onChange<Value: Equatable>(of value: Value, perform action: @escaping (_ newValue: Value)->Void) -> ChangeObserver<Self, Value> {
+    func onChange<Value: Equatable>(of value: Value, perform action: @escaping (_ newValue: Value) -> Void) -> ChangeObserver<Self, Value> {
         ChangeObserver(base: self, value: value, action: action)
     }
 }

@@ -4,16 +4,20 @@ import AVKit
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
     @Binding var effectState: EffectState
+    @State var offsetLeftLimit: CGFloat = 0
+    // actual params in init()
+    @State var offsetRightLimit: CGFloat = 0
+    @State var effectPosition = CGPoint(x: 0, y: 0)
 
     var totalWidth = UIScreen.main.bounds.width - 45 // minus right left margins?
     var cornerSize = CGSize(width: 11, height: 53)
     //var marginTopBottom: CGFloat = 3
-    var effectElementSize = CGSize(width: 60, height: 60)
+    var effectElementSize = CGSize(width: 40, height: 40)
+    var duration: CGFloat
+    var onResize: (CGFloat) -> ()
+    var onChangeCursorPosition: (CGFloat) -> ()
 
-    @State var widthLeft: CGFloat = 0
-    // actual params in init()
-    @State var widthRight: CGFloat = 0
-    @State var effectPosition = CGPoint(x: 0, y: 0)
+
 
     private var adapterAsset: Binding<AVAsset> {
         Binding<AVAsset>(get: {
@@ -27,12 +31,6 @@ struct VideoRangeSliderView: View {
             })
     }
 
-
-    //var asset: AVAsset?
-    var duration: CGFloat
-    var onResize: (CGFloat) -> ()
-    var onChangeCursorPosition: (CGFloat) -> ()
-
     init(
         asset: Binding<AVAsset?>,
         duration: CGFloat,
@@ -41,7 +39,7 @@ struct VideoRangeSliderView: View {
         onChangeCursorPosition: @escaping (CGFloat) -> ()) {
 
         print("Video range INIT called")
-        self._widthRight = State(initialValue: totalWidth)
+        self._offsetRightLimit = State(initialValue: totalWidth)
         self._effectState = effectState
         self._asset = asset
         self._effectPosition = State(initialValue: CGPoint(x: -(self.effectElementSize.width / 2), y: 0))
@@ -92,152 +90,97 @@ struct VideoRangeSliderView: View {
                 Rectangle()
                     .fill(Color.white)
                     .border(Color(hex: "e9445a"), width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                    .frame(width: self.widthRight - self.widthLeft, height: cornerSize.height)
+                    .frame(width: self.offsetRightLimit - self.offsetLeftLimit, height: cornerSize.height)
                 //.frame(width: self.widthRight - self.widthLeft, height: cornerSize.height - marginTopBottom)
-                .offset(x: self.widthLeft)
+                .offset(x: self.offsetLeftLimit)
 
-                // effect control
-                if !self.effectState.previewUrl.isEmpty {
-                    //Text(self.effectState.previewUrl)
-                    /*Image(self.effectState.previewUrl)
-                                            .resizable()
-                                            .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
-                                            .offset(x: self.effectPosition.x, y: self.effectPosition.y)
-                                            .gesture(
-                                                DragGesture()
-                                                    .onChanged({ value in
-                                                        print("Drag val ", value.location, self.totalWidth)
-                                                        if value.location.x <= self.totalWidth - self.effectElementSize.width && value.location.x >= self.widthLeft {
-                                                            self.effectPosition.x = value.location.x
-                                                        }
-                                                    })
-                                            )*/
-                    /*EffectCursor()
-                        .fill(Color(hex: "f7ef00"))
-                        .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
-                        .offset(x: self.effectPosition.x, y: self.effectPosition.y)
-                        .gesture(
-                            DragGesture()
-                                .onChanged({ value in
-                                    // calculate x with center of cursor
-                                    let newX = value.location.x - self.effectElementSize.width / 2
-                                    print("Drag val ", value.location, newX, self.effectElementSize.width, self.totalWidth, UIScreen.main.bounds.width)
 
-                                    if value.location.x < 0 || value.location.x > UIScreen.main.bounds.width - self.effectElementSize.width / 2 {
-                                        return
-                                    }
-                                    //                                        if newX < -(self.effectElementSize.width * 2) || newX > self.totalWidth - (self.effectElementSize.width / 2) {
-                                    //                                            return
-                                    //                                        }
-                                    /*if value.location.x <= self.totalWidth - self.effectElementSize.width && value.location.x >= self.widthLeft {
-                                                        self.effectPosition.x = value.location.x
-                                                    }*/
-                                    print("Set new x", newX)
-                                    self.effectPosition.x = newX
-                                })
-                        )*/
 
-                    HStack(spacing: 0) {
-                        // left timeline control
-                        //cornerRadius: 25
-                        /*RoundedRectangle(cornerRadius: 0, style: .continuous)
-                            .fill(Color.red)
+
+                HStack(spacing: 0) {
+                    // left timeline control
+                    ZStack() {
+                        TimelineLimitBase()
+                            .fill(Color(hex: "e9445a"))
                             .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.widthLeft - cornerSize.width)
+                            .offset(x: self.offsetLeftLimit - cornerSize.width)
                             .gesture(
                                 DragGesture()
                                     .onChanged({ value in
-                                        if value.location.x >= 0 && value.location.x <= self.widthRight {
-                                            self.widthLeft = value.location.x
+                                        if value.location.x >= 0 && value.location.x <= self.offsetRightLimit {
+                                            self.offsetLeftLimit = value.location.x
                                         }
 
                                         self.onResize(111)
                                     })
-                            )*/
+                            )
+                        TimelineLimitLines()
+                            .fill(Color.white)
+                            .frame(width: cornerSize.width, height: cornerSize.height / 3)
+                            .offset(x: self.offsetLeftLimit - cornerSize.width + 4)
+                    }
 
 
-                        ZStack() {
-                            TimelineLimitBase()
-                                .fill(Color(hex: "e9445a"))
-                                .frame(width: cornerSize.width, height: cornerSize.height)
-                                .offset(x: self.widthLeft - cornerSize.width)
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged({ value in
-                                            if value.location.x >= 0 && value.location.x <= self.widthRight {
-                                                self.widthLeft = value.location.x
-                                            }
-
-                                            self.onResize(111)
-                                        })
-                                )
-                            TimelineLimitLines()
-                                .fill(Color.white)
-                                .frame(width: cornerSize.width, height: cornerSize.height / 3)
-                                .offset(x: self.widthLeft - cornerSize.width + 4)
-                        }
-
-
-                        // right timeline control
-                        ZStack() {
-                            TimelineLimitBase()
-                                .fill(Color(hex: "e9445a"))
-                                .frame(width: cornerSize.width, height: cornerSize.height)
-                                .offset(x: self.widthRight - cornerSize.width)
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged({ value in
-                                            if value.location.x <= self.totalWidth && value.location.x >= self.widthLeft {
-                                                self.widthRight = value.location.x
-                                            }
-
-                                            self.onResize(222)
-                                        })
-                                )
-                            TimelineLimitLines()
-                                .fill(Color.white)
-                                .frame(width: cornerSize.width, height: cornerSize.height / 3)
-                                .offset(x: self.widthRight - cornerSize.width + 2)
-                        }
-                        /*RoundedRectangle(cornerRadius: 0, style: .continuous)
-                            .fill(Color.red)
+                    // right timeline control
+                    ZStack() {
+                        TimelineLimitBase()
+                            .fill(Color(hex: "e9445a"))
                             .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.widthRight - cornerSize.width)
+                            .offset(x: self.offsetRightLimit - cornerSize.width)
                             .gesture(
                                 DragGesture()
                                     .onChanged({ value in
-                                        if value.location.x <= self.totalWidth && value.location.x >= self.widthLeft {
-                                            self.widthRight = value.location.x
+                                        if value.location.x <= self.totalWidth && value.location.x >= self.offsetLeftLimit {
+                                            self.offsetRightLimit = value.location.x
                                         }
 
                                         self.onResize(222)
                                     })
-                            )*/
-
-                        /// effect cursor was here
-
+                            )
+                        TimelineLimitLines()
+                            .fill(Color.white)
+                            .frame(width: cornerSize.width, height: cornerSize.height / 3)
+                            .offset(x: self.offsetRightLimit - cornerSize.width + 2)
                     }
                 }
+
             }
-            
-            // effect cursor
-            VStack(alignment: .leading) {
-                if !self.effectState.previewUrl.isEmpty {
-                Image(self.effectState.previewUrl)
-                .resizable()
-                .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
-                .offset(x: self.effectPosition.x, y: self.effectPosition.y)
-                .gesture(
-                    DragGesture()
-                        .onChanged({ value in
-                            print("Drag val ", value.location, self.totalWidth)
-                            if value.location.x <= self.totalWidth - self.effectElementSize.width && value.location.x >= self.widthLeft {
-                                self.effectPosition.x = value.location.x
-                            }
-                        })
-                )
+
+            // effect control
+            HStack {
+                VStack(alignment: .leading) {
+                    if !self.effectState.previewUrl.isEmpty {
+                        Image(self.effectState.previewUrl)
+                            .resizable()
+                            .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
+                            .offset(x: self.effectPosition.x + self.effectElementSize.width / 2, y: self.effectPosition.y)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged({ value in
+                                        let newX = value.location.x - self.effectElementSize.width
+                                        //let halfScreen = self.totalWidth / 2
+                                        let halfElementWidth = self.effectElementSize.width / 2
+                                        print("Drag effect val ", value.location, newX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
+
+                                        // check timeline limit
+                                        if newX < -halfElementWidth || value.location.x > self.totalWidth - halfElementWidth {
+                                            return
+                                        }
+
+                                        // check offset limit
+                                        if newX < self.offsetLeftLimit - halfElementWidth || value.location.x > self.offsetRightLimit - halfElementWidth {
+                                            return
+                                        }
+
+                                        self.effectPosition.x = newX
+                                    })
+                            )
+                    }
+
                 }
+                Spacer()
             }
+                .frame(width: totalWidth)
         }
             .padding()
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
@@ -265,19 +208,6 @@ struct EffectState {
     }
 }
 
-struct EffectCursor: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-
-        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
-
-        return path
-    }
-}
-
 struct TimelineLimitLines: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
@@ -294,10 +224,6 @@ struct TimelineLimitBase: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
 
-        /*path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))*/
         path.addRect(CGRect(x: rect.minX, y: rect.minY, width: rect.maxX, height: rect.maxY))
         path.addRect(CGRect(x: rect.minX, y: rect.minY, width: rect.maxX - 5, height: rect.maxY))
 

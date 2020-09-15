@@ -10,15 +10,21 @@ import SwiftUI
 
 struct TestUI: View {
     var body: some View {
-        HStack() {
-            VStack(alignment: .leading) {
-                Text("Hello World")
-                    .font(.title)
-
-
+        HStack(spacing: 0) {
+            ZStack() {
+                Rectangle()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(Color.red)
+        
+                Rectangle()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(Color.green)
+           
+                Rectangle()
+                    .frame(width: 50, height: 50)
+                    .foregroundColor(Color.blue)
             }
-            Spacer()
-        }.background(Color.red)
+        }
     }
 }
 

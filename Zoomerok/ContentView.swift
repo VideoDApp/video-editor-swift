@@ -26,7 +26,7 @@ struct ContentView: View {
         #if targetEnvironment(simulator)
             // your simulator code
             print("Document directory", DownloadTestContent.getDocumentsDirectory())
-            initTestVideoForSimulator()
+            //initTestVideoForSimulator()
             self.isSimulator = true
             //DownloadTestContent.downloadAll()
         #else
@@ -135,26 +135,20 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                /*Image(systemName: "square.and.arrow.down.fill")
-                 .padding(.vertical)
-                 .frame(width: 30.0, height: 100.0)
-                 .font(.system(size: 30))
-                 .foregroundColor(SwiftUI.Color.white)
-                 .onTapGesture {
-                 print("Export file")
-                 }*/
+                if videoUrl == nil {
+                    SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
+                        //print("SelectContentView", result)
+                        //self.videoUrl = result
+                        self.previewAsset = AVAsset(url: result)
+                        self.videoUrl = result
+                        self.playerController.player = self.makeSimplePlayer(url: result)
 
-                CustomPlayer(url: $videoUrl, isPlay: $isPlay, montage: $montageInstance, playerController: $playerController)
-                    .frame(height: UIScreen.main.bounds.height / 2)
-
-
-                /*ScrollPreviewView() { (result) -> () in
-                 // do stuff with the result
-                 self.onScroll(r: result)
-                 //print("IT WORKS", result)
-                 //print("IT WORKS 2", result)
-                 //self.playerController.player?.seek(to: CMTimeMakeWithSeconds(10, preferredTimescale: 60))
-                 }*/
+                        return ()
+                    })
+                } else {
+                    CustomPlayer(url: $videoUrl, isPlay: $isPlay, montage: $montageInstance, playerController: $playerController)
+                        .frame(height: UIScreen.main.bounds.height / 2)
+                }
 
                 VideoRangeSliderView(asset: self.$previewAsset, duration: 10, effectState: self.$effectState, onResize: { result in
                     print(result)
@@ -168,14 +162,9 @@ struct ContentView: View {
                     return
                 })
 
-                PreviewControlView(isSimulator: isSimulator,
-                    onPlayPause: { result in
-                        self.isPlay = result
-                    },
-                    onContentChanged: { result in
-                        self.videoUrl = result
-                        self.playerController.player = self.makeSimplePlayer(url: result)
-                    })
+                PreviewControlView(onPlayPause: { result in
+                    self.isPlay = result
+                })
 
                 Spacer()
             }
@@ -208,14 +197,13 @@ struct CustomPlayer: UIViewControllerRepresentable {
     @Binding var montage: Montage
     @Binding var playerController: AVPlayerViewController
 
-
     func makeUIViewController(context: UIViewControllerRepresentableContext<CustomPlayer>) -> AVPlayerViewController {
 
         return playerController
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<CustomPlayer>) {
-        print("updateUIViewController")
+        print("CustomPlayer updateUIViewController")
 
         if isPlay {
             uiViewController.player?.play()
@@ -223,7 +211,6 @@ struct CustomPlayer: UIViewControllerRepresentable {
             uiViewController.player?.pause()
         }
     }
-
 }
 
 /// See `View.onChange(of: value, perform: action)` for more information

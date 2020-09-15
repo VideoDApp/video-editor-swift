@@ -17,8 +17,6 @@ struct VideoRangeSliderView: View {
     var onResize: (CGFloat) -> ()
     var onChangeCursorPosition: (CGFloat) -> ()
 
-
-
     private var adapterAsset: Binding<AVAsset> {
         Binding<AVAsset>(get: {
             //self.willUpdate()
@@ -83,19 +81,13 @@ struct VideoRangeSliderView: View {
                 Rectangle()
                     .fill(Color.white.opacity(0.2))
                     .frame(width: totalWidth, height: cornerSize.height)
-                //.frame(width: totalWidth, height: cornerSize.height - marginTopBottom)
-                //.offset(x: 3)
 
                 // active timeline
                 Rectangle()
-                    .fill(Color.white)
+                    .fill(Color.gray)
                     .border(Color(hex: "e9445a"), width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
                     .frame(width: self.offsetRightLimit - self.offsetLeftLimit, height: cornerSize.height)
-                //.frame(width: self.widthRight - self.widthLeft, height: cornerSize.height - marginTopBottom)
-                .offset(x: self.offsetLeftLimit)
-
-
-
+                    .offset(x: self.offsetLeftLimit)
 
                 HStack(spacing: 0) {
                     // left timeline control
@@ -120,6 +112,13 @@ struct VideoRangeSliderView: View {
                             .offset(x: self.offsetLeftLimit - cornerSize.width + 4)
                     }
 
+                    // current time cursor
+//                    ZStack() {
+//                        Rectangle()
+//                            .fill(Color.white)
+//                            .frame(width: 3, height: cornerSize.height)
+//                            .offset(x: 0)
+//                    }
 
                     // right timeline control
                     ZStack() {

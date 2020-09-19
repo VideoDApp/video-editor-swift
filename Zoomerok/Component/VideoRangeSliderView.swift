@@ -5,17 +5,21 @@ struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
     @Binding var effectState: EffectState
     @State var offsetLeftLimit: CGFloat = 0
-    // actual params in init()
     @State var offsetRightLimit: CGFloat = 0
     @State var effectPosition = CGPoint(x: 0, y: 0)
+    @State var activeTimelineWidth: CGFloat = 0
+    @State var activeTimelineOffsetX: CGFloat = 0
 
-    var totalWidth = UIScreen.main.bounds.width - 45 // minus right left margins?
-    var cornerSize = CGSize(width: 11, height: 53)
+    var margins: CGFloat = 46
+    var timelineBorderSize: CGFloat = 2
+    var totalWidth = UIScreen.main.bounds.width - 46 // minus right left margins?
+    var timelineControlSize = CGSize(width: 11, height: 53)
     //var marginTopBottom: CGFloat = 3
     var effectElementSize = CGSize(width: 40, height: 40)
     var duration: CGFloat
     var onResize: (CGFloat) -> ()
     var onChangeCursorPosition: (CGFloat) -> ()
+
 
     private var adapterAsset: Binding<AVAsset> {
         Binding<AVAsset>(get: {
@@ -40,12 +44,17 @@ struct VideoRangeSliderView: View {
         self._offsetRightLimit = State(initialValue: totalWidth)
         self._effectState = effectState
         self._asset = asset
-        self._effectPosition = State(initialValue: CGPoint(x: -(self.effectElementSize.width / 2), y: 0))
+        self._effectPosition = State(initialValue: CGPoint(x: self.margins / 2 - (self.effectElementSize.width / 2), y: 0))
 
         self.duration = duration
         self.onResize = onResize
         self.onChangeCursorPosition = onChangeCursorPosition
 
+        //self._activeTimelineWidth = State(initialValue: 0)
+        //self._activeTimelineOffsetX = State(initialValue: 0)
+
+        self.onTimelineResize()
+        self.printVars()
         //print("asset", self.asset )
 //        if self.asset != nil {
 //            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
@@ -57,6 +66,28 @@ struct VideoRangeSliderView: View {
 //                }
 //            }
 //        }
+    }
+
+    func onTimelineResize() {
+        self.activeTimelineWidth = self.offsetRightLimit - self.offsetLeftLimit + self.timelineBorderSize * 2
+        self.activeTimelineOffsetX = self.offsetLeftLimit - self.timelineBorderSize + self.margins / 2
+//        self.activeTimelineOffsetX =self.activeTimelineOffsetX <0?0:self.activeTimelineOffsetX
+        //self.activeTimelineOffsetX = self.offsetLeftLimit
+
+        self.onResize(1234)
+        printVars()
+    }
+
+    func printVars() {
+        print("START =======")
+        print("UIScreen.main.bounds.width",UIScreen.main.bounds.width)
+        print("totalWidth", self.totalWidth)
+        print("activeTimelineWidth", self.activeTimelineWidth)
+        print("activeTimelineOffsetX", self.activeTimelineOffsetX)
+        print("offsetLeftLimit", self.offsetLeftLimit)
+        print("offsetRightLimit", self.offsetRightLimit)
+        print("timelineBorderSize", self.timelineBorderSize)
+        print("END =======")
     }
 
     // todo округлять если маленькие граничные значения ( почти влево почти вправо)
@@ -77,71 +108,79 @@ struct VideoRangeSliderView: View {
 //                .foregroundColor(Color.white)
 
             ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.white.opacity(0))
+                    .frame(width: UIScreen.main.bounds.width, height: timelineControlSize.height)
+
                 // muted timeline (background)
                 Rectangle()
                     .fill(Color.white.opacity(0.2))
-                    .frame(width: totalWidth, height: cornerSize.height)
+                    .frame(width: self.totalWidth, height: timelineControlSize.height)
+                    .offset(x: self.margins / 2)
 
                 // active timeline
                 Rectangle()
                     .fill(Color.gray)
-                    .border(Color(hex: "e9445a"), width: /*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                    .frame(width: self.offsetRightLimit - self.offsetLeftLimit, height: cornerSize.height)
-                    .offset(x: self.offsetLeftLimit)
+                    .border(Color(hex: "e9445a"), width: self.timelineBorderSize)
+                    .frame(width: self.activeTimelineWidth, height: timelineControlSize.height)
+                // y: -10 temp val for tests
+                .offset(x: self.activeTimelineOffsetX, y: -10)
 
-                HStack(spacing: 0) {
-                    // left timeline control
-                    ZStack() {
-                        TimelineLimitBase()
-                            .fill(Color(hex: "e9445a"))
-                            .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.offsetLeftLimit - cornerSize.width)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged({ value in
-                                        if value.location.x >= 0 && value.location.x <= self.offsetRightLimit {
-                                            self.offsetLeftLimit = value.location.x
-                                        }
+                // left timeline control base
+                TimelineLimitBase()
+                    .fill(Color(hex: "e9445a"))
+                    .frame(width: timelineControlSize.width, height: timelineControlSize.height)
+                    .offset(x: self.offsetLeftLimit + self.timelineControlSize.width, y: -5)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ value in
+                                print(value.location.x)
+                                if value.location.x >=  self.timelineControlSize.width && value.location.x <= self.offsetRightLimit {
 
-                                        self.onResize(111)
-                                    })
-                            )
-                        TimelineLimitLines()
-                            .fill(Color.white)
-                            .frame(width: cornerSize.width, height: cornerSize.height / 3)
-                            .offset(x: self.offsetLeftLimit - cornerSize.width + 4)
-                    }
+                                } else {
+                                    return
+                                }
 
-                    // current time cursor
-//                    ZStack() {
-//                        Rectangle()
-//                            .fill(Color.white)
-//                            .frame(width: 3, height: cornerSize.height)
-//                            .offset(x: 0)
-//                    }
+                                self.offsetLeftLimit = value.location.x - self.timelineControlSize.width - self.timelineBorderSize
+                                self.onTimelineResize()
+                                //self.printVars()
+                            })
+                    )
 
-                    // right timeline control
-                    ZStack() {
-                        TimelineLimitBase()
-                            .fill(Color(hex: "e9445a"))
-                            .frame(width: cornerSize.width, height: cornerSize.height)
-                            .offset(x: self.offsetRightLimit - cornerSize.width)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged({ value in
-                                        if value.location.x <= self.totalWidth && value.location.x >= self.offsetLeftLimit {
-                                            self.offsetRightLimit = value.location.x
-                                        }
+                // left timeline control lines
+                TimelineLimitLines()
+                    .fill(Color.white)
+                    .frame(width: timelineControlSize.width, height: timelineControlSize.height / 3)
+                    .offset(x: self.offsetLeftLimit - timelineControlSize.width + self.timelineBorderSize + self.margins / 2)
 
-                                        self.onResize(222)
-                                    })
-                            )
-                        TimelineLimitLines()
-                            .fill(Color.white)
-                            .frame(width: cornerSize.width, height: cornerSize.height / 3)
-                            .offset(x: self.offsetRightLimit - cornerSize.width + 2)
-                    }
-                }
+                // current time cursor
+                Rectangle()
+                    .fill(Color.white)
+                    .frame(width: 3, height: timelineControlSize.height)
+                    .offset(x: 10 + self.margins / 2)
+
+                // right timeline control base
+                TimelineLimitBase()
+                    .fill(Color(hex: "e9445a"))
+                    .frame(width: timelineControlSize.width, height: timelineControlSize.height)
+                    .offset(x: self.offsetRightLimit + self.timelineBorderSize + self.margins / 2, y: -5)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ value in
+                                if value.location.x <= self.totalWidth && value.location.x >= self.offsetLeftLimit {
+                                    self.offsetRightLimit = value.location.x //+ self.timelineControlSize.width
+                                }
+
+                                self.onTimelineResize()
+                                //self.printVars()
+                            })
+                    )
+
+                // right timeline control lines
+                TimelineLimitLines()
+                    .fill(Color.white)
+                    .frame(width: timelineControlSize.width, height: timelineControlSize.height / 3)
+                    .offset(x: self.offsetRightLimit + self.timelineBorderSize + 2 + self.margins / 2)
 
             }
 
@@ -159,15 +198,16 @@ struct VideoRangeSliderView: View {
                                         let newX = value.location.x - self.effectElementSize.width
                                         //let halfScreen = self.totalWidth / 2
                                         let halfElementWidth = self.effectElementSize.width / 2
+                                        let halfMargins = self.margins / 2
                                         print("Drag effect val ", value.location, newX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
 
                                         // check timeline limit
-                                        if newX < -halfElementWidth || value.location.x > self.totalWidth - halfElementWidth {
+                                        if newX < halfMargins - halfElementWidth || value.location.x > self.totalWidth - halfElementWidth + halfMargins {
                                             return
                                         }
 
                                         // check offset limit
-                                        if newX < self.offsetLeftLimit - halfElementWidth || value.location.x > self.offsetRightLimit - halfElementWidth {
+                                        if newX < self.offsetLeftLimit - halfElementWidth || value.location.x > self.offsetRightLimit - halfElementWidth + halfMargins {
                                             return
                                         }
 
@@ -179,10 +219,14 @@ struct VideoRangeSliderView: View {
                 }
                 Spacer()
             }
-                .frame(width: totalWidth)
+            //.frame(width: self.totalWidth)
         }
             .padding()
-            .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
+        //.background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
+        .background(SwiftUI.Color.green.edgesIgnoringSafeArea(.all))
+            .onAppear {
+                self.onTimelineResize()
+        }
     }
 }
 

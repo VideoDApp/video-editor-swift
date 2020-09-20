@@ -152,8 +152,11 @@ struct ContentView: View {
 
                 VideoRangeSliderView(asset: self.$previewAsset, duration: 10, effectState: self.$effectState, onResize: { result in
                     print(result)
+                    
+                    return ()
                 }, onChangeCursorPosition: { result in
                         print(result)
+                        return ()
                     })
 
                 EffectSelectorView(onEffectSelected: { result in
@@ -164,6 +167,7 @@ struct ContentView: View {
 
                 PreviewControlView(onPlayPause: { result in
                     self.isPlay = result
+                    return ()
                 })
 
                 Spacer()

@@ -1,21 +1,21 @@
 PODS:
-  - Firebase/Analytics (6.31.1):
+  - Firebase/Analytics (6.32.2):
     - Firebase/Core
-  - Firebase/Core (6.31.1):
+  - Firebase/Core (6.32.2):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.8.0)
-  - Firebase/CoreOnly (6.31.1):
-    - FirebaseCore (= 6.10.1)
-  - FirebaseAnalytics (6.8.0):
+    - FirebaseAnalytics (= 6.8.2)
+  - Firebase/CoreOnly (6.32.2):
+    - FirebaseCore (= 6.10.2)
+  - FirebaseAnalytics (6.8.2):
     - FirebaseCore (~> 6.10)
     - FirebaseInstallations (~> 1.6)
-    - GoogleAppMeasurement (= 6.8.0)
+    - GoogleAppMeasurement (= 6.8.2)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
     - "GoogleUtilities/NSData+zlib (~> 6.7)"
     - nanopb (~> 1.30906.0)
-  - FirebaseCore (6.10.1):
+  - FirebaseCore (6.10.2):
     - FirebaseCoreDiagnostics (~> 1.6)
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
@@ -29,8 +29,7 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - PromisesObjC (~> 1.2)
-  - GoogleAnalytics (3.17.0)
-  - GoogleAppMeasurement (6.8.0):
+  - GoogleAppMeasurement (6.8.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
     - GoogleUtilities/MethodSwizzler (~> 6.7)
     - GoogleUtilities/Network (~> 6.7)
@@ -66,7 +65,6 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/Analytics
-  - GoogleAnalytics
 
 SPEC REPOS:
   trunk:
@@ -75,7 +73,6 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreDiagnostics
     - FirebaseInstallations
-    - GoogleAnalytics
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
@@ -83,18 +80,17 @@ SPEC REPOS:
     - PromisesObjC
 
 SPEC CHECKSUMS:
-  Firebase: 658370fa0181826a74b7cfca8d68c5856ca749ae
-  FirebaseAnalytics: 0ca9aa2af7cc4dc92392b7a78bfc49feaa2eb60f
-  FirebaseCore: 6fb954e350af0885803d5aa49865d15d9a6b264c
+  Firebase: 47176280bfba198e531f909cfb1612dad216cb96
+  FirebaseAnalytics: 3c2fee6a922023ccfda7af87e4e641bad1fc11ba
+  FirebaseCore: 1d697bb944bf2af5fc248f1a66e165c9dd88bf97
   FirebaseCoreDiagnostics: 7415bfb3883b3500c5a95c42b6ba66baae78f600
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
-  GoogleAnalytics: f42cc53a87a51fe94334821868d9c8481ff47a7b
-  GoogleAppMeasurement: ecc30d0ab5b66d7d18e85ce1b8e2b345db60626d
+  GoogleAppMeasurement: 1a66f478c68ecd6c16ee63ee60c7c3a648e6b337
   GoogleDataTransport: e85fb700c9b027079ce182c3d08e12e0f9618bb4
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
 
-PODFILE CHECKSUM: 037a6d78cffb23cb0a0623edf15b825d13da7cd3
+PODFILE CHECKSUM: 5937c35241faaaada401164cab03c5a51436c99e
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0.rc.1

@@ -71,6 +71,8 @@ struct SelectContentView_Previews: PreviewProvider {
     static var previews: some View {
         SelectContentView(isSimulator: true, onContentChanged: { result in
             print(result)
+            
+            return ()
         })
     }
 }

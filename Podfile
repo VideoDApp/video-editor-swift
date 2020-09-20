@@ -6,7 +6,7 @@ target 'Zoomerok' do
   use_frameworks!
 
   # Pods for Zoomerok
-  pod 'GoogleAnalytics'
+  #pod 'GoogleAnalytics'
   pod 'Firebase/Analytics'
 
   target 'ZoomerokTests' do

@@ -299,6 +299,7 @@ struct VideoRangeSliderView_Previews: PreviewProvider {
     static var previews: some View {
         VideoRangeSliderView(asset: $previewAsset, duration: 10, effectState: $effectState, onResize: { result in
             print(result)
+            return ()
         }, onChangeCursorPosition: { result in
                 print(result)
             })

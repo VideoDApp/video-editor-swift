@@ -829,10 +829,6 @@ Copyright 2020 Google
    limitations under the License.
 
 
-## GoogleAnalytics
-
-Copyright 2016 Google
-
 ## GoogleAppMeasurement
 
 Copyright 2020 Google

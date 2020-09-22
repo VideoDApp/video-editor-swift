@@ -4,6 +4,7 @@ import AVKit
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
     @Binding var effectState: EffectState
+
     @State var offsetLeftLimit: CGFloat = 0
     @State var offsetRightLimit: CGFloat = 0
     @State var effectPosition = CGPoint(x: 0, y: 0)
@@ -14,55 +15,44 @@ struct VideoRangeSliderView: View {
     @State var offsetCursor: CGFloat = 0
 
     var margins: CGFloat = 45
-    var timelineBorderSize: CGFloat = 2
-    var totalWidth = UIScreen.main.bounds.width - 45 // minus right left margins?
+    var timelineBorderWidth: CGFloat = 2
+    var cursorWidth: CGFloat = 3
+    var totalWidth = UIScreen.main.bounds.width - 45 // minus right+left margins
     var timelineControlSize = CGSize(width: 11, height: 53)
-    //var marginTopBottom: CGFloat = 3
     var effectElementSize = CGSize(width: 40, height: 40)
-    var duration: CGFloat
-    var onResize: (CGFloat) -> ()
-    var onChangeCursorPosition: (CGFloat) -> ()
+    var duration: CMTime
+    // startFromPercent: CGFloat (0 - from start, 51 - more than half)
+    // videoLength: ???
+    var onResize: (SliderChange) -> ()
 
-//    var newFullScreenSize: CGFloat = UIScreen.main.bounds.width
-//    var newMargins: CGFloat = 0
-//    var newOneSideMargin: CGFloat = 0
-//    var newMaxSize: CGFloat = 0
-
-
-    private var adapterAsset: Binding<AVAsset> {
-        Binding<AVAsset>(get: {
-            //self.willUpdate()
-            print("---get adapter")
-            return self.asset!
-        }, set: {
-                print("---set adapter")
-                self.asset = $0
-                //self.didModify()
-            })
-    }
+//    private var adapterAsset: Binding<AVAsset> {
+//        Binding<AVAsset>(get: {
+//            //self.willUpdate()
+//            print("---get adapter")
+//            return self.asset!
+//        }, set: {
+//                print("---set adapter")
+//                self.asset = $0
+//                //self.didModify()
+//            })
+//    }
 
     init(
         asset: Binding<AVAsset?>,
-        duration: CGFloat,
+        duration: CMTime,
         effectState: Binding<EffectState>,
-        @ViewBuilder onResize: @escaping (CGFloat) -> (),
-        onChangeCursorPosition: @escaping (CGFloat) -> ()) {
+        @ViewBuilder onResize: @escaping (SliderChange) -> ()) {
 
-        print("Video range INIT called")
+        //print("Video range INIT called")
         self._offsetRightLimit = State(initialValue: totalWidth)
         self._effectState = effectState
         self._asset = asset
-        //self._effectPosition = State(initialValue: CGPoint(x: 0, y: 0))
 
         self.duration = duration
         self.onResize = onResize
-        self.onChangeCursorPosition = onChangeCursorPosition
-
-        //self._activeTimelineWidth = State(initialValue: 0)
-        //self._activeTimelineOffsetX = State(initialValue: 0)
 
         self.onTimelineResize()
-        self.printVars()
+        //self.printVars()
         //print("asset", self.asset )
 //        if self.asset != nil {
 //            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
@@ -77,10 +67,10 @@ struct VideoRangeSliderView: View {
     }
 
     func onTimelineResize(changeType: TimelineResizeType = .none) {
-        self.activeTimelineWidth = self.offsetRightLimit - self.offsetLeftLimit + self.timelineBorderSize * 2
-        self.activeTimelineOffsetX = self.margins / 2 + self.offsetLeftLimit - self.timelineBorderSize
+        self.activeTimelineWidth = self.offsetRightLimit - self.offsetLeftLimit + self.timelineBorderWidth * 2
+        self.activeTimelineOffsetX = self.margins / 2 + self.offsetLeftLimit - self.timelineBorderWidth
 
-        // todo also check effect cursor start-end (inside active timeline)
+        // todo check that cursor fully inside in active timeline
         if changeType == .leftControl {
             self.offsetCursor = self.offsetLeftLimit
             if self.effectPosition.x < self.offsetCursor {
@@ -93,8 +83,28 @@ struct VideoRangeSliderView: View {
             }
         }
 
-        self.onResize(1234)
-        printVars()
+        let onePercent = self.totalWidth / 100
+        let startPositionPercent = self.offsetLeftLimit / onePercent
+        let rightOffsetPercent = self.offsetRightLimit / onePercent
+        let videoSizePercent = rightOffsetPercent - startPositionPercent
+        let cursorPositionPercent = self.offsetCursor / onePercent
+//        print("onePercent \(onePercent)")
+//        print("leftOffsetPercent \(leftOffsetPercent)")
+//        print("rightOffsetPercent \(rightOffsetPercent)")
+//        print("videoSizePercent \(videoSizePercent)")
+        print("cursorPositionPercent \(cursorPositionPercent)")
+
+        let duration = CMTimeGetSeconds(self.duration)
+        let change = SliderChange()
+        change.startPositionPercent = startPositionPercent
+        change.startPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(startPositionPercent), preferredTimescale: self.duration.timescale)
+        change.cursorPositionPercent = cursorPositionPercent
+        change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(cursorPositionPercent), preferredTimescale: self.duration.timescale)
+        change.sizePercent = videoSizePercent
+        change.sizeSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(videoSizePercent), preferredTimescale: self.duration.timescale)
+
+        self.onResize(change)
+        //printVars()
     }
 
     func printVars() {
@@ -105,7 +115,8 @@ struct VideoRangeSliderView: View {
         print("activeTimelineOffsetX", self.activeTimelineOffsetX)
         print("offsetLeftLimit", self.offsetLeftLimit)
         print("offsetRightLimit", self.offsetRightLimit)
-        print("timelineBorderSize", self.timelineBorderSize)
+        print("timelineBorderWidth", self.timelineBorderWidth)
+        print("offsetCursor", self.offsetCursor)
         print("END =======")
     }
 
@@ -130,7 +141,7 @@ struct VideoRangeSliderView: View {
 //            Text("activeTimelineOffsetX \(self.activeTimelineOffsetX)")
 //            Text("offsetLeftLimit \(self.offsetLeftLimit)")
 //            Text("offsetRightLimit \(self.offsetRightLimit)")
-//            Text("timelineBorderSize \(self.timelineBorderSize)")
+//            Text("timelineBorderWidth \(self.timelineBorderWidth)")
 //            Text("totalWidth \(self.totalWidth)")
 //            Text("tempCurX \(self.tempCurX)")
 //            Text("effectPosition.x \(self.effectPosition.x)")
@@ -150,7 +161,7 @@ struct VideoRangeSliderView: View {
                 // active timeline
                 Rectangle()
                     .fill(Color.gray)
-                    .border(Color(hex: "e9445a"), width: self.timelineBorderSize)
+                    .border(Color(hex: "e9445a"), width: self.timelineBorderWidth)
                     .frame(width: self.activeTimelineWidth, height: timelineControlSize.height)
                 // y: -10 temp val for tests
                 .offset(x: self.activeTimelineOffsetX, y: 0)
@@ -159,67 +170,53 @@ struct VideoRangeSliderView: View {
                 TimelineLimitBase()
                     .fill(Color(hex: "e9445a"))
                     .frame(width: timelineControlSize.width, height: timelineControlSize.height)
-                    .offset(x: self.offsetLeftLimit + self.margins / 2 - self.timelineControlSize.width - self.timelineBorderSize, y: 0)
-                //.offset(x: self.offsetLeftLimit - self.timelineControlSize.width / 2, y: -5)
-                .gesture(
-                    DragGesture()
-                        .onChanged({ value in
-                            let checkX = value.location.x - self.timelineControlSize.width - self.timelineControlSize.width / 2
-                            self.checkX = checkX
-                            self.tempCurX = value.location.x
-                            /*print(value.location.x)
-                                if value.location.x >= self.timelineControlSize.width + self.timelineBorderSize &&
-                                    value.location.x <= self.offsetRightLimit {
+                    .offset(x: self.offsetLeftLimit + self.margins / 2 - self.timelineControlSize.width - self.timelineBorderWidth, y: 0)
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ value in
+                                let checkX = value.location.x - self.timelineControlSize.width - self.timelineControlSize.width / 2
+                                self.checkX = checkX
+                                self.tempCurX = value.location.x
 
-                                } else {
+                                if checkX < 0 || checkX > self.offsetRightLimit {
                                     return
-                                }*/
+                                }
 
-                            if checkX < 0 || checkX > self.offsetRightLimit {
-                                return
-                            }
-
-                            self.offsetLeftLimit = value.location.x - self.timelineControlSize.width - self.timelineControlSize.width / 2
-                            //self.offsetLeftLimit = value.location.x
-                            self.onTimelineResize(changeType: .leftControl)
-                            //self.printVars()
-                        })
-                )
+                                self.offsetLeftLimit = value.location.x - self.timelineControlSize.width - self.timelineControlSize.width / 2
+                                self.onTimelineResize(changeType: .leftControl)
+                            })
+                    )
 
                 // left timeline control lines
                 TimelineLimitLines()
                     .fill(Color.white)
                     .frame(width: timelineControlSize.width, height: timelineControlSize.height / 3)
-                    .offset(x: self.offsetLeftLimit - timelineControlSize.width + self.timelineBorderSize + self.margins / 2)
+                    .offset(x: self.offsetLeftLimit - timelineControlSize.width + self.timelineBorderWidth + self.margins / 2)
 
                 // current time cursor
                 Rectangle()
                     .fill(Color.white)
-                    .frame(width: 3, height: timelineControlSize.height)
+                    .frame(width: self.cursorWidth, height: timelineControlSize.height)
                     .offset(x: self.offsetCursor + self.margins / 2)
 
                 // right timeline control base
                 TimelineLimitBase()
                     .fill(Color(hex: "e9445a"))
                     .frame(width: timelineControlSize.width, height: timelineControlSize.height)
-                    .offset(x: self.offsetRightLimit + self.timelineBorderSize + self.margins / 2, y: 0)
+                    .offset(x: self.offsetRightLimit + self.timelineBorderWidth + self.margins / 2, y: 0)
                     .gesture(
                         DragGesture()
                             .onChanged({ value in
                                 self.tempCurX = value.location.x
-                                let checkX = value.location.x - self.margins / 2 - self.timelineControlSize.width / 2 - self.timelineBorderSize
+                                let checkX = value.location.x - self.margins / 2 - self.timelineControlSize.width / 2 - self.timelineBorderWidth
                                 self.checkX = checkX
-//                                if value.location.x <= self.totalWidth && value.location.x >= self.offsetLeftLimit {
-//                                    self.offsetRightLimit = value.location.x //+ self.timelineControlSize.width
-//                                }
 
                                 if self.checkX < 0 || self.checkX > self.totalWidth {
                                     return
                                 }
 
-                                self.offsetRightLimit = value.location.x - self.margins / 2 - self.timelineControlSize.width / 2 - self.timelineBorderSize
+                                self.offsetRightLimit = value.location.x - self.margins / 2 - self.timelineControlSize.width / 2 - self.timelineBorderWidth
                                 self.onTimelineResize(changeType: .rightControl)
-                                //self.printVars()
                             })
                     )
 
@@ -227,8 +224,7 @@ struct VideoRangeSliderView: View {
                 TimelineLimitLines()
                     .fill(Color.white)
                     .frame(width: timelineControlSize.width, height: timelineControlSize.height / 3)
-                    .offset(x: self.offsetRightLimit + self.timelineBorderSize + 2 + self.margins / 2)
-
+                    .offset(x: self.offsetRightLimit + self.timelineBorderWidth + 2 + self.margins / 2)
             }
 
             // effect control
@@ -243,33 +239,16 @@ struct VideoRangeSliderView: View {
                                 DragGesture()
                                     .onChanged({ value in
                                         let checkX = value.location.x - self.margins / 2 - self.effectElementSize.width + self.effectElementSize.width / 2
-
-                                        //let halfScreen = self.totalWidth / 2
-                                        let halfElementWidth = self.effectElementSize.width / 2
-                                        let halfMargins = self.margins / 2
-                                        print("Drag effect val ", value.location, checkX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
-
-
-//                                        if checkX <= halfMargins - halfElementWidth ||
-//                                            value.location.x > self.totalWidth - halfElementWidth + halfMargins {
-//                                            return
-//                                        }
+                                        //print("Drag effect val ", value.location, checkX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
 
                                         // check timeline limit
                                         if checkX < 0 || checkX > self.totalWidth - self.effectElementSize.width {
                                             return
                                         }
 
-
                                         if checkX < self.offsetLeftLimit || checkX > self.offsetRightLimit - self.effectElementSize.width {
                                             return
                                         }
-//
-//
-//                                        if checkX <= self.offsetLeftLimit - halfElementWidth ||
-//                                            value.location.x > self.offsetRightLimit - halfElementWidth + halfMargins {
-//                                            return
-//                                        }
 
                                         self.effectPosition.x = value.location.x - self.effectElementSize.width / 2 - self.margins / 2
                                         self.checkX = checkX
@@ -281,7 +260,6 @@ struct VideoRangeSliderView: View {
                 }
                 Spacer()
             }
-            //.frame(width: self.totalWidth)
         }
             .padding()
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
@@ -297,13 +275,24 @@ struct VideoRangeSliderView_Previews: PreviewProvider {
     @State static var effectState: EffectState = EffectState("SpiderAttack-preview")
 
     static var previews: some View {
-        VideoRangeSliderView(asset: $previewAsset, duration: 10, effectState: $effectState, onResize: { result in
-            print(result)
-            return ()
-        }, onChangeCursorPosition: { result in
+        VideoRangeSliderView(
+            asset: $previewAsset,
+            duration: CMTime(seconds: 7, preferredTimescale: 600),
+            effectState: $effectState,
+            onResize: { result in
                 print(result)
+                return ()
             })
     }
+}
+
+class SliderChange {
+    public var startPositionPercent: CGFloat = 0
+    public var startPositionSeconds: CMTime = .zero
+    public var cursorPositionPercent: CGFloat = 0
+    public var cursorPositionSeconds: CMTime = .zero
+    public var sizePercent: CGFloat = 0
+    public var sizeSeconds: CMTime = .zero
 }
 
 struct EffectState {
@@ -381,7 +370,6 @@ extension Color {
         )
     }
 }
-
 
 enum TimelineResizeType {
     case leftControl

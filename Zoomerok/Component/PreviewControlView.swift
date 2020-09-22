@@ -2,24 +2,15 @@ import SwiftUI
 import AVKit
 
 struct PreviewControlView: View {
-    //@State private var showImagePicker: Bool = false
-//    @State private var showSheet: Bool = false
-    @State var isPlay: Bool = false
-    //@State private var image: UIImage?
-//    @State private var sourceType: UIImagePickerController.SourceType = .camera
-    //@State var videoUrl: URL?
+    @Binding var isPlay: Bool
 
-    //private var isSimulator: Bool = false
     private var onPlayPause: (Bool) -> ()
-    //private var onContentChanged: (URL) -> ()
 
-    init(//isSimulator: Bool,
-        @ViewBuilder onPlayPause: @escaping (Bool) -> ()
-        //,onContentChanged: @escaping (URL) -> ()
-    ) {
+    init(
+        isPlay: Binding<Bool>,
+        @ViewBuilder onPlayPause: @escaping (Bool) -> ()) {
+        self._isPlay = isPlay
         self.onPlayPause = onPlayPause
-        //self.onContentChanged = onContentChanged
-        //self.isSimulator = isSimulator
     }
 
     var body: some View {

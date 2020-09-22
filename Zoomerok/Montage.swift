@@ -15,6 +15,8 @@ class VideoPart {
 }
 
 class Montage {
+    let preferredTimescale: Int32 = 600
+    
     var sourceVideo: AVAsset?
     var sourceTrack: AVAssetTrack?
     var sourcePart = VideoPart()
@@ -45,8 +47,8 @@ class Montage {
 
         try track!.insertTimeRange(
                 CMTimeRangeMake(
-                        start: CMTimeMakeWithSeconds(startTime, preferredTimescale: 10000),
-                        duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: 10000)
+                        start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                        duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
                 of: track!,
                 at: CMTime.zero)
@@ -105,8 +107,8 @@ class Montage {
             try
             topPart.track?.insertTimeRange(
                     CMTimeRangeMake(
-                            start: CMTimeMakeWithSeconds(startTime, preferredTimescale: 10000),
-                            duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: 10000)
+                            start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                            duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                     ),
                     of: sourceTrack!,
                     at: CMTime.zero)
@@ -125,8 +127,8 @@ class Montage {
             try
             bottomPart.track?.insertTimeRange(
                     CMTimeRangeMake(
-                            start: CMTimeMakeWithSeconds(startTime, preferredTimescale: 10000),
-                            duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: 10000)
+                            start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                            duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                     ),
                     of: sourceTrack!,
                     at: CMTime.zero)

@@ -96,10 +96,10 @@ struct ContentView: View {
 
         var player: AVPlayer?
         do {
-            // todo get here full time and set to VideoRangeSliderView
             let item = try montageInstance
             //.setTopPart(startTime: 1, endTime: 12)
-            .setBottomPart(startTime: 3, endTime: 11)
+//            .setBottomPart(startTime: 3, endTime: 11)
+            .setBottomPart(startTime: 0, endTime: CMTimeGetSeconds(montageInstance.sourceVideo!.duration))
                 .getAVPlayerItem()
 
             player = AVPlayer(playerItem: item)
@@ -156,15 +156,15 @@ struct ContentView: View {
 
                 VideoRangeSliderView(
                     asset: self.$previewAsset,
-                    duration: CMTime(seconds: 7, preferredTimescale: 600),
+                    //duration: CMTime(seconds: 7, preferredTimescale: 600),
                     effectState: self.$effectState,
                     onResize: { (result: SliderChange) in
 //                        print("startPositionSeconds \(result.startPositionSeconds)")
                         print("cursorPositionSeconds \(result.cursorPositionSeconds)")
                         if self.playerController.player != nil {
-                            self.isPlay = false
+                            //self.isPlay = false
                             //self.playerController.player!.pause()
-                            print("Seek \(self.playerController.player!.currentTime())")
+                            print("Seek \(self.playerController.player!.currentItem?.currentTime()) \(result.cursorPositionSeconds)")
                             self.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         }
 

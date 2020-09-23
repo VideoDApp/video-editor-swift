@@ -4,6 +4,7 @@ import AVKit
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
     @Binding var effectState: EffectState
+//    @Binding var duration: CMTime
 
     @State var offsetLeftLimit: CGFloat = 0
     @State var offsetRightLimit: CGFloat = 0
@@ -20,9 +21,7 @@ struct VideoRangeSliderView: View {
     var totalWidth = UIScreen.main.bounds.width - 45 // minus right+left margins
     var timelineControlSize = CGSize(width: 11, height: 53)
     var effectElementSize = CGSize(width: 40, height: 40)
-    var duration: CMTime
-    // startFromPercent: CGFloat (0 - from start, 51 - more than half)
-    // videoLength: ???
+
     var onResize: (SliderChange) -> ()
 
 //    private var adapterAsset: Binding<AVAsset> {
@@ -39,7 +38,7 @@ struct VideoRangeSliderView: View {
 
     init(
         asset: Binding<AVAsset?>,
-        duration: CMTime,
+        //duration: Binding<CMTime>,
         effectState: Binding<EffectState>,
         @ViewBuilder onResize: @escaping (SliderChange) -> ()) {
 
@@ -47,8 +46,8 @@ struct VideoRangeSliderView: View {
         self._offsetRightLimit = State(initialValue: totalWidth)
         self._effectState = effectState
         self._asset = asset
+        //self._duration = duration
 
-        self.duration = duration
         self.onResize = onResize
 
         self.onTimelineResize()
@@ -83,6 +82,11 @@ struct VideoRangeSliderView: View {
             }
         }
 
+        if self.asset == nil {
+            print("Empty asset, skip")
+            return
+        }
+        
         let onePercent = self.totalWidth / 100
         let startPositionPercent = self.offsetLeftLimit / onePercent
         let rightOffsetPercent = self.offsetRightLimit / onePercent
@@ -92,16 +96,18 @@ struct VideoRangeSliderView: View {
 //        print("leftOffsetPercent \(leftOffsetPercent)")
 //        print("rightOffsetPercent \(rightOffsetPercent)")
 //        print("videoSizePercent \(videoSizePercent)")
-        print("cursorPositionPercent \(cursorPositionPercent)")
+//        print("cursorPositionPercent \(cursorPositionPercent)")
 
-        let duration = CMTimeGetSeconds(self.duration)
+        let duration = CMTimeGetSeconds(self.asset!.duration)
+        let timescale = self.asset!.duration.timescale
         let change = SliderChange()
         change.startPositionPercent = startPositionPercent
-        change.startPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(startPositionPercent), preferredTimescale: self.duration.timescale)
+        change.startPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(startPositionPercent), preferredTimescale: timescale)
         change.cursorPositionPercent = cursorPositionPercent
-        change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(cursorPositionPercent), preferredTimescale: self.duration.timescale)
+        change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration  / 100 * Float64(cursorPositionPercent), preferredTimescale: timescale)
         change.sizePercent = videoSizePercent
-        change.sizeSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(videoSizePercent), preferredTimescale: self.duration.timescale)
+        change.sizeSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(videoSizePercent), preferredTimescale: timescale)
+        print("Asset duration: \(duration), \(CMTimeGetSeconds(change.cursorPositionSeconds))")
 
         self.onResize(change)
         //printVars()
@@ -137,15 +143,17 @@ struct VideoRangeSliderView: View {
 //            Text("\(self.widthLeft / self.totalWidth) - \(self.widthRight / self.totalWidth)")
 //                .foregroundColor(Color.white)
 
-//            Text("activeTimelineWidth \(self.activeTimelineWidth)")
-//            Text("activeTimelineOffsetX \(self.activeTimelineOffsetX)")
-//            Text("offsetLeftLimit \(self.offsetLeftLimit)")
-//            Text("offsetRightLimit \(self.offsetRightLimit)")
-//            Text("timelineBorderWidth \(self.timelineBorderWidth)")
-//            Text("totalWidth \(self.totalWidth)")
-//            Text("tempCurX \(self.tempCurX)")
-//            Text("effectPosition.x \(self.effectPosition.x)")
-//            //Text("checkX \(self.checkX)")
+//            VStack() {
+//                Text("activeTimelineWidth \(self.activeTimelineWidth)")
+//                Text("activeTimelineOffsetX \(self.activeTimelineOffsetX)")
+//                Text("offsetLeftLimit \(self.offsetLeftLimit)")
+//                Text("offsetRightLimit \(self.offsetRightLimit)")
+//                Text("timelineBorderWidth \(self.timelineBorderWidth)")
+//                Text("totalWidth \(self.totalWidth)")
+//                Text("tempCurX \(self.tempCurX)")
+//                Text("effectPosition.x \(self.effectPosition.x)")
+//                Text("checkX \(self.checkX)")
+//            }.background(Color.white)
 
             ZStack(alignment: .leading) {
                 Rectangle()
@@ -178,7 +186,7 @@ struct VideoRangeSliderView: View {
                                 self.checkX = checkX
                                 self.tempCurX = value.location.x
 
-                                if checkX < 0 || checkX > self.offsetRightLimit {
+                                if checkX < 0 || checkX >= self.offsetRightLimit {
                                     return
                                 }
 
@@ -207,11 +215,11 @@ struct VideoRangeSliderView: View {
                     .gesture(
                         DragGesture()
                             .onChanged({ value in
-                                self.tempCurX = value.location.x
                                 let checkX = value.location.x - self.margins / 2 - self.timelineControlSize.width / 2 - self.timelineBorderWidth
+                                self.tempCurX = value.location.x
                                 self.checkX = checkX
 
-                                if self.checkX < 0 || self.checkX > self.totalWidth {
+                                if checkX < 0 || self.offsetLeftLimit >= checkX || checkX > self.totalWidth {
                                     return
                                 }
 
@@ -273,11 +281,12 @@ struct VideoRangeSliderView: View {
 struct VideoRangeSliderView_Previews: PreviewProvider {
     @State static var previewAsset: AVAsset?
     @State static var effectState: EffectState = EffectState("SpiderAttack-preview")
+    @State static var duration: CMTime = CMTime(seconds: 7, preferredTimescale: 600)
 
     static var previews: some View {
         VideoRangeSliderView(
             asset: $previewAsset,
-            duration: CMTime(seconds: 7, preferredTimescale: 600),
+            //duration: $duration,
             effectState: $effectState,
             onResize: { result in
                 print(result)

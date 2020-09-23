@@ -3,7 +3,7 @@ import AVKit
 
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
-    @Binding var effectState: EffectState
+    @Binding var effectState: EffectState?
 //    @Binding var duration: CMTime
 
     @State var offsetLeftLimit: CGFloat = 0
@@ -39,7 +39,7 @@ struct VideoRangeSliderView: View {
     init(
         asset: Binding<AVAsset?>,
         //duration: Binding<CMTime>,
-        effectState: Binding<EffectState>,
+        effectState: Binding<EffectState?>,
         @ViewBuilder onResize: @escaping (SliderChange) -> ()) {
 
         //print("Video range INIT called")
@@ -86,7 +86,7 @@ struct VideoRangeSliderView: View {
             print("Empty asset, skip")
             return
         }
-        
+
         let onePercent = self.totalWidth / 100
         let startPositionPercent = self.offsetLeftLimit / onePercent
         let rightOffsetPercent = self.offsetRightLimit / onePercent
@@ -104,7 +104,7 @@ struct VideoRangeSliderView: View {
         change.startPositionPercent = startPositionPercent
         change.startPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(startPositionPercent), preferredTimescale: timescale)
         change.cursorPositionPercent = cursorPositionPercent
-        change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration  / 100 * Float64(cursorPositionPercent), preferredTimescale: timescale)
+        change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration / 100 * Float64(cursorPositionPercent), preferredTimescale: timescale)
         change.sizePercent = videoSizePercent
         change.sizeSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(videoSizePercent), preferredTimescale: timescale)
         print("Asset duration: \(duration), \(CMTimeGetSeconds(change.cursorPositionSeconds))")
@@ -238,8 +238,8 @@ struct VideoRangeSliderView: View {
             // effect control
             HStack {
                 VStack(alignment: .leading) {
-                    if !self.effectState.previewUrl.isEmpty {
-                        Image(self.effectState.previewUrl)
+                    if self.effectState != nil && !self.effectState!.previewUrl.isEmpty {
+                        Image(self.effectState!.previewUrl)
                             .resizable()
                             .frame(width: self.effectElementSize.width, height: self.effectElementSize.height)
                             .offset(x: self.effectPosition.x + self.margins / 2, y: self.effectPosition.y)
@@ -280,7 +280,7 @@ struct VideoRangeSliderView: View {
 
 struct VideoRangeSliderView_Previews: PreviewProvider {
     @State static var previewAsset: AVAsset?
-    @State static var effectState: EffectState = EffectState("SpiderAttack-preview")
+    @State static var effectState: EffectState?// = EffectState("SpiderAttack-preview")
     @State static var duration: CMTime = CMTime(seconds: 7, preferredTimescale: 600)
 
     static var previews: some View {

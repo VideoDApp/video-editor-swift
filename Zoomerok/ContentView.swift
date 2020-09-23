@@ -11,7 +11,7 @@ struct ContentView: View {
     @State var previewAsset: AVAsset?
     // todo how to use var direct from PreviewControlView?
     @State var isPlay: Bool = false
-    @State var effectState: EffectState = EffectState("SpiderAttack-preview")
+    @State var effectState: EffectState?// = EffectState("SpiderAttack-preview")
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero

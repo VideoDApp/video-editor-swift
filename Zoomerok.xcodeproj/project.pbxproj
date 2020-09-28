@@ -17,6 +17,7 @@
 		984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */; };
 		984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */; };
 		984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */; };
+		988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988DD41A251CA5FC00623601 /* CustomPlayerView.swift */; };
 		9896B6E22506ABCD007B7C40 /* video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E12506ABCD007B7C40 /* video.mov */; };
 		9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E52506C6E1007B7C40 /* Assets.xcassets */; };
 		9896B6E82506CF8D007B7C40 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E72506CF8C007B7C40 /* 1024.png */; };
@@ -75,6 +76,7 @@
 		984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokUITests.swift; sourceTree = "<group>"; };
 		984C5D142501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		988DD41A251CA5FC00623601 /* CustomPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPlayerView.swift; sourceTree = "<group>"; };
 		9896B6E12506ABCD007B7C40 /* video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = video.mov; sourceTree = "<group>"; };
 		9896B6E52506C6E1007B7C40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9896B6E72506CF8C007B7C40 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1024.png; path = Zoomerok/Assets.xcassets/AppIcon.appiconset/1024.png; sourceTree = SOURCE_ROOT; };
@@ -232,6 +234,7 @@
 				9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */,
 				9896B6EB2508C637007B7C40 /* PreviewControlView.swift */,
 				983CEBF7250FFBD10061A4CD /* SelectContentView.swift */,
+				988DD41A251CA5FC00623601 /* CustomPlayerView.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 			files = (
 				98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */,
 				983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */,
+				988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */,
 				9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */,

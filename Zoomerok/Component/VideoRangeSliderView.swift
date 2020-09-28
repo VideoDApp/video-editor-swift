@@ -4,7 +4,7 @@ import AVKit
 struct VideoRangeSliderView: View {
     @Binding var asset: AVAsset?
     @Binding var effectState: EffectState?
-//    @Binding var duration: CMTime
+    @Binding var cursorTimeSeconds: Double
 
     @State var offsetLeftLimit: CGFloat = 0
     @State var offsetRightLimit: CGFloat = 0
@@ -15,6 +15,7 @@ struct VideoRangeSliderView: View {
     @State var checkX: CGFloat = 0
     @State var offsetCursor: CGFloat = 0
 
+    //var cursorPosition: CMTime = .zero
     var margins: CGFloat = 45
     var timelineBorderWidth: CGFloat = 2
     var cursorWidth: CGFloat = 3
@@ -24,21 +25,9 @@ struct VideoRangeSliderView: View {
 
     var onResize: (SliderChange) -> ()
 
-//    private var adapterAsset: Binding<AVAsset> {
-//        Binding<AVAsset>(get: {
-//            //self.willUpdate()
-//            print("---get adapter")
-//            return self.asset!
-//        }, set: {
-//                print("---set adapter")
-//                self.asset = $0
-//                //self.didModify()
-//            })
-//    }
-
     init(
         asset: Binding<AVAsset?>,
-        //duration: Binding<CMTime>,
+        cursorTimeSeconds: Binding<Double>,
         effectState: Binding<EffectState?>,
         @ViewBuilder onResize: @escaping (SliderChange) -> ()) {
 
@@ -46,8 +35,9 @@ struct VideoRangeSliderView: View {
         self._offsetRightLimit = State(initialValue: totalWidth)
         self._effectState = effectState
         self._asset = asset
-        //self._duration = duration
+        self._cursorTimeSeconds = cursorTimeSeconds
 
+        //self.cursorPosition = cursorPosition
         self.onResize = onResize
 
         self.onTimelineResize()
@@ -63,6 +53,24 @@ struct VideoRangeSliderView: View {
 //                }
 //            }
 //        }
+    }
+
+    func getCursorPosition() -> CGFloat {
+        if self.asset == nil {
+            return 0
+        }
+
+        let totalSeconds = self.asset!.duration.seconds
+        if self.cursorTimeSeconds > totalSeconds {
+            print("Incorrect param. Passed time more than content time \(totalSeconds) \(self.cursorTimeSeconds)")
+            return 0
+        }
+
+        let percent = self.cursorTimeSeconds / (totalSeconds / 100)
+        let result = self.totalWidth/100 * CGFloat(percent)
+       // print("getCursorPosition, \(percent), \(totalSeconds), \(self.cursorTimeSeconds), \(result)")
+
+        return result
     }
 
     func onTimelineResize(changeType: TimelineResizeType = .none) {
@@ -122,7 +130,8 @@ struct VideoRangeSliderView: View {
         print("offsetLeftLimit", self.offsetLeftLimit)
         print("offsetRightLimit", self.offsetRightLimit)
         print("timelineBorderWidth", self.timelineBorderWidth)
-        print("offsetCursor", self.offsetCursor)
+        //print("offsetCursor", self.offsetCursor)
+        //print("cursorTime", self.cursorTime!.seconds)
         print("END =======")
     }
 
@@ -205,7 +214,7 @@ struct VideoRangeSliderView: View {
                 Rectangle()
                     .fill(Color.white)
                     .frame(width: self.cursorWidth, height: timelineControlSize.height)
-                    .offset(x: self.offsetCursor + self.margins / 2)
+                    .offset(x: self.getCursorPosition() + self.margins / 2)
 
                 // right timeline control base
                 TimelineLimitBase()
@@ -282,11 +291,12 @@ struct VideoRangeSliderView_Previews: PreviewProvider {
     @State static var previewAsset: AVAsset?
     @State static var effectState: EffectState?// = EffectState("SpiderAttack-preview")
     @State static var duration: CMTime = CMTime(seconds: 7, preferredTimescale: 600)
+    @State static var cursorTimeSeconds: Double = 0
 
     static var previews: some View {
         VideoRangeSliderView(
             asset: $previewAsset,
-            //duration: $duration,
+            cursorTimeSeconds: $cursorTimeSeconds,
             effectState: $effectState,
             onResize: { result in
                 print(result)

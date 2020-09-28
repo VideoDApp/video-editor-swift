@@ -1,28 +1,60 @@
-//
-//  TestUI.swift
-//  Zoomerok
-//
-//  Created by sdancer on 9/14/20.
-//  Copyright © 2020 Shadurin Organization. All rights reserved.
-//
-
 import SwiftUI
+import AVKit
 
 struct TestUI: View {
-    @State var pos: CGFloat = -10
-    @State var w: CGFloat = 50
+    @State var time: CMTime?
 
 
     var body: some View {
         VStack {
 
-            Text("Hello World!")
-                .frame(width: 200, height: 100)
-                .background(Color.red)
+            if self.time != nil {
+                Text("Time \(self.time!.seconds)")
+            } else {
+                Text("Empty time")
+            }
+            
+            Button(action: {
+                print("parent Btn clicked")
+                self.time = .zero
+            }) {
+                Text("Parent change")
+            }
+
+//            Text("Hello World!")
+//                .frame(width: 200, height: 100)
+//                .background(Color.red)
             //.foregroundColor(.white)
             //.font(.largeTitle)
             //.padding(150)
-              
+
+            TestUI1()
+        }
+    }
+}
+
+struct TestUI1: View {
+    @State private var test = ""
+
+
+
+    var body: some View {
+
+        let binding = Binding(
+            get: { self.test },
+            set: { self.test = $0 }
+        )
+
+        return VStack {
+
+            Button(action: {
+                print("Btn clicked")
+                print("Bnd clicked \(binding)")
+                
+            }) {
+                Text("Change time \(test)")
+            }
+
         }
     }
 }
@@ -33,19 +65,3 @@ struct TestUI_Previews: PreviewProvider {
     }
 }
 
-//extension View {
-//    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-//        clipShape(RoundedCorner(radius: radius, corners: corners))
-//    }
-//}
-//
-//struct RoundedCorner: Shape {
-//
-//    var radius: CGFloat = .infinity
-//    var corners: UIRectCorner = .allCorners
-//
-//    func path(in rect: CGRect) -> Path {
-//        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-//        return Path(path.cgPath)
-//    }
-//}

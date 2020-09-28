@@ -123,6 +123,7 @@ class Montage {
 
     func setBottomPart(startTime: Float64, endTime: Float64) throws -> Montage {
         bottomPart.track = mixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        //bottomPart.track = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         do {
             try
             bottomPart.track?.insertTimeRange(
@@ -132,11 +133,23 @@ class Montage {
                     ),
                     of: sourceTrack!,
                     at: CMTime.zero)
+            
             bottomPart.layerInstruction = compositionLayerInstruction(for: bottomPart.track!, asset: sourceVideo!)
         } catch {
             print("Failed to load main track")
             //return
         }
+        
+//        if let loadedAudioAsset = audioAsset {
+//         let audioTrack = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
+//         do {
+//         try audioTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: CMTimeAdd(firstAsset.duration, secondAsset.duration)),
+//         of: loadedAudioAsset.tracks(withMediaType: .audio)[0] ,
+//         at: CMTime.zero)
+//         } catch {
+//         print("Failed to load Audio track")
+//         }
+//         }
 
         return self
     }

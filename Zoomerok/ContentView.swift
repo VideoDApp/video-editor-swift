@@ -4,12 +4,12 @@ import AVKit
 struct ContentView: View {
 //    @State private var showImagePicker: Bool = false
 //    @State private var sourceType: UIImagePickerController.SourceType = .camera
+    @State var cursorTimeSeconds: Double = 0
     @State var videoUrl: URL?
     @State var player: AVPlayer?
     @State var montageInstance = Montage()
     @State var playerController = AVPlayerViewController()
     @State var previewAsset: AVAsset?
-    // todo how to use var direct from PreviewControlView?
     @State var isPlay: Bool = false
     @State var effectState: EffectState?// = EffectState("SpiderAttack-preview")
 
@@ -99,7 +99,10 @@ struct ContentView: View {
             let item = try montageInstance
             //.setTopPart(startTime: 1, endTime: 12)
 //            .setBottomPart(startTime: 3, endTime: 11)
-            .setBottomPart(startTime: 0, endTime: CMTimeGetSeconds(montageInstance.sourceVideo!.duration))
+            .setBottomPart(
+                startTime: 0,
+                endTime: CMTimeGetSeconds(montageInstance.sourceVideo!.duration)
+            )
                 .getAVPlayerItem()
 
             player = AVPlayer(playerItem: item)
@@ -110,82 +113,103 @@ struct ContentView: View {
         return player!
     }
 
-//    func onScroll(r: CGFloat) -> Void {
-//        if (self.offset == r) {
-//            //print("STORED scroll offset")
-//            return
-//        } else {
-//            self.offset = r
-//        }
-//        print("Scroll percent", r)
-//        /*let duration = (self.playerController.player?.currentItem?.duration)!
-//         print("duration", duration)
-//         let toTime=CMTimeMultiplyByRatio(duration, multiplier: 9,divisor: 100000)*/
-//        //print("toTime", toTime)
-//        //self.playerController.player?.seek(to: CMTimeMakeWithSeconds(5, preferredTimescale: 60))
-//        let percentCoeff = Float(r / 100)
-//        let duration = Float((self.playerController.player?.currentItem?.duration.seconds)!)
-//        let sec = Double(percentCoeff * duration)
-//
-//        let toTime = CMTime(seconds: sec, preferredTimescale: 1000)
-//        print(percentCoeff, duration, sec)
-//        self.playerController.player?.seek(to: toTime, toleranceBefore: .zero, toleranceAfter: .zero)
-//    }
-
     var body: some View {
         NavigationView {
             VStack {
+
+
                 if videoUrl == nil {
                     SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
-                        //print("SelectContentView", result)
+                        print("SelectContentView result", result)
                         //self.videoUrl = result
                         self.previewAsset = AVAsset(url: result)
                         self.videoUrl = result
                         self.playerController.player = self.makeSimplePlayer(url: result)
 
+                        self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+
                         return ()
                     })
+                        .frame(width: UIScreen.main.bounds.width / 1.5, height: UIScreen.main.bounds.height / 2)
                 } else {
-                    CustomPlayer(
-                        url: $videoUrl,
-                        isPlay: $isPlay,
-                        montage: $montageInstance,
-                        playerController: $playerController)
-                        .frame(height: UIScreen.main.bounds.height / 2)
-                }
+                    HStack {
+                        Button(action: {
+                            print("Btn export clicked")
+//                            self.montageInstance.saveToFile(completion: {
+//
+//                            })
+                        }) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.up")
+                                //.font(.system(size: 18))
+                                .foregroundColor(.white)
+                                //.padding(5)
+                                Text("Export")
+                                //.padding(5)
+                                //.font(.system(size: 18))
+                            }
+                            //.frame(minWidth: 0, maxWidth: 300)
+                            .padding(8)
+                                .foregroundColor(.white)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white, lineWidth: 1)
+                                )
 
-                VideoRangeSliderView(
-                    asset: self.$previewAsset,
-                    //duration: CMTime(seconds: 7, preferredTimescale: 600),
-                    effectState: self.$effectState,
-                    onResize: { (result: SliderChange) in
-//                        print("startPositionSeconds \(result.startPositionSeconds)")
-                        print("cursorPositionSeconds \(result.cursorPositionSeconds)")
-                        if self.playerController.player != nil {
-                            //self.isPlay = false
-                            //self.playerController.player!.pause()
-                            print("Seek \(self.playerController.player!.currentItem?.currentTime()) \(result.cursorPositionSeconds)")
-                            self.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         }
+                    }
+
+                    ZStack {
+                        CustomPlayerView(
+                            url: $videoUrl,
+                            isPlay: $isPlay,
+                            montage: $montageInstance,
+                            playerController: $playerController,
+                            onSeek: { (result: CMTime) in
+                                print("CustomPlayerView result seek", result)
+                                self.cursorTimeSeconds = result.seconds
+                                return ()
+                            })
+                            .frame(height: UIScreen.main.bounds.height / 2)
+                    }
+
+                    VideoRangeSliderView(
+                        asset: self.$previewAsset,
+                        cursorTimeSeconds: self.$cursorTimeSeconds,
+                        effectState: self.$effectState,
+                        onResize: { (result: SliderChange) in
+                            print("VideoRangeSliderView cursorPositionSeconds \(result.cursorPositionSeconds)")
+                            if self.playerController.player != nil {
+                                //self.isPlay = false
+                                //self.playerController.player!.pause()
+                                print("VideoRangeSliderView Seek \(String(describing: self.playerController.player!.currentItem?.currentTime())) \(result.cursorPositionSeconds)")
+                                self.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                            }
 
 
-                        return ()
-                    })
+                            return ()
+                        })
+                }
 
                 EffectSelectorView(onEffectSelected: { result in
                     //print(result)
-                    self.effectState = EffectState(result.previewUrl)
+                    if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
+                        self.effectState = nil
+                    } else {
+                        self.effectState = EffectState(result.previewUrl)
+                    }
 
                     return ()
                 })
 
-                PreviewControlView(
-                    isPlay: self.$isPlay,
-                    onPlayPause: { result in
-                        //self.isPlay = result
-
-                        return ()
-                    })
+                // todo mege this logic with CustomPlayer
+//                PreviewControlView(
+//                    isPlay: self.$isPlay,
+//                    onPlayPause: { result in
+//                        //self.isPlay = result
+//
+//                        return ()
+//                    })
 
                 Spacer()
             }
@@ -206,26 +230,26 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct CustomPlayer: UIViewControllerRepresentable {
-    @Binding var url: URL?
-    @Binding var isPlay: Bool
-    @Binding var montage: Montage
-    @Binding var playerController: AVPlayerViewController
-
-    func makeUIViewController(context: UIViewControllerRepresentableContext<CustomPlayer>) -> AVPlayerViewController {
-        return playerController
-    }
-
-    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<CustomPlayer>) {
-        print("CustomPlayer updateUIViewController")
-
-        if isPlay {
-            uiViewController.player?.play()
-        } else {
-            uiViewController.player?.pause()
-        }
-    }
-}
+//struct CustomPlayer: UIViewControllerRepresentable {
+//    @Binding var url: URL?
+//    @Binding var isPlay: Bool
+//    @Binding var montage: Montage
+//    @Binding var playerController: AVPlayerViewController
+//
+//    func makeUIViewController(context: UIViewControllerRepresentableContext<CustomPlayer>) -> AVPlayerViewController {
+//        return playerController
+//    }
+//
+//    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<CustomPlayer>) {
+//        print("CustomPlayer updateUIViewController")
+//
+//        if isPlay {
+//            uiViewController.player?.play()
+//        } else {
+//            uiViewController.player?.pause()
+//        }
+//    }
+//}
 
 /// See `View.onChange(of: value, perform: action)` for more information
 //struct ChangeObserver<Base: View, Value: Equatable>: View {

@@ -4,13 +4,15 @@ struct SelectContentView: View {
     @State private var showSheet: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera
-    @State private var image: UIImage?
+    //@State private var image: UIImage?
 
     var onContentChanged: (URL) -> ()
     var isSimulator: Bool = false
 
-    init(isSimulator: Bool,
-        @ViewBuilder onContentChanged: @escaping (URL) -> ()) {
+    init(
+        isSimulator: Bool,
+        @ViewBuilder onContentChanged: @escaping (URL) -> ()
+    ) {
         self.onContentChanged = onContentChanged
         self.isSimulator = isSimulator
     }
@@ -19,7 +21,7 @@ struct SelectContentView: View {
         ZStack {
             Rectangle()
                 .foregroundColor(Color.gray)
-                .frame(width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.height / 2)
+                
 
             VStack {
                 Text("Choose a video")
@@ -45,9 +47,6 @@ struct SelectContentView: View {
                     buttons.insert(.default(Text("LOCAL TEST")) {
                             let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
                             print("Local test file", fileUrl)
-                            //self.videoUrl = fileUrl
-                            //self.isPlay = false
-//                          self.onPlayPause(self.isPlay)
                             self.onContentChanged(fileUrl)
                         }, at: 0)
                 } else {
@@ -57,12 +56,18 @@ struct SelectContentView: View {
                         }, at: buttons.count - 2)
                 }
 
-//                return ActionSheet(title: Text("Choose a video source"), message: Text("Choose an option"), buttons: buttons)
                 return ActionSheet(title: Text("Choose a video source"), buttons: buttons)
             }
             .foregroundColor(SwiftUI.Color.white)
             .sheet(isPresented: $showImagePicker) {
-                ImagePicker(image: self.$image, isShown: self.$showImagePicker, sourceType: self.sourceType)
+                ImagePicker(
+                    //image: self.$image,
+                    isShown: self.$showImagePicker,
+                    sourceType: self.sourceType,
+                    onPicked: { result in
+                        print("ImagePicker picked \(result)")
+                        self.onContentChanged(result)
+                    })
         }
     }
 }
@@ -71,7 +76,7 @@ struct SelectContentView_Previews: PreviewProvider {
     static var previews: some View {
         SelectContentView(isSimulator: true, onContentChanged: { result in
             print(result)
-            
+
             return ()
         })
     }

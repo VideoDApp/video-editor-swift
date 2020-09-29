@@ -41,17 +41,6 @@ struct EffectSelectorView: View {
                                         print("Effect button clicked \(item.title)")
                                         self.onEffectSelected(item)
                                 }
-                                /*Text("\(item.title)")
-                                    .foregroundColor(.white)
-                                    .font(.title)
-                                    .frame(width: 60, height: 60)
-                                    .background(Color.red)
-                                    .onTapGesture {
-                                        print("Screamer button clicked \(item.title)")
-//                                        self.onEffectSelected($0)
-//                                        let fileUrl = DownloadTestContent.getFilePath("test-files/1VideoBig.mov")
-//                                        self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-                                }*/
                             }
                         }
                     }

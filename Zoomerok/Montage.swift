@@ -7,6 +7,8 @@ enum MontageError: Error {
     case backgroundPartIsEmpty
     case mainPartIsEmpty
     case some
+    case fileNotFound
+    case exporterError
 }
 
 class VideoPart {
@@ -78,9 +80,11 @@ class Montage {
         print("videoSize", videoSize)
         overlayVideoComposition.renderSize = videoSize
 
-        try self.saveAnyToFile(mixComposition: overlayMixComposition) {
-            print("overlayTwoVideos complete")
-        }
+        try self.saveAnyToFile(mixComposition: overlayMixComposition,completion: {result in
+            print("overlayTwoVideos complete \(result)")
+        }, error: {result in
+            print("overlayTwoVideos error \(result)")
+        })
     }
 
     func reset() {
@@ -91,7 +95,12 @@ class Montage {
         mixComposition = AVMutableComposition()
     }
 
-    func setVideoSource(url: URL) -> Montage {
+    func setVideoSource(url: URL) throws -> Montage  {
+        //print("url.path \(url.path)")
+        if !FileManager.default.fileExists(atPath: url.path) {
+            throw MontageError.fileNotFound
+        }
+        
         reset()
         self.sourceVideo = AVAsset(url: url)
         self.sourceTrack = self.sourceVideo!.tracks(withMediaType: .video)[0]
@@ -247,7 +256,7 @@ class Montage {
         return item
     }
 
-    func saveToFile(completion: @escaping () -> Void) throws {
+    func saveToFile(completion: @escaping (URL) -> Void,error: @escaping (String) -> Void)  {
         _ = prepareComposition()
 /*
         // 3 - Audio track
@@ -289,16 +298,32 @@ class Montage {
                 completion()
             }
         }*/
-        do {
-            try self.saveAnyToFile(mixComposition: self.mixComposition) {
-                completion()
-            }
-        } catch {
-            // todo call error callback
-        }
+//      self.saveAnyToFile(mixComposition: self.mixComposition, completion: {result in
+//        DispatchQueue.main.async {
+//            completion(result)
+//        }
+//
+//            }, error:{result in
+//
+//                DispatchQueue.main.async {
+//                    error(result)
+//                }
+//            })
+        self.saveAnyToFile(mixComposition: self.mixComposition, completion: {result in
+          
+              completion(result)
+    
+                  
+              }, error:{result in
+                  
+                  
+                      error(result)
+               
+              })
+    
     }
 
-    func saveAnyToFile(mixComposition: AVAsset, completion: @escaping () -> Void) throws {
+    func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void)  {
         // 3 - Audio track
         /*if let loadedAudioAsset = audioAsset {
          let audioTrack = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
@@ -313,8 +338,11 @@ class Montage {
 
         // 4 - Get path
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            // todo return exception result
             return
         }
+        
+        print("Montage documentDirectory \(documentDirectory)")
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .short
@@ -325,18 +353,28 @@ class Montage {
         guard let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) else {
             return
         }
+        
         exporter.outputURL = url
-        print("output", url)
-        exporter.outputFileType = AVFileType.mov
+        print("Montage output url \(url)")
+        exporter.outputFileType = .mov
         exporter.shouldOptimizeForNetworkUse = true
         exporter.videoComposition = videoComposition
 
         // 6 - Perform the Export
         exporter.exportAsynchronously() {
-            DispatchQueue.main.async {
-                //self.exportDidFinish(exporter)
-                completion()
+            //print("Export error \(exporter.error)")
+            if exporter.error != nil {
+                DispatchQueue.main.async {
+                    error(String(describing: exporter.error))
+                }
+            }else{
+                DispatchQueue.main.async {
+                    //self.exportDidFinish(exporter)
+                    completion(url)
+                }
             }
+            
+            
         }
     }
 
@@ -359,7 +397,7 @@ class Montage {
     }
 
     private func compositionLayerInstruction(for compositionTrack: AVCompositionTrack, asset: AVAsset) -> AVMutableVideoCompositionLayerInstruction {
-        let assetTrack = asset.tracks(withMediaType: AVMediaType.video)[0]
+        let assetTrack = asset.tracks(withMediaType: .video)[0]
         let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
         instruction.setTransform(assetTrack.preferredTransform, at: .zero)
 

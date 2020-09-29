@@ -25,7 +25,7 @@ struct ContentView: View {
     init() {
         #if targetEnvironment(simulator)
             // your simulator code
-            print("Document directory", DownloadTestContent.getDocumentsDirectory())
+            print("ContentView Document directory", DownloadTestContent.getDocumentsDirectory())
             //initTestVideoForSimulator()
             self.isSimulator = true
             //DownloadTestContent.downloadAll()
@@ -92,10 +92,10 @@ struct ContentView: View {
 //    }
 
     func makeSimplePlayer(url: URL) -> AVPlayer {
-        _ = montageInstance.setVideoSource(url: url)
-
+        
         var player: AVPlayer?
         do {
+            _ = try montageInstance.setVideoSource(url: url)
             let item = try montageInstance
             //.setTopPart(startTime: 1, endTime: 12)
 //            .setBottomPart(startTime: 3, endTime: 11)

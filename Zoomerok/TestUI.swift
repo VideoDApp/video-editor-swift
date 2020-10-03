@@ -3,40 +3,55 @@ import AVKit
 
 struct TestUI: View {
     @State var time: CMTime?
-
+    @State var showModal = true
 
     var body: some View {
         VStack {
+//            Button(action: {
+//                print("Btn clicked")
+//
+//            }) {
+//                Text("Change time")
+//            }
+//
+////            ActivityIndicator()
+////                .frame(width: 200, height: 200)
+////                .foregroundColor(.orange)
+//            ModalView(showModal: self.$showModal)
 
-            if self.time != nil {
-                Text("Time \(self.time!.seconds)")
-            } else {
-                Text("Empty time")
+            Button("Show Modal") {
+                // 2.
+                self.showModal.toggle()
+                // 3.
+            }.sheet(isPresented: $showModal) {
+                ModalView(showModal: self.$showModal)
             }
-            
-            Button(action: {
-                print("parent Btn clicked")
-                self.time = .zero
-            }) {
-                Text("Parent change")
+        }
+    }
+}
+
+struct ModalView: View {
+    // 1.
+    @Binding var showModal: Bool
+
+    var body: some View {
+        VStack {
+            ActivityIndicator()
+                .frame(width: 200, height: 200)
+                .foregroundColor(.orange)
+
+            Text("Inside Modal View")
+                .padding()
+            // 2.
+            Button("Dismiss") {
+                self.showModal.toggle()
             }
-
-//            Text("Hello World!")
-//                .frame(width: 200, height: 100)
-//                .background(Color.red)
-            //.foregroundColor(.white)
-            //.font(.largeTitle)
-            //.padding(150)
-
-            TestUI1()
         }
     }
 }
 
 struct TestUI1: View {
     @State private var test = ""
-
-
 
     var body: some View {
 
@@ -50,7 +65,7 @@ struct TestUI1: View {
             Button(action: {
                 print("Btn clicked")
                 print("Bnd clicked \(binding)")
-                
+
             }) {
                 Text("Change time \(test)")
             }

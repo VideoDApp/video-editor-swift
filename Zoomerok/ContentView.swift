@@ -2,8 +2,6 @@ import SwiftUI
 import AVKit
 
 struct ContentView: View {
-//    @State private var showImagePicker: Bool = false
-//    @State private var sourceType: UIImagePickerController.SourceType = .camera
     @State var cursorTimeSeconds: Double = 0
     @State var videoUrl: URL?
     @State var player: AVPlayer?
@@ -11,15 +9,14 @@ struct ContentView: View {
     @State var playerController = AVPlayerViewController()
     @State var previewAsset: AVAsset?
     @State var isPlay: Bool = false
-    @State var effectState: EffectState?// = EffectState("SpiderAttack-preview")
+    @State var effectState: EffectState?
+    @State var saveInProgress = false
+    @State var saveError = ""
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero
-    //@State private var offset: CGPoint = .zero
-    //var scrollPosition: CGFloat = .zero
     @State private var offset: CGFloat = .zero
 
-//    @State private var image: UIImage?
     private var isSimulator: Bool = false
 
     init() {
@@ -92,16 +89,16 @@ struct ContentView: View {
 //    }
 
     func makeSimplePlayer(url: URL) -> AVPlayer {
-        
+
         var player: AVPlayer?
         do {
-            _ = try montageInstance.setVideoSource(url: url)
+            _ = try montageInstance.setBottomVideoSource(url: url)
             let item = try montageInstance
             //.setTopPart(startTime: 1, endTime: 12)
 //            .setBottomPart(startTime: 3, endTime: 11)
             .setBottomPart(
                 startTime: 0,
-                endTime: CMTimeGetSeconds(montageInstance.sourceVideo!.duration)
+                endTime: CMTimeGetSeconds(montageInstance.bottomVideoSource!.duration)
             )
                 .getAVPlayerItem()
 
@@ -116,8 +113,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-
-
                 if videoUrl == nil {
                     SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
                         print("SelectContentView result", result)
@@ -135,9 +130,17 @@ struct ContentView: View {
                     HStack {
                         Button(action: {
                             print("Btn export clicked")
-//                            self.montageInstance.saveToFile(completion: {
-//
-//                            })
+                            self.saveError = ""
+                            self.saveInProgress = true
+                            self.montageInstance.saveToFile(
+                                completion: { result in
+                                    print("Save OK \(result)")
+                                    self.saveInProgress = false
+                                }, error: { result in
+                                    print("Save error \(result)")
+                                    self.saveInProgress = false
+                                    self.saveError = result
+                                })
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
@@ -156,6 +159,10 @@ struct ContentView: View {
                                         .stroke(Color.white, lineWidth: 1)
                                 )
 
+                        }.sheet(isPresented: self.$saveInProgress) {
+                            SavingModalView(showModal: self.$saveInProgress, onCancel: {
+                                print("Cancel saving here")
+                            })
                         }
                     }
 

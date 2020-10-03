@@ -20,9 +20,10 @@ class VideoPart {
 class Montage {
     let preferredTimescale: Int32 = 600
 
-    var sourceVideo: AVAsset?
-    var sourceVideoTrack: AVAssetTrack?
-    var sourceAudioTrack: AVAssetTrack?
+    var bottomVideoSource: AVAsset?
+    var bottomVideoTrack: AVAssetTrack?
+    var bottomAudioTrack: AVAssetTrack?
+
     var sourcePart = VideoPart()
     var topPart = VideoPart()
     var bottomPart = VideoPart()
@@ -90,26 +91,40 @@ class Montage {
     }
 
     func reset() {
-        sourceVideo = nil
-        sourceVideoTrack = nil
-        sourceAudioTrack = nil
+        bottomVideoSource = nil
+        bottomVideoTrack = nil
+        bottomAudioTrack = nil
         topPart = VideoPart()
         bottomPart = VideoPart()
         mutableMixComposition = AVMutableComposition()
     }
 
-    func setVideoSource(url: URL) throws -> Montage {
-        //print("url.path \(url.path)")
+    func setBottomVideoSource(url: URL) throws -> Montage {
         if !FileManager.default.fileExists(atPath: url.path) {
             throw MontageError.fileNotFound
         }
 
-        reset()
-        self.sourceVideo = AVAsset(url: url)
-        self.sourceVideoTrack = self.sourceVideo!.tracks(withMediaType: .video)[0]
-        self.sourceAudioTrack = self.sourceVideo!.tracks(withMediaType: .audio)[0]
+        self.reset()
+        self.bottomVideoSource = AVAsset(url: url)
+        self.bottomVideoTrack = self.bottomVideoSource!.tracks(withMediaType: .video)[0]
+        self.bottomAudioTrack = self.bottomVideoSource!.tracks(withMediaType: .audio)[0]
         self.sourcePart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.videoMutableCompositionTrack!, asset: self.sourceVideo!)
+        self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
+
+        return self
+    }
+
+    func setOverlayVideoSource(url: URL) throws -> Montage {
+        if !FileManager.default.fileExists(atPath: url.path) {
+            throw MontageError.fileNotFound
+        }
+
+        let video: AVAsset = AVAsset(url: url)
+        //sourceTrack = video!.tracks(withMediaType: .video)[0]
+        let overlayMixComposition = AVMutableComposition()
+        self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: video)
 
         return self
     }
@@ -123,9 +138,9 @@ class Montage {
                     start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
-                of: sourceVideoTrack!,
+                of: bottomVideoTrack!,
                 at: CMTime.zero)
-            topPart.layerInstruction = compositionLayerInstruction(for: topPart.videoMutableCompositionTrack!, asset: sourceVideo!)
+            topPart.layerInstruction = compositionLayerInstruction(for: topPart.videoMutableCompositionTrack!, asset: bottomVideoSource!)
         } catch {
             print("Failed to load top track")
             //return
@@ -144,7 +159,7 @@ class Montage {
                     start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
-                of: sourceVideoTrack!,
+                of: bottomVideoTrack!,
                 at: CMTime.zero)
 
             try bottomPart.audioMutableCompositionTrack?.insertTimeRange(
@@ -152,26 +167,16 @@ class Montage {
                     start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
-                of: sourceAudioTrack!,
+                of: bottomAudioTrack!,
                 at: CMTime.zero)
 
-            bottomPart.layerInstruction = compositionLayerInstruction(for: bottomPart.videoMutableCompositionTrack!, asset: sourceVideo!)
+            bottomPart.layerInstruction = compositionLayerInstruction(for: bottomPart.videoMutableCompositionTrack!, asset: bottomVideoSource!)
         } catch {
             print("Failed to load main track")
         }
 
         return self
     }
-
-    /*func setOverlayVideo(url: URL) -> Montage {
-        let video: AVAsset = AVAsset(url: url)
-        //sourceTrack = video!.tracks(withMediaType: .video)[0]
-        let overlayMixComposition = AVMutableComposition()
-        self.overlayPart.track = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.track!, asset: video)
-
-        return self
-    }*/
 
     func calcCorrectRect(rect: CGRect, screenSize: CGSize) -> CGRect {
         let secondDot = CGPoint(x: rect.minX + rect.width, y: rect.minY)
@@ -181,7 +186,7 @@ class Montage {
     }
 
     func getCorrectSourceSize() -> CGSize {
-        var size = sourceVideoTrack!.naturalSize
+        var size = bottomVideoTrack!.naturalSize
         //print("getCorrectSourceSize", size)
         if size.width > size.height {
             size = CGSize(width: size.height, height: size.width)
@@ -194,7 +199,7 @@ class Montage {
         // todo how to optimize it? here crop before transformation for iPhone recorded videos
         var correctRect = rect
         let correctSize = getCorrectSourceSize();
-        if correctSize.width != sourceVideoTrack!.naturalSize.width {
+        if correctSize.width != bottomVideoTrack!.naturalSize.width {
             correctRect = calcCorrectRect(rect: rect, screenSize: correctSize)
         }
 
@@ -206,7 +211,7 @@ class Montage {
     func prepareComposition() -> Montage {
         let mainInstruction = AVMutableVideoCompositionInstruction()
         //mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: CMTimeAdd(sourceVideo!.duration, sourceVideo!.duration))
-        mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: sourceVideo!.duration)
+        mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: bottomVideoSource!.duration)
 
         // 2.3
         // SECOND LAYER DRAWS BEFORE FIRST
@@ -235,12 +240,12 @@ class Montage {
         self.videoComposition.instructions = [mainInstruction]
         self.videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
 
-        let videoInfo = orientation(from: sourceVideoTrack!.preferredTransform)
+        let videoInfo = orientation(from: bottomVideoTrack!.preferredTransform)
         let videoSize: CGSize
         if videoInfo.isPortrait {
-            videoSize = CGSize(width: sourceVideoTrack!.naturalSize.height, height: sourceVideoTrack!.naturalSize.width)
+            videoSize = CGSize(width: bottomVideoTrack!.naturalSize.height, height: bottomVideoTrack!.naturalSize.width)
         } else {
-            videoSize = sourceVideoTrack!.naturalSize
+            videoSize = bottomVideoTrack!.naturalSize
         }
 
         self.videoComposition.renderSize = videoSize

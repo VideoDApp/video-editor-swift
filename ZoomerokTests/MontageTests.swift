@@ -143,7 +143,40 @@ class MontageTest: XCTestCase {
         let montage = Montage()
         let expectation = self.expectation(description: "testCutSmallBottomVideo")
         do {
-            _ = try montage.setVideoSource(url: url)
+            _ = try montage.setBottomVideoSource(url: url)
+            try montage
+            //.setTopPart(startTime: 0, endTime: 2)
+            .setBottomPart(startTime: 0, endTime: 2)
+            //.cropTopPart(rect: rect)
+            .saveToFile(completion: { result in
+                print("saveToFile OUT file \(result)")
+                expectation.fulfill()
+            }, error: { error in
+                print("saveToFile error \(error)")
+                XCTAssertTrue(false, "Error on save")
+                expectation.fulfill()
+            })
+        } catch {
+            print("Failed to run \(error)")
+            expectation.fulfill()
+            XCTAssertTrue(false, "Something wrong")
+        }
+
+        waitForExpectations(timeout: 100, handler: nil)
+    }
+    
+    func testOverlayVideo() {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+
+        let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
+        print("MontageTest documentDirectory \(documentDirectory)")
+        print("MontageTest url \(url)")
+        let montage = Montage()
+        let expectation = self.expectation(description: "testOverlayVideo")
+        do {
+            _ = try montage.setBottomVideoSource(url: url)
             try montage
             //.setTopPart(startTime: 0, endTime: 2)
             .setBottomPart(startTime: 0, endTime: 2)

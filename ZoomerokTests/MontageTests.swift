@@ -152,10 +152,10 @@ class MontageTest: XCTestCase {
                 print("saveToFile OUT file \(result)")
                 expectation.fulfill()
             }, error: { error in
-                print("saveToFile error \(error)")
-                XCTAssertTrue(false, "Error on save")
-                expectation.fulfill()
-            })
+                    print("saveToFile error \(error)")
+                    XCTAssertTrue(false, "Error on save")
+                    expectation.fulfill()
+                })
         } catch {
             print("Failed to run \(error)")
             expectation.fulfill()
@@ -164,31 +164,34 @@ class MontageTest: XCTestCase {
 
         waitForExpectations(timeout: 100, handler: nil)
     }
-    
+
     func testOverlayVideo() {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
 
         let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
+        let overlayUrl = documentDirectory.appendingPathComponent("test-files/transparent-spider.mov")
         print("MontageTest documentDirectory \(documentDirectory)")
         print("MontageTest url \(url)")
         let montage = Montage()
         let expectation = self.expectation(description: "testOverlayVideo")
         do {
-            _ = try montage.setBottomVideoSource(url: url)
-            try montage
-            //.setTopPart(startTime: 0, endTime: 2)
-            .setBottomPart(startTime: 0, endTime: 2)
-            //.cropTopPart(rect: rect)
-            .saveToFile(completion: { result in
-                print("saveToFile OUT file \(result)")
-                expectation.fulfill()
-            }, error: { error in
-                print("saveToFile error \(error)")
-                XCTAssertTrue(false, "Error on save")
-                expectation.fulfill()
-            })
+            _ = try montage
+                .setBottomVideoSource(url: url)
+                .setOverlayVideoSource(url: overlayUrl)
+                .setBottomPart(startTime: 0, endTime: 2)
+                .setOverlayPart(startTime: 0, endTime: 1)
+                .saveToFile(
+                    completion: { result in
+                        print("saveToFile OUT file \(result)")
+                        expectation.fulfill()
+                    },
+                    error: { error in
+                        print("saveToFile error \(error)")
+                        XCTAssertTrue(false, "Error on save")
+                        expectation.fulfill()
+                    })
         } catch {
             print("Failed to run \(error)")
             expectation.fulfill()

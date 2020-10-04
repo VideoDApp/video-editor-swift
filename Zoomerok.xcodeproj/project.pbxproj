@@ -170,7 +170,7 @@
 				98D98CD42505472B006FB952 /* Libs */,
 				9839F6362503E430000DE7C0 /* GoogleService-Info.plist */,
 				98A5D3E22502A13800240003 /* Assets */,
-				98A5D3DF2502A0D900240003 /* Component */,
+				98A5D3DF2502A0D900240003 /* Views */,
 				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
 				984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */,
 				984C5CF42501A2AD007DBAF4 /* ContentView.swift */,
@@ -178,11 +178,6 @@
 				9896B6E52506C6E1007B7C40 /* Assets.xcassets */,
 				984C5CFE2501A2AF007DBAF4 /* Info.plist */,
 				984C5CF82501A2AF007DBAF4 /* Preview Content */,
-				98A5D3D72502A03F00240003 /* ImagePicker.swift */,
-				98A5D3D92502A07900240003 /* OverlayVideo.swift */,
-				98A5D3DB2502A08E00240003 /* OverlayData.swift */,
-				98A5D3DD2502A0B100240003 /* Montage.swift */,
-				983CEBF5250FE4750061A4CD /* TestUI.swift */,
 			);
 			path = Zoomerok;
 			sourceTree = "<group>";
@@ -231,9 +226,11 @@
 			path = SpiderAttack;
 			sourceTree = "<group>";
 		};
-		98A5D3DF2502A0D900240003 /* Component */ = {
+		98A5D3DF2502A0D900240003 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				983CEBF5250FE4750061A4CD /* TestUI.swift */,
+				98A5D3D72502A03F00240003 /* ImagePicker.swift */,
 				98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */,
 				9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */,
 				9896B6EB2508C637007B7C40 /* PreviewControlView.swift */,
@@ -242,7 +239,7 @@
 				988CF511252758730003B673 /* ActivityIndicator.swift */,
 				988CF516252885BC0003B673 /* SavingModalView.swift */,
 			);
-			path = Component;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		98A5D3E22502A13800240003 /* Assets */ = {
@@ -257,6 +254,9 @@
 		98D98CD42505472B006FB952 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				98A5D3D92502A07900240003 /* OverlayVideo.swift */,
+				98A5D3DB2502A08E00240003 /* OverlayData.swift */,
+				98A5D3DD2502A0B100240003 /* Montage.swift */,
 				98D98CD525054759006FB952 /* DownloadTestContent.swift */,
 			);
 			path = Libs;

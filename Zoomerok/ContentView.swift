@@ -89,12 +89,11 @@ struct ContentView: View {
 //    }
 
     func makeSimplePlayer(url: URL) -> AVPlayer {
-
         var player: AVPlayer?
         do {
             _ = try montageInstance.setBottomVideoSource(url: url)
             let item = try montageInstance
-            //.setTopPart(startTime: 1, endTime: 12)
+//            .setTopPart(startTime: 1, endTime: 12)
 //            .setBottomPart(startTime: 3, endTime: 11)
             .setBottomPart(
                 startTime: 0,

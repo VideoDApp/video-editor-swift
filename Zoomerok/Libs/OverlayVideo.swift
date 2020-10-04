@@ -7,8 +7,6 @@ enum OverlayError: Error {
 
 extension Float64 {
     func toCMTime() -> CMTime {
-        // todo preferredTimescale is 600? default timescale in big bottom video is 600. or receive scale each video?
-        //CMTimeMakeWithSeconds(self, preferredTimescale: 1000)
         CMTimeMakeWithSeconds(self, preferredTimescale: 600)
     }
 }

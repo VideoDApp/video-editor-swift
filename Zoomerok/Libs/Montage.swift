@@ -2,7 +2,7 @@ import Foundation
 import AVKit
 import Photos
 
-enum MontageError: Error {
+public enum MontageError: Error {
     case sourceIsEmpty
     case backgroundPartIsEmpty
     case mainPartIsEmpty
@@ -11,18 +11,22 @@ enum MontageError: Error {
     case exporterError
 }
 
-class VideoPart {
+public class VideoPart {
     var videoMutableCompositionTrack: AVMutableCompositionTrack?
     var audioMutableCompositionTrack: AVMutableCompositionTrack?
     var layerInstruction: AVMutableVideoCompositionLayerInstruction?
 }
 
-class Montage {
+public class Montage {
     let preferredTimescale: Int32 = 600
 
     var bottomVideoSource: AVAsset?
     var bottomVideoTrack: AVAssetTrack?
     var bottomAudioTrack: AVAssetTrack?
+
+    var overlayVideoSource: AVAsset?
+    var overlayVideoTrack: AVAssetTrack?
+    var overlayAudioTrack: AVAssetTrack?
 
     var sourcePart = VideoPart()
     var topPart = VideoPart()
@@ -31,69 +35,71 @@ class Montage {
     var mutableMixComposition = AVMutableComposition()
     var videoComposition = AVMutableVideoComposition()
 
-    init() {
+//    init() {
+//
+//    }
 
-    }
-
-    func overlayTwoVideos(urlBottom: URL, urlTop: URL) throws {
-        let bottomVideo = AVAsset(url: urlBottom)
-        //let topVideo = AVAsset(url: urlTop)
-
-        let startTime: Float64 = 3
-        let endTime: Float64 = 8
-
-        let overlayMixComposition = AVMutableComposition()
-        let mainInstruction = AVMutableVideoCompositionInstruction()
-        mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: bottomVideo.duration)
-
-        //        self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.track!, asset: self.sourceVideo!)
-        let track = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        let bottomInstructions = compositionLayerInstruction(for: track!, asset: bottomVideo)
-
-        try track!.insertTimeRange(
-            CMTimeRangeMake(
-                start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
-                duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
-            ),
-            of: track!,
-            at: CMTime.zero)
-        bottomPart.layerInstruction = compositionLayerInstruction(for: track!, asset: bottomVideo)
-
-        // 2.3
-        // SECOND LAYER DRAWS BEFORE FIRST
-        // here I can reorder drawing. drawing here from end to start
-        mainInstruction.layerInstructions = [
-            bottomInstructions
-        ]
-
-        let overlayVideoComposition = AVMutableVideoComposition()
-        overlayVideoComposition.instructions = [mainInstruction]
-        overlayVideoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
-
-        let videoInfo = orientation(from: track!.preferredTransform)
-        print("track!.naturalSize", track!.naturalSize)
-        print("videoInfo", videoInfo)
-        let videoSize: CGSize
-        if videoInfo.isPortrait {
-            videoSize = CGSize(width: track!.naturalSize.height, height: track!.naturalSize.width)
-        } else {
-            videoSize = track!.naturalSize
-        }
-
-        print("videoSize", videoSize)
-        overlayVideoComposition.renderSize = videoSize
-
-        try self.saveAnyToFile(mixComposition: overlayMixComposition, completion: { result in
-            print("overlayTwoVideos complete \(result)")
-        }, error: { result in
-                print("overlayTwoVideos error \(result)")
-            })
-    }
+//    func overlayTwoVideos(urlBottom: URL, urlTop: URL) throws {
+//        let bottomVideo = AVAsset(url: urlBottom)
+//        //let topVideo = AVAsset(url: urlTop)
+//
+//        let startTime: Float64 = 3
+//        let endTime: Float64 = 8
+//
+//        let overlayMixComposition = AVMutableComposition()
+//        let mainInstruction = AVMutableVideoCompositionInstruction()
+//        mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: bottomVideo.duration)
+//
+//        //        self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.track!, asset: self.sourceVideo!)
+//        let track = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+//        let bottomInstructions = compositionLayerInstruction(for: track!, asset: bottomVideo)
+//
+//        try track!.insertTimeRange(
+//            CMTimeRangeMake(
+//                start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+//                duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
+//            ),
+//            of: track!,
+//            at: CMTime.zero)
+//        bottomPart.layerInstruction = compositionLayerInstruction(for: track!, asset: bottomVideo)
+//
+//        // 2.3
+//        // SECOND LAYER DRAWS BEFORE FIRST
+//        // here I can reorder drawing. drawing here from end to start
+//        mainInstruction.layerInstructions = [
+//            bottomInstructions
+//        ]
+//
+//        let overlayVideoComposition = AVMutableVideoComposition()
+//        overlayVideoComposition.instructions = [mainInstruction]
+//        overlayVideoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
+//
+//        let videoInfo = orientation(from: track!.preferredTransform)
+//        print("track!.naturalSize", track!.naturalSize)
+//        print("videoInfo", videoInfo)
+//        let videoSize: CGSize
+//        if videoInfo.isPortrait {
+//            videoSize = CGSize(width: track!.naturalSize.height, height: track!.naturalSize.width)
+//        } else {
+//            videoSize = track!.naturalSize
+//        }
+//
+//        print("videoSize", videoSize)
+//        overlayVideoComposition.renderSize = videoSize
+//
+//        try self.saveAnyToFile(mixComposition: overlayMixComposition, completion: { result in
+//            print("overlayTwoVideos complete \(result)")
+//        }, error: { result in
+//                print("overlayTwoVideos error \(result)")
+//            })
+//    }
 
     func reset() {
         bottomVideoSource = nil
         bottomVideoTrack = nil
         bottomAudioTrack = nil
+        overlayVideoTrack = nil
+        overlayAudioTrack = nil
         topPart = VideoPart()
         bottomPart = VideoPart()
         mutableMixComposition = AVMutableComposition()
@@ -119,12 +125,13 @@ class Montage {
             throw MontageError.fileNotFound
         }
 
-        let video: AVAsset = AVAsset(url: url)
-        //sourceTrack = video!.tracks(withMediaType: .video)[0]
+        self.overlayVideoSource = AVAsset(url: url)
+        self.overlayVideoTrack = self.overlayVideoSource!.tracks(withMediaType: .video)[0]
+        self.overlayAudioTrack = self.overlayVideoSource!.tracks(withMediaType: .audio)[0]
         let overlayMixComposition = AVMutableComposition()
         self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: video)
+        self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
 
         return self
     }
@@ -178,6 +185,35 @@ class Montage {
         return self
     }
 
+    func setOverlayPart(startTime: Float64, endTime: Float64) throws -> Montage {
+        overlayPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
+        overlayPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+
+        do {
+            try overlayPart.videoMutableCompositionTrack?.insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                    duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
+                ),
+                of: overlayVideoTrack!,
+                at: CMTime.zero)
+
+            try overlayPart.audioMutableCompositionTrack?.insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                    duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
+                ),
+                of: overlayAudioTrack!,
+                at: CMTime.zero)
+
+            overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
+        } catch {
+            print("Failed to load main track")
+        }
+
+        return self
+    }
+
     func calcCorrectRect(rect: CGRect, screenSize: CGSize) -> CGRect {
         let secondDot = CGPoint(x: rect.minX + rect.width, y: rect.minY)
         //print("second dot", secondDot)
@@ -210,31 +246,22 @@ class Montage {
 
     func prepareComposition() -> Montage {
         let mainInstruction = AVMutableVideoCompositionInstruction()
-        //mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: CMTimeAdd(sourceVideo!.duration, sourceVideo!.duration))
         mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: bottomVideoSource!.duration)
 
-        // 2.3
         // SECOND LAYER DRAWS BEFORE FIRST
-        // here I can reorder drawing. drawing here from end to start
-        mainInstruction.layerInstructions = [
-            /*bottomPart.layerInstruction!,
-            topPart.layerInstruction!*/
-        ]
-
-        if (bottomPart.layerInstruction !== nil) {
-            mainInstruction.layerInstructions.append(bottomPart.layerInstruction!)
+        mainInstruction.layerInstructions = []
+        
+        if (self.overlayPart.layerInstruction !== nil) {
+            mainInstruction.layerInstructions.append(self.overlayPart.layerInstruction!)
         }
-
-        if (topPart.layerInstruction !== nil) {
+        
+        if (self.topPart.layerInstruction !== nil) {
             mainInstruction.layerInstructions.append(topPart.layerInstruction!)
         }
 
-        /*if (self.overlayPart.layerInstruction !== nil) {
-            mainInstruction.layerInstructions.append(self.overlayPart.layerInstruction!)
-        }*/
-        /*if (bottomPart.layerInstruction !== nil) {
+        if (self.bottomPart.layerInstruction !== nil) {
             mainInstruction.layerInstructions.append(bottomPart.layerInstruction!)
-        }*/
+        }
 
         self.videoComposition = AVMutableVideoComposition()
         self.videoComposition.instructions = [mainInstruction]

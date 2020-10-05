@@ -38,30 +38,20 @@ struct ContentView: View {
         self.playerController.showsPlaybackControls = false
     }
 
-    func initTestVideoForSimulator() {
-        let testFileName = "test-files/1VideoBig.mov"
-        let fileUrl = DownloadTestContent.getFilePath(testFileName)
-        if !DownloadTestContent.isFileExists(testFileName) {
-            print("Test file not found in simulator mode")
-            return
-        }
-
-        print("initTestVideoForSimulator")
-        // todo check is file exists
-        self.previewAsset = AVAsset(url: fileUrl)
-        self.videoUrl = fileUrl
-        self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-
-//        self.playerController.player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1), queue: .main) { (_) in
-//            print("OBSERVE")
-//            /*self.value = self.getSliderValue()
-//
-//             if self.value == 1.0{
-//
-//             self.isplaying = false
-//             }*/
+//    func initTestVideoForSimulator() {
+//        let testFileName = "test-files/1VideoBig.mov"
+//        let fileUrl = DownloadTestContent.getFilePath(testFileName)
+//        if !DownloadTestContent.isFileExists(testFileName) {
+//            print("Test file not found in simulator mode")
+//            return
 //        }
-    }
+//
+//        print("initTestVideoForSimulator")
+//        // todo check is file exists
+//        self.previewAsset = AVAsset(url: fileUrl)
+//        self.videoUrl = fileUrl
+//        self.playerController.player = self.makeSimplePlayer(url: fileUrl)
+//    }
 
 //    func getSliderValue() -> Float {
 //        return Float(self.playerController.player!.currentTime().seconds / (self.playerController.player!.currentItem?.duration.seconds)!)
@@ -88,25 +78,27 @@ struct ContentView: View {
 //        return player!
 //    }
 
-    func makeSimplePlayer(url: URL) -> AVPlayer {
-        var player: AVPlayer?
-        do {
-            _ = try montageInstance.setBottomVideoSource(url: url)
-            let item = try montageInstance
-//            .setTopPart(startTime: 1, endTime: 12)
-//            .setBottomPart(startTime: 3, endTime: 11)
+    func makeOverlayPlayer(mainUrl: URL, overlayUrl: URL? = nil) throws -> AVPlayer {
+        var player: AVPlayer
+
+        self.montageInstance = Montage()
+        _ = try self.montageInstance.setBottomVideoSource(url: mainUrl)
             .setBottomPart(
                 startTime: 0,
                 endTime: CMTimeGetSeconds(montageInstance.bottomVideoSource!.duration)
             )
-                .getAVPlayerItem()
 
-            player = AVPlayer(playerItem: item)
-        } catch {
-            print("Something not ok")
+        if overlayUrl != nil {
+            _ = try self.montageInstance
+                .setOverlayVideoSource(url: overlayUrl!)
+                .setOverlayPart(offsetTime: 1)
         }
 
-        return player!
+        let item = self.montageInstance.getAVPlayerItem()
+        player = AVPlayer(playerItem: item)
+
+
+        return player
     }
 
     var body: some View {
@@ -115,12 +107,14 @@ struct ContentView: View {
                 if videoUrl == nil {
                     SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
                         print("SelectContentView result", result)
-                        //self.videoUrl = result
-                        self.previewAsset = AVAsset(url: result)
-                        self.videoUrl = result
-                        self.playerController.player = self.makeSimplePlayer(url: result)
-
-                        self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                        do {
+                            self.previewAsset = AVAsset(url: result)
+                            self.videoUrl = result
+                            self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                            self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                        } catch {
+                            print("SelectContentView error \(error)")
+                        }
 
                         return ()
                     })
@@ -203,6 +197,13 @@ struct ContentView: View {
                         self.effectState = nil
                     } else {
                         self.effectState = EffectState(result.previewUrl)
+                        print("EffectSelectorView url \(result.videoUrl)")
+                        do {
+                            self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
+                            self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                        } catch {
+                            print("EffectSelectorView error \(error)")
+                        }
                     }
 
                     return ()

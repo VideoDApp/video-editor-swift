@@ -181,7 +181,7 @@ class MontageTest: XCTestCase {
                 .setBottomVideoSource(url: url)
                 .setOverlayVideoSource(url: overlayUrl)
                 .setBottomPart(startTime: 0, endTime: 2)
-                .setOverlayPart(startTime: 0, endTime: 1)
+                .setOverlayPart(offsetTime: 1)
                 .saveToFile(
                     completion: { result in
                         print("saveToFile OUT file \(result)")

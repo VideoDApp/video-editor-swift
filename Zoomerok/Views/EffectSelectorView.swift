@@ -10,8 +10,8 @@ struct EffectInfo {
         self.title = title
         // src from resource
         self.previewUrl = name + "-preview"
-        // src from file system
-        self.videoUrl = URL(string: name + "/video.mov")!
+        // src from file
+        self.videoUrl = Bundle.main.url(forResource: name + "-video", withExtension: "mov")!//URL(string: name + "/video.mov")!
     }
 }
 

@@ -185,7 +185,10 @@ public class Montage {
         return self
     }
 
-    func setOverlayPart(startTime: Float64, endTime: Float64) throws -> Montage {
+    func setOverlayPart(offsetTime: Float64) throws -> Montage {
+//        func setOverlayPart(startTime: Float64, endTime: Float64) throws -> Montage {
+        let startTime: Float64 = 0
+        let endTime: Float64 = CMTimeGetSeconds(overlayVideoTrack!.asset!.duration)
         overlayPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
         overlayPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
 
@@ -196,7 +199,8 @@ public class Montage {
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
                 of: overlayVideoTrack!,
-                at: CMTime.zero)
+                at: CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale))
+//                at: CMTime.zero)
 
             try overlayPart.audioMutableCompositionTrack?.insertTimeRange(
                 CMTimeRangeMake(
@@ -204,7 +208,8 @@ public class Montage {
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
                 of: overlayAudioTrack!,
-                at: CMTime.zero)
+                at: CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale))
+//            at: CMTime.zero)
 
             overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
         } catch {
@@ -250,11 +255,11 @@ public class Montage {
 
         // SECOND LAYER DRAWS BEFORE FIRST
         mainInstruction.layerInstructions = []
-        
+
         if (self.overlayPart.layerInstruction !== nil) {
             mainInstruction.layerInstructions.append(self.overlayPart.layerInstruction!)
         }
-        
+
         if (self.topPart.layerInstruction !== nil) {
             mainInstruction.layerInstructions.append(topPart.layerInstruction!)
         }

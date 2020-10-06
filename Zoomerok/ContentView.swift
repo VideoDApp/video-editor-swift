@@ -1,5 +1,12 @@
 import SwiftUI
 import AVKit
+import Photos
+
+enum ActiveSheet {
+    case none
+    case saveOrShare
+    case saveProcess
+}
 
 struct ContentView: View {
     @State var cursorTimeSeconds: Double = 0
@@ -10,7 +17,7 @@ struct ContentView: View {
     @State var previewAsset: AVAsset?
     @State var isPlay: Bool = false
     @State var effectState: EffectState?
-    @State var saveInProgress = false
+    @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
 
     @State private var currentPosition: CGSize = .zero
@@ -36,6 +43,33 @@ struct ContentView: View {
         ]
 
         self.playerController.showsPlaybackControls = false
+    }
+
+    func getSheet() -> some View {
+        print("self.activeSheet \(self.activeSheet)")
+        if self.activeSheet == .saveOrShare {
+            return AnyView(ExportShareModalView(
+                onSaveStart: {
+                    print("onSaveStart")
+                    //self.saveInProgress = true
+                    //self.showSaveShareModal = false
+                    // todo call saving process
+                    self.activeSheet = .saveProcess
+                },
+                onCancel: {
+                    print("onCancel")
+                    //self.showModalSheet = false
+                    self.activeSheet = .none
+                }))
+        } else if self.activeSheet == .saveProcess {
+            return AnyView(SavingModalView(onCancel: {
+                print("Cancel saving here")
+            }))
+        } else if self.activeSheet == .none {
+            return AnyView(Text("None"))
+        }
+
+        return AnyView(Text("Hello"))
     }
 
 //    func initTestVideoForSimulator() {
@@ -123,17 +157,66 @@ struct ContentView: View {
                     HStack {
                         Button(action: {
                             print("Btn export clicked")
-                            self.saveError = ""
-                            self.saveInProgress = true
-                            self.montageInstance.saveToFile(
-                                completion: { result in
-                                    print("Save OK \(result)")
-                                    self.saveInProgress = false
-                                }, error: { result in
-                                    print("Save error \(result)")
-                                    self.saveInProgress = false
-                                    self.saveError = result
+
+                            func requestAuthorization(complete: @escaping () -> Void, error: @escaping () -> Void) {
+                                let authorizationStatus = PHPhotoLibrary.authorizationStatus()
+                                //print("authorizationStatus \(authorizationStatus.rawValue)")
+                                if authorizationStatus == .notDetermined {
+                                    PHPhotoLibrary.requestAuthorization { (status) in
+                                        print("requestAuthorization status \(status)")
+                                        DispatchQueue.main.async {
+                                            complete()
+                                        }
+                                    }
+                                } else if PHPhotoLibrary.authorizationStatus() == .authorized {
+                                    DispatchQueue.main.async {
+                                        complete()
+                                    }
+                                } else {
+                                    DispatchQueue.main.async {
+                                        error()
+                                    }
+                                }
+                            }
+
+                            requestAuthorization(
+                                complete: {
+                                    //print("requestAuthorization complete")
+                                    // todo show export/share modal
+                                    //self.showSaveShareModal = true
+
+//                                    self.showModalSheet = true
+
+//                                    print("set activeSheet")
+                                    self.activeSheet = .saveOrShare
+//                                    print("new  self.activeSheet \(self.activeSheet)")
+                                }, error: {
+                                    print("requestAuthorization error")
+                                    // todo show error (try to reinstall app)
                                 })
+
+                            self.saveError = ""
+//                            PHPhotoLibrary.shared().performChanges({
+//                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(string: "helloefew.mov")!)
+//                            }) { saved, error in
+//                                print("PHPhotoLibrary \(saved) \(error)")
+//                                if saved {
+//                                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
+//                                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+//                                    alertController.addAction(defaultAction)
+//                                    //self.present(alertController, animated: true, completion: nil)
+//                                }
+//                            }
+//                            self.saveInProgress = true
+//                            self.montageInstance.saveToFile(
+//                                completion: { result in
+//                                    print("Save OK \(result)")
+//                                    self.saveInProgress = false
+//                                }, error: { result in
+//                                    print("Save error \(result)")
+//                                    self.saveInProgress = false
+//                                    self.saveError = result
+//                                })
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
@@ -152,10 +235,10 @@ struct ContentView: View {
                                         .stroke(Color.white, lineWidth: 1)
                                 )
 
-                        }.sheet(isPresented: self.$saveInProgress) {
-                            SavingModalView(showModal: self.$saveInProgress, onCancel: {
-                                print("Cancel saving here")
-                            })
+                        }
+                            .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
+                                set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
+                                getSheet()
                         }
                     }
 

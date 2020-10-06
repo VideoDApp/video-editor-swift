@@ -360,10 +360,9 @@ public class Montage {
 
     func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
         // 4 - Get path
-        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            // todo return exception result
-            return
-        }
+        //guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        //return}
+        let documentDirectory = FileManager.default.temporaryDirectory
 
         print("Montage documentDirectory \(documentDirectory)")
         let name = DownloadTestContent.generateFileName(mainName: "Zoomerok", nameExtension: "mov")

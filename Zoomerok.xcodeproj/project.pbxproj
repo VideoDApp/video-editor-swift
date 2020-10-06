@@ -10,6 +10,7 @@
 		9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9839F6362503E430000DE7C0 /* GoogleService-Info.plist */; };
 		983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF5250FE4750061A4CD /* TestUI.swift */; };
 		983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF7250FFBD10061A4CD /* SelectContentView.swift */; };
+		98427857252CCD0500A553F9 /* ExportShareModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98427856252CCD0500A553F9 /* ExportShareModalView.swift */; };
 		984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */; };
 		984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */; };
 		984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5CF42501A2AD007DBAF4 /* ContentView.swift */; };
@@ -64,6 +65,7 @@
 		9839F6362503E430000DE7C0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		983CEBF5250FE4750061A4CD /* TestUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUI.swift; sourceTree = "<group>"; };
 		983CEBF7250FFBD10061A4CD /* SelectContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectContentView.swift; sourceTree = "<group>"; };
+		98427856252CCD0500A553F9 /* ExportShareModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportShareModalView.swift; sourceTree = "<group>"; };
 		984C5CED2501A2AD007DBAF4 /* Zoomerok.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Zoomerok.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				988DD41A251CA5FC00623601 /* CustomPlayerView.swift */,
 				988CF511252758730003B673 /* ActivityIndicator.swift */,
 				988CF516252885BC0003B673 /* SavingModalView.swift */,
+				98427856252CCD0500A553F9 /* ExportShareModalView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -519,6 +522,7 @@
 				988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */,
+				98427857252CCD0500A553F9 /* ExportShareModalView.swift in Sources */,
 				9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
 				983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */,

@@ -199,7 +199,6 @@ public class Montage {
                 duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
             )
             let atTime = CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale)
-//            let atTimeEmptyFrames = CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: preferredTimescale)
 
             try overlayPart.videoMutableCompositionTrack?.insertTimeRange(
                 timeRange,
@@ -211,13 +210,9 @@ public class Montage {
                 of: overlayAudioTrack!,
                 at: atTime)
 
-//            try emptyFrames!.insertTimeRange(
-//                timeRange,
-//                of: overlayVideoTrack!,
-//                at: atTimeEmptyFrames)
 
             overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
-            overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(endTime, preferredTimescale: self.preferredTimescale))
+            overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: self.preferredTimescale))
         } catch {
             print("Failed to load main track")
         }
@@ -371,11 +366,8 @@ public class Montage {
         }
 
         print("Montage documentDirectory \(documentDirectory)")
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .short
-        let date = dateFormatter.string(from: Date())
-        let url = documentDirectory.appendingPathComponent("merged-video-\(date)-\(Int.random(in: 1...100000)).mov")
+        let name = DownloadTestContent.generateFileName(mainName: "Zoomerok", nameExtension: "mov")
+        let url = documentDirectory.appendingPathComponent(name)
 
         // 5 - Create Exporter
         guard let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) else {
@@ -397,7 +389,6 @@ public class Montage {
                 }
             } else {
                 DispatchQueue.main.async {
-                    //self.exportDidFinish(exporter)
                     completion(url)
                 }
             }

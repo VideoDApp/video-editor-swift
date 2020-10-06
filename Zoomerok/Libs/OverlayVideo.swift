@@ -184,8 +184,8 @@ class OverlayVideo {
         exporter.exportAsynchronously() {
             DispatchQueue.main.async {
                 //self.exportDidFinish(exporter)
-                print("exporter.status", exporter.status)
-                print("exporter.error", exporter.error)
+                print("exporter.status \(exporter.status)")
+                print("exporter.error \(String(describing: exporter.error))")
                 completion()
             }
         }

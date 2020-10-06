@@ -165,6 +165,10 @@ class MontageTest: XCTestCase {
         waitForExpectations(timeout: 100, handler: nil)
     }
 
+    func testDate() {
+        print("testDate \(DownloadTestContent.generateFileName(mainName: "Zoomerok"))")
+    }
+
     func testOverlayVideo() {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return

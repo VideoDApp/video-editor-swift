@@ -96,4 +96,12 @@ class DownloadTestContent {
     static func isFileExists(_ fileName: String) -> Bool {
         return FileManager.default.fileExists(atPath: getFilePath(fileName).path)
     }
+
+    static func generateFileName(mainName: String = "merged", nameExtension: String = "mov") -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        let date = dateFormatter.string(from: Date())
+
+        return "\(mainName)-\(date)-\(Int.random(in: 1...100000)).\(nameExtension)"
+    }
 }

@@ -186,38 +186,29 @@ struct ContentView: View {
                                 self.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                             }
 
-
                             return ()
                         })
-                }
 
-                EffectSelectorView(onEffectSelected: { result in
-                    //print(result)
-                    if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
-                        self.effectState = nil
-                    } else {
-                        self.effectState = EffectState(result.previewUrl)
-                        print("EffectSelectorView url \(result.videoUrl)")
+                    EffectSelectorView(onEffectSelected: { result in
+                        //print(result)
                         do {
-                            self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
+                            if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
+                                self.effectState = nil
+                                self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                            } else {
+                                self.effectState = EffectState(result.previewUrl)
+                                self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
+                            }
                             self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         } catch {
                             print("EffectSelectorView error \(error)")
                         }
-                    }
 
-                    return ()
-                })
+                        return ()
+                    })
+                }
 
-                // todo mege this logic with CustomPlayer
-//                PreviewControlView(
-//                    isPlay: self.$isPlay,
-//                    onPlayPause: { result in
-//                        //self.isPlay = result
-//
-//                        return ()
-//                    })
-
+                Color.black.edgesIgnoringSafeArea(.all)
                 Spacer()
             }
 

@@ -191,27 +191,33 @@ public class Montage {
         let endTime: Float64 = CMTimeGetSeconds(overlayVideoTrack!.asset!.duration)
         overlayPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
         overlayPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+//        let emptyFrames = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
 
         do {
+            let timeRange = CMTimeRangeMake(
+                start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
+                duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
+            )
+            let atTime = CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale)
+//            let atTimeEmptyFrames = CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: preferredTimescale)
+
             try overlayPart.videoMutableCompositionTrack?.insertTimeRange(
-                CMTimeRangeMake(
-                    start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
-                    duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
-                ),
+                timeRange,
                 of: overlayVideoTrack!,
-                at: CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale))
-//                at: CMTime.zero)
+                at: atTime)
 
             try overlayPart.audioMutableCompositionTrack?.insertTimeRange(
-                CMTimeRangeMake(
-                    start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
-                    duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
-                ),
+                timeRange,
                 of: overlayAudioTrack!,
-                at: CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale))
-//            at: CMTime.zero)
+                at: atTime)
+
+//            try emptyFrames!.insertTimeRange(
+//                timeRange,
+//                of: overlayVideoTrack!,
+//                at: atTimeEmptyFrames)
 
             overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
+            overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(endTime, preferredTimescale: self.preferredTimescale))
         } catch {
             print("Failed to load main track")
         }

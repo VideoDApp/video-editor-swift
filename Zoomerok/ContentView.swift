@@ -51,10 +51,28 @@ struct ContentView: View {
             return AnyView(ExportShareModalView(
                 onSaveStart: {
                     print("onSaveStart")
-                    //self.saveInProgress = true
-                    //self.showSaveShareModal = false
-                    // todo call saving process
                     self.activeSheet = .saveProcess
+                    self.montageInstance.saveToFile(
+                        completion: { resultUrl in
+                            print("Save OK \(resultUrl)")
+                            //self.saveInProgress = false
+                            PHPhotoLibrary.shared().performChanges({
+                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
+                            }) { saved, error in
+                                print("PHPhotoLibrary \(saved) \(error)")
+                                self.activeSheet = .none
+                                if saved {
+//                                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
+//                                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+//                                    alertController.addAction(defaultAction)
+                                    //self.present(alertController, animated: true, completion: nil)
+                                }
+                            }
+                        }, error: { result in
+                            print("Save error \(result)")
+                            //self.saveInProgress = false
+                            self.saveError = result
+                        })
                 },
                 onCancel: {
                     print("onCancel")
@@ -196,27 +214,7 @@ struct ContentView: View {
                                 })
 
                             self.saveError = ""
-//                            PHPhotoLibrary.shared().performChanges({
-//                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(string: "helloefew.mov")!)
-//                            }) { saved, error in
-//                                print("PHPhotoLibrary \(saved) \(error)")
-//                                if saved {
-//                                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
-//                                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//                                    alertController.addAction(defaultAction)
-//                                    //self.present(alertController, animated: true, completion: nil)
-//                                }
-//                            }
-//                            self.saveInProgress = true
-//                            self.montageInstance.saveToFile(
-//                                completion: { result in
-//                                    print("Save OK \(result)")
-//                                    self.saveInProgress = false
-//                                }, error: { result in
-//                                    print("Save error \(result)")
-//                                    self.saveInProgress = false
-//                                    self.saveError = result
-//                                })
+
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")

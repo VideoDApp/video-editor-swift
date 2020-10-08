@@ -59,7 +59,7 @@ struct ContentView: View {
                             PHPhotoLibrary.shared().performChanges({
                                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
                             }) { saved, error in
-                                print("PHPhotoLibrary \(saved) \(error)")
+                                print("PHPhotoLibrary \(saved) \(String(describing: error))")
                                 self.activeSheet = .none
                                 if saved {
 //                                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)

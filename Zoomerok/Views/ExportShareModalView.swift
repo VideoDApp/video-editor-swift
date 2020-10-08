@@ -7,25 +7,35 @@ struct ExportShareModalView: View {
     var onCancel: () -> Void
 
     var body: some View {
-
         VStack {
-//            Text("Export or share title")
-//                .foregroundColor(Color.white)
-//                .padding()
+            Text("Export or share video")
+                .foregroundColor(.gray)
+                .padding(.bottom, 150)
 
-            Button("Save to gallery") {
+            Button(action: {
                 self.onSaveStart()
+            }) {
+                HStack {
+                    Image(systemName: "square.and.arrow.down")
+                        .foregroundColor(.white)
+                    Text("Save to gallery")
+                }
+                    .padding(8)
+                    .foregroundColor(.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.white, lineWidth: 1)
+                    )
             }
-                .padding()
-                .foregroundColor(Color.white)
+
+            Color.black.edgesIgnoringSafeArea(.all)
+            Spacer()
 
             Button("Close") {
                 self.onCancel()
             }
                 .padding()
-                .foregroundColor(Color.white)
-
-            Color.black.edgesIgnoringSafeArea(.all)
+                .foregroundColor(.white)
         }
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
     }

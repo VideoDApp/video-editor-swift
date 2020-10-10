@@ -294,6 +294,12 @@ public class Montage {
         return item
     }
 
+    func getPreparedComposition() -> AVMutableVideoComposition {
+        _ = self.prepareComposition()
+
+        return self.videoComposition
+    }
+
     func saveToFile(completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
         _ = prepareComposition()
 

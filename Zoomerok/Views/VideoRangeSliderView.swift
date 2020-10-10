@@ -14,6 +14,7 @@ struct VideoRangeSliderView: View {
     @State var tempCurX: CGFloat = 0
     @State var checkX: CGFloat = 0
     @State var offsetCursor: CGFloat = 0
+    @State var effectTime: Float64 = 0
 
     //var cursorPosition: CMTime = .zero
     var margins: CGFloat = 45
@@ -24,12 +25,14 @@ struct VideoRangeSliderView: View {
     var effectElementSize = CGSize(width: 40, height: 40)
 
     var onResize: (SliderChange) -> ()
+    var onEffectMoved: (Float64) -> ()
 
     init(
         asset: Binding<AVAsset?>,
         cursorTimeSeconds: Binding<Double>,
         effectState: Binding<EffectState?>,
-        @ViewBuilder onResize: @escaping (SliderChange) -> ()) {
+        @ViewBuilder onResize: @escaping (SliderChange) -> (),
+        @ViewBuilder onEffectMoved: @escaping (Float64) -> ()) {
 
         //print("Video range INIT called")
         self._offsetRightLimit = State(initialValue: totalWidth)
@@ -39,6 +42,7 @@ struct VideoRangeSliderView: View {
 
         //self.cursorPosition = cursorPosition
         self.onResize = onResize
+        self.onEffectMoved = onEffectMoved
 
         self.onTimelineResize()
         //self.printVars()
@@ -67,8 +71,8 @@ struct VideoRangeSliderView: View {
         }
 
         let percent = self.cursorTimeSeconds / (totalSeconds / 100)
-        let result = self.totalWidth/100 * CGFloat(percent)
-       // print("getCursorPosition, \(percent), \(totalSeconds), \(self.cursorTimeSeconds), \(result)")
+        let result = self.totalWidth / 100 * CGFloat(percent)
+        // print("getCursorPosition, \(percent), \(totalSeconds), \(self.cursorTimeSeconds), \(result)")
 
         return result
     }
@@ -248,22 +252,32 @@ struct VideoRangeSliderView: View {
                             .offset(x: self.effectPosition.x + self.margins / 2, y: self.effectPosition.y)
                             .gesture(
                                 DragGesture()
-                                    .onChanged({ value in
-                                        let checkX = value.location.x - self.margins / 2 - self.effectElementSize.width + self.effectElementSize.width / 2
-                                        //print("Drag effect val ", value.location, checkX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
+//                                    .onEnded({ value in
+                                .onChanged({ value in
+                                    let checkX = value.location.x - self.margins / 2 - self.effectElementSize.width + self.effectElementSize.width / 2
+                                    //print("Drag effect val ", value.location, checkX, self.totalWidth, self.offsetLeftLimit, self.offsetRightLimit)
 
-                                        // check timeline limit
-                                        if checkX < 0 || checkX > self.totalWidth - self.effectElementSize.width {
-                                            return
-                                        }
+                                    // check timeline limit
+                                    if checkX < 0 || checkX > self.totalWidth - self.effectElementSize.width {
+                                        return
+                                    }
 
-                                        if checkX < self.offsetLeftLimit || checkX > self.offsetRightLimit - self.effectElementSize.width {
-                                            return
-                                        }
+                                    if checkX < self.offsetLeftLimit || checkX > self.offsetRightLimit - self.effectElementSize.width {
+                                        return
+                                    }
 
-                                        self.effectPosition.x = value.location.x - self.effectElementSize.width / 2 - self.margins / 2
-                                        self.checkX = checkX
-                                        self.tempCurX = value.location.x
+                                    self.effectPosition.x = value.location.x - self.effectElementSize.width / 2 - self.margins / 2
+                                    self.checkX = checkX
+                                    self.tempCurX = value.location.x
+
+                                    let duration = CMTimeGetSeconds(self.asset!.duration)
+                                    let onePercent = self.totalWidth / 100
+//                                        let time = CMTimeMakeWithSeconds(  duration / 100 * Float64(self.effectPosition.x / onePercent), preferredTimescale: timescale)
+                                    self.effectTime = duration / 100 * Float64(self.effectPosition.x / onePercent)
+
+                                })
+                                    .onEnded({ result in
+                                        self.onEffectMoved(self.effectTime)
                                     })
                             )
                     }
@@ -294,6 +308,9 @@ struct VideoRangeSliderView_Previews: PreviewProvider {
             effectState: $effectState,
             onResize: { result in
                 print(result)
+                return ()
+            },
+            onEffectMoved: { result in
                 return ()
             })
     }

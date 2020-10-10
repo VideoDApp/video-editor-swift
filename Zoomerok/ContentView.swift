@@ -19,12 +19,14 @@ struct ContentView: View {
     @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
     @State var playerModel: CustomPlayerModel = CustomPlayerModel()
+    @State var effectInfo: EffectInfo?
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero
     @State private var offset: CGFloat = .zero
 
     private var isSimulator: Bool = false
+
 
     init() {
         #if targetEnvironment(simulator)
@@ -130,9 +132,7 @@ struct ContentView: View {
 //        return player!
 //    }
 
-    func makeOverlayPlayer(mainUrl: URL, overlayUrl: URL? = nil) throws -> AVPlayer {
-        var player: AVPlayer
-
+    func makeOverlayPlayer(mainUrl: URL, overlayUrl: URL? = nil, overlayOffset: Float64 = 0) throws -> AVPlayer {
         self.montageInstance = Montage()
         _ = try self.montageInstance.setBottomVideoSource(url: mainUrl)
             .setBottomPart(
@@ -143,13 +143,11 @@ struct ContentView: View {
         if overlayUrl != nil {
             _ = try self.montageInstance
                 .setOverlayVideoSource(url: overlayUrl!)
-                .setOverlayPart(offsetTime: 1)
+                .setOverlayPart(offsetTime: overlayOffset)
         }
 
         let item = self.montageInstance.getAVPlayerItem()
-        player = AVPlayer(playerItem: item)
-
-        return player
+        return AVPlayer(playerItem: item)
     }
 
     var body: some View {
@@ -268,10 +266,29 @@ struct ContentView: View {
                             }
 
                             return ()
+                        },
+                        onEffectMoved: { (result: Float64) in
+                            print("onEffectMoved \(result)")
+                            if self.effectInfo == nil {
+                                print("empty self.effectInfo")
+                                return ()
+                            }
+
+                            do {
+                                //_ = try self.montageInstance.setOverlayPart(offsetTime: result)
+                                //self.playerModel.playerController.player!.currentItem?.videoComposition = self.montageInstance.getPreparedComposition()
+                                //self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
+                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo!.videoUrl, overlayOffset: result))
+                            } catch {
+                                print("onEffectMoved error \(error)")
+                            }
+
+                            return ()
                         })
 
-                    EffectSelectorView(onEffectSelected: { result in
+                    EffectSelectorView(onEffectSelected: { (result: EffectInfo) in
                         //print(result)
+                        self.effectInfo = result
                         do {
                             let playerController = self.playerModel.playerController
                             if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {

@@ -4,72 +4,45 @@ import AVKit
 struct TestUI: View {
     @State var time: CMTime?
     @State var showModal = true
+    @ObservedObject var model = PlayerModel()
 
     var body: some View {
         VStack {
-//            Button(action: {
-//                print("Btn clicked")
-//
-//            }) {
-//                Text("Change time")
-//            }
-//
-////            ActivityIndicator()
-////                .frame(width: 200, height: 200)
-////                .foregroundColor(.orange)
-//            ModalView(showModal: self.$showModal)
+            Button(action: {
+                print("Btn 1 clicked")
+                self.model.setPlayer()
+            }) {
+                Text(model.player)
 
-            Button("Show Modal") {
-                // 2.
-                self.showModal.toggle()
-                // 3.
-            }.sheet(isPresented: $showModal) {
-                ModalView(showModal: self.$showModal)
             }
+
+            TestUI1(model: model)
         }
     }
 }
 
-struct ModalView: View {
-    // 1.
-    @Binding var showModal: Bool
+final class PlayerModel: ObservableObject {
+    @Published var player: String = "Uno"
 
-    var body: some View {
-        VStack {
-            ActivityIndicator()
-                .frame(width: 200, height: 200)
-                .foregroundColor(.orange)
-
-            Text("Inside Modal View")
-                .padding()
-            // 2.
-            Button("Dismiss") {
-                self.showModal.toggle()
-            }
-        }
+    func setPlayer() {
+        // todo here set callback for seek
+        self.player = "new player data here"
     }
 }
 
 struct TestUI1: View {
+    // @ObjectBinding renamed to @ObservedObject
+    @ObservedObject var model: PlayerModel
     @State private var test = ""
 
     var body: some View {
-
-        let binding = Binding(
-            get: { self.test },
-            set: { self.test = $0 }
-        )
-
         return VStack {
-
             Button(action: {
-                print("Btn clicked")
-                print("Bnd clicked \(binding)")
+                print("Btn 2 clicked")
 
             }) {
-                Text("Change time \(test)")
+                Text("My test var \(test)")
             }
-
         }
     }
 }

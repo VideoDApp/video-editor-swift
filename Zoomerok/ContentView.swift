@@ -13,12 +13,12 @@ struct ContentView: View {
     @State var videoUrl: URL?
     @State var player: AVPlayer?
     @State var montageInstance = Montage()
-    @State var playerController = AVPlayerViewController()
     @State var previewAsset: AVAsset?
     @State var isPlay: Bool = false
     @State var effectState: EffectState?
     @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
+    @State var playerModel: CustomPlayerModel = CustomPlayerModel()
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero
@@ -42,7 +42,7 @@ struct ContentView: View {
                 .foregroundColor: UIColor.white
         ]
 
-        self.playerController.showsPlaybackControls = false
+        self.playerModel.playerController.showsPlaybackControls = false
     }
 
     func getSheet() -> some View {
@@ -149,7 +149,6 @@ struct ContentView: View {
         let item = self.montageInstance.getAVPlayerItem()
         player = AVPlayer(playerItem: item)
 
-
         return player
     }
 
@@ -162,8 +161,9 @@ struct ContentView: View {
                         do {
                             self.previewAsset = AVAsset(url: result)
                             self.videoUrl = result
-                            self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
-                            self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+//                            self.playerModel.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                            self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
+                            self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         } catch {
                             print("SelectContentView error \(error)")
                         }
@@ -245,7 +245,7 @@ struct ContentView: View {
                             url: $videoUrl,
                             isPlay: $isPlay,
                             montage: $montageInstance,
-                            playerController: $playerController,
+                            playerModel: $playerModel,
                             onSeek: { (result: CMTime) in
                                 print("CustomPlayerView result seek", result)
                                 self.cursorTimeSeconds = result.seconds
@@ -260,11 +260,11 @@ struct ContentView: View {
                         effectState: self.$effectState,
                         onResize: { (result: SliderChange) in
                             print("VideoRangeSliderView cursorPositionSeconds \(result.cursorPositionSeconds)")
-                            if self.playerController.player != nil {
+                            if self.playerModel.playerController.player != nil {
                                 //self.isPlay = false
                                 //self.playerController.player!.pause()
-                                print("VideoRangeSliderView Seek \(String(describing: self.playerController.player!.currentItem?.currentTime())) \(result.cursorPositionSeconds)")
-                                self.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                                print("VideoRangeSliderView Seek \(String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())) \(result.cursorPositionSeconds)")
+                                self.playerModel.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                             }
 
                             return ()
@@ -273,14 +273,17 @@ struct ContentView: View {
                     EffectSelectorView(onEffectSelected: { result in
                         //print(result)
                         do {
+                            let playerController = self.playerModel.playerController
                             if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
                                 self.effectState = nil
-                                self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                                //playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
                             } else {
                                 self.effectState = EffectState(result.previewUrl)
-                                self.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
+//                                playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
+                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl))
                             }
-                            self.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                            playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         } catch {
                             print("EffectSelectorView error \(error)")
                         }

@@ -114,12 +114,12 @@ struct VideoRangeSliderView: View {
         let timescale = self.asset!.duration.timescale
         let change = SliderChange()
         change.startPositionPercent = startPositionPercent
-        change.startPositionSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(startPositionPercent), preferredTimescale: timescale)
+        change.startPositionSeconds = CMTimeMakeWithSeconds(duration / 100 * Float64(startPositionPercent), preferredTimescale: timescale)
         change.cursorPositionPercent = cursorPositionPercent
         change.cursorPositionSeconds = CMTimeMakeWithSeconds(duration / 100 * Float64(cursorPositionPercent), preferredTimescale: timescale)
         change.sizePercent = videoSizePercent
-        change.sizeSeconds = CMTimeMakeWithSeconds(duration - duration / 100 * Float64(videoSizePercent), preferredTimescale: timescale)
-        print("Asset duration: \(duration), \(CMTimeGetSeconds(change.cursorPositionSeconds))")
+        change.sizeSeconds = CMTimeMakeWithSeconds(duration / 100 * Float64(videoSizePercent), preferredTimescale: timescale)
+        print("Asset duration total: \(duration), cursor position: \(CMTimeGetSeconds(change.cursorPositionSeconds))")
 
         self.onResize(change)
         //printVars()
@@ -270,11 +270,17 @@ struct VideoRangeSliderView: View {
                                     self.checkX = checkX
                                     self.tempCurX = value.location.x
 
-                                    let duration = CMTimeGetSeconds(self.asset!.duration)
+                                    let duration = self.asset!.duration.seconds
                                     let onePercent = self.totalWidth / 100
 //                                        let time = CMTimeMakeWithSeconds(  duration / 100 * Float64(self.effectPosition.x / onePercent), preferredTimescale: timescale)
-                                    self.effectTime = duration / 100 * Float64(self.effectPosition.x / onePercent)
 
+                                    let newEffectTime = duration / 100 * Float64(self.effectPosition.x / onePercent)
+                                    // check is effect in bottom video timeline
+                                    if self.effectState != nil && newEffectTime + self.effectState!.seconds > duration {
+                                        //self.effectTime = _VIDEO_DURATION_ - _TOTAL_EFFECT_TIME
+                                    } else {
+                                        self.effectTime = newEffectTime
+                                    }
                                 })
                                     .onEnded({ result in
                                         self.onEffectMoved(self.effectTime)
@@ -298,6 +304,7 @@ struct VideoRangeSliderView: View {
 struct VideoRangeSliderView_Previews: PreviewProvider {
     @State static var previewAsset: AVAsset?
     @State static var effectState: EffectState?// = EffectState("SpiderAttack-preview")
+    //@State static var effectSeconds: Double?
     @State static var duration: CMTime = CMTime(seconds: 7, preferredTimescale: 600)
     @State static var cursorTimeSeconds: Double = 0
 
@@ -306,6 +313,7 @@ struct VideoRangeSliderView_Previews: PreviewProvider {
             asset: $previewAsset,
             cursorTimeSeconds: $cursorTimeSeconds,
             effectState: $effectState,
+            //effectSeconds: $effectSeconds,
             onResize: { result in
                 print(result)
                 return ()
@@ -327,9 +335,11 @@ class SliderChange {
 
 struct EffectState {
     public var previewUrl: String
+    public var seconds: Double
 
-    init(_ previewUrl: String) {
+    init(_ previewUrl: String, _ seconds: Double) {
         self.previewUrl = previewUrl
+        self.seconds = seconds
     }
 }
 

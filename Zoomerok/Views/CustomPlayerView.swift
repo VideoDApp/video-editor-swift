@@ -63,13 +63,7 @@ struct CustomPlayer: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: AVPlayerViewController, context: UIViewControllerRepresentableContext<CustomPlayer>) {
-        print("CustomPlayerView updateUIViewController")
-
-//        if isPlay {
-//            uiViewController.player?.play()
-//        } else {
-//            uiViewController.player?.pause()
-//        }
+//        print("CustomPlayerView updateUIViewController")
     }
 }
 

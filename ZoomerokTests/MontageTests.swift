@@ -137,6 +137,7 @@ class MontageTest: XCTestCase {
             return
         }
 
+        let destinationUrl = documentDirectory.appendingPathComponent(DownloadTestContent.generateFileName(mainName: "video_result_test", nameExtension: "mov"))
         let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
         print("MontageTest documentDirectory \(documentDirectory)")
         print("MontageTest url \(url)")
@@ -148,10 +149,18 @@ class MontageTest: XCTestCase {
             //.setTopPart(startTime: 0, endTime: 2)
             .setBottomPart(startTime: 0, endTime: 2)
             //.cropTopPart(rect: rect)
-            .saveToFile(completion: { result in
-                print("saveToFile OUT file \(result)")
-                expectation.fulfill()
-            }, error: { error in
+            .saveToFile(
+                completion: { result in
+                    // todo move video from temp to docs
+                    print("saveToFile OUT file \(result)")
+                    do {
+                        try FileManager.default.moveItem(at: result, to: destinationUrl)
+                    } catch {
+                        print("Error when file move")
+                    }
+
+                    expectation.fulfill()
+                }, error: { error in
                     print("saveToFile error \(error)")
                     XCTAssertTrue(false, "Error on save")
                     expectation.fulfill()
@@ -175,6 +184,7 @@ class MontageTest: XCTestCase {
         }
 
         let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
+        let destinationUrl = documentDirectory.appendingPathComponent(DownloadTestContent.generateFileName(mainName: "video_result_test", nameExtension: "mov"))
         let overlayUrl = documentDirectory.appendingPathComponent("test-files/transparent-spider.mov")
         print("MontageTest documentDirectory \(documentDirectory)")
         print("MontageTest url \(url)")
@@ -185,10 +195,18 @@ class MontageTest: XCTestCase {
                 .setBottomVideoSource(url: url)
                 .setOverlayVideoSource(url: overlayUrl)
                 .setBottomPart(startTime: 0, endTime: 2)
+            // test changing setBottomPart on-fly
+            .setBottomPart(startTime: 0, endTime: 1)
                 .setOverlayPart(offsetTime: 0)
                 .saveToFile(
                     completion: { result in
                         print("saveToFile OUT file \(result)")
+                        do {
+                            try FileManager.default.moveItem(at: result, to: destinationUrl)
+                        } catch {
+                            print("Error when file move")
+                        }
+
                         expectation.fulfill()
                     },
                     error: { error in

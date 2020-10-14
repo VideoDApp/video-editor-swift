@@ -15,6 +15,7 @@ public class VideoPart {
     var videoMutableCompositionTrack: AVMutableCompositionTrack?
     var audioMutableCompositionTrack: AVMutableCompositionTrack?
     var layerInstruction: AVMutableVideoCompositionLayerInstruction?
+    var tracks: [AVMutableCompositionTrack]?
 }
 
 public class Montage {
@@ -34,6 +35,8 @@ public class Montage {
     var overlayPart = VideoPart()
     var mutableMixComposition = AVMutableComposition()
     var videoComposition = AVMutableVideoComposition()
+
+    var bottomVideoLength: Float64?
 
 //    init() {
 //
@@ -114,8 +117,8 @@ public class Montage {
         self.bottomVideoSource = AVAsset(url: url)
         self.bottomVideoTrack = self.bottomVideoSource!.tracks(withMediaType: .video)[0]
         self.bottomAudioTrack = self.bottomVideoSource!.tracks(withMediaType: .audio)[0]
-        self.sourcePart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
+        //self.sourcePart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        //self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
 
         return self
     }
@@ -128,10 +131,10 @@ public class Montage {
         self.overlayVideoSource = AVAsset(url: url)
         self.overlayVideoTrack = self.overlayVideoSource!.tracks(withMediaType: .video)[0]
         self.overlayAudioTrack = self.overlayVideoSource!.tracks(withMediaType: .audio)[0]
-        let overlayMixComposition = AVMutableComposition()
-        self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
+        //let overlayMixComposition = AVMutableComposition()
+        //self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        //self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        //self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
 
         return self
     }
@@ -157,27 +160,37 @@ public class Montage {
     }
 
     func setBottomPart(startTime: Float64, endTime: Float64) throws -> Montage {
-        bottomPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
-        bottomPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        // todo remove bottomPart.audioMutableCompositionTrack and bottomPart.videoMutableCompositionTrack everywhere?
+//        bottomPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
+//        bottomPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        if self.bottomPart.tracks != nil {
+            self.bottomPart.tracks!.forEach { track in
+                self.mutableMixComposition.removeTrack(track)
+            }
+        }
+
+        let audioMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
+        let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        self.bottomPart.tracks = [audioMutableCompositionTrack!, videoMutableCompositionTrack!]
 
         do {
-            try bottomPart.videoMutableCompositionTrack?.insertTimeRange(
+            try videoMutableCompositionTrack?.insertTimeRange(
                 CMTimeRangeMake(
                     start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
-                of: bottomVideoTrack!,
+                of: self.bottomVideoTrack!,
                 at: CMTime.zero)
 
-            try bottomPart.audioMutableCompositionTrack?.insertTimeRange(
+            try audioMutableCompositionTrack?.insertTimeRange(
                 CMTimeRangeMake(
                     start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                     duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
                 ),
-                of: bottomAudioTrack!,
+                of: self.bottomAudioTrack!,
                 at: CMTime.zero)
 
-            bottomPart.layerInstruction = compositionLayerInstruction(for: bottomPart.videoMutableCompositionTrack!, asset: bottomVideoSource!)
+            self.bottomPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
         } catch {
             print("Failed to load main track")
         }
@@ -191,7 +204,16 @@ public class Montage {
         let endTime: Float64 = CMTimeGetSeconds(overlayVideoTrack!.asset!.duration)
         overlayPart.audioMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
         overlayPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-//        let emptyFrames = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+
+//        if self.overlayPart.tracks != nil {
+//            self.overlayPart.tracks!.forEach { track in
+//                self.mutableMixComposition.removeTrack(track)
+//            }
+//        }
+//
+//        let audioMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
+//        let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+//        self.overlayPart.tracks = [audioMutableCompositionTrack!, videoMutableCompositionTrack!]
 
         do {
             let timeRange = CMTimeRangeMake(
@@ -200,19 +222,22 @@ public class Montage {
             )
             let atTime = CMTimeMakeWithSeconds(offsetTime, preferredTimescale: preferredTimescale)
 
-            try overlayPart.videoMutableCompositionTrack?.insertTimeRange(
+            try self.overlayPart.videoMutableCompositionTrack?.insertTimeRange(
+//            try videoMutableCompositionTrack?.insertTimeRange(
                 timeRange,
                 of: overlayVideoTrack!,
                 at: atTime)
 
-            try overlayPart.audioMutableCompositionTrack?.insertTimeRange(
+            try self.overlayPart.audioMutableCompositionTrack?.insertTimeRange(
+//            try audioMutableCompositionTrack?.insertTimeRange(
                 timeRange,
                 of: overlayAudioTrack!,
                 at: atTime)
 
 
-            overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
-            overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: self.preferredTimescale))
+            self.overlayPart.layerInstruction = compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: overlayVideoSource!)
+            // hide last freezed frame
+            self.overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: self.preferredTimescale))
         } catch {
             print("Failed to load main track")
         }
@@ -262,11 +287,11 @@ public class Montage {
         }
 
         if (self.topPart.layerInstruction !== nil) {
-            mainInstruction.layerInstructions.append(topPart.layerInstruction!)
+            mainInstruction.layerInstructions.append(self.topPart.layerInstruction!)
         }
 
         if (self.bottomPart.layerInstruction !== nil) {
-            mainInstruction.layerInstructions.append(bottomPart.layerInstruction!)
+            mainInstruction.layerInstructions.append(self.bottomPart.layerInstruction!)
         }
 
         self.videoComposition = AVMutableVideoComposition()
@@ -302,57 +327,6 @@ public class Montage {
 
     func saveToFile(completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
         _ = prepareComposition()
-
-        // 3 - Audio track
-        /*if let loadedAudioAsset = audioAsset {
-         let audioTrack = mixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: 0)
-         do {
-         try audioTrack?.insertTimeRange(CMTimeRangeMake(start: CMTime.zero, duration: CMTimeAdd(firstAsset.duration, secondAsset.duration)),
-         of: loadedAudioAsset.tracks(withMediaType: .audio)[0] ,
-         at: CMTime.zero)
-         } catch {
-         print("Failed to load Audio track")
-         }
-         }*/
-
-        // 4 - Get path
-//        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-//            return
-//        }
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .long
-//        dateFormatter.timeStyle = .short
-//        let date = dateFormatter.string(from: Date())
-//        let url = documentDirectory.appendingPathComponent("merged-video-\(date)-\(Int.random(in: 1...100000)).mov")
-//
-//        // 5 - Create Exporter
-//        guard let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) else {
-//            return
-//        }
-//        exporter.outputURL = url
-//        print("output", url)
-//        exporter.outputFileType = AVFileType.mov
-//        exporter.shouldOptimizeForNetworkUse = true
-//        exporter.videoComposition = videoComposition
-//
-//        // 6 - Perform the Export
-//        exporter.exportAsynchronously() {
-//            DispatchQueue.main.async {
-//                //self.exportDidFinish(exporter)
-//                completion()
-//            }
-//        }
-//      self.saveAnyToFile(mixComposition: self.mixComposition, completion: {result in
-//        DispatchQueue.main.async {
-//            completion(result)
-//        }
-//
-//            }, error:{result in
-//
-//                DispatchQueue.main.async {
-//                    error(result)
-//                }
-//            })
         self.saveAnyToFile(
             mixComposition: self.mutableMixComposition,
             completion: { result in
@@ -361,7 +335,6 @@ public class Montage {
             error: { result in
                 error(result)
             })
-
     }
 
     func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {

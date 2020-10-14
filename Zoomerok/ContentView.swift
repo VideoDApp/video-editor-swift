@@ -20,13 +20,14 @@ struct ContentView: View {
     @State var saveError = ""
     @State var playerModel: CustomPlayerModel = CustomPlayerModel()
     @State var effectInfo: EffectInfo?
+    @State var sliderChange: SliderChange?
+    @State var overlayOffset: Float64 = 0
 
     @State private var currentPosition: CGSize = .zero
     @State private var newPosition: CGSize = .zero
     @State private var offset: CGFloat = .zero
 
     private var isSimulator: Bool = false
-
 
     init() {
         #if targetEnvironment(simulator)
@@ -47,6 +48,35 @@ struct ContentView: View {
         self.playerModel.playerController.showsPlaybackControls = false
     }
 
+    func resetEditor() {
+        self.videoUrl = nil
+        self.effectState = nil
+        self.sliderChange = nil
+        self.overlayOffset = 0
+        self.montageInstance = Montage()
+    }
+
+    func requestAuthorization(complete: @escaping () -> Void, error: @escaping () -> Void) {
+        let authorizationStatus = PHPhotoLibrary.authorizationStatus()
+        //print("authorizationStatus \(authorizationStatus.rawValue)")
+        if authorizationStatus == .notDetermined {
+            PHPhotoLibrary.requestAuthorization { (status) in
+                print("requestAuthorization status \(status)")
+                DispatchQueue.main.async {
+                    complete()
+                }
+            }
+        } else if PHPhotoLibrary.authorizationStatus() == .authorized {
+            DispatchQueue.main.async {
+                complete()
+            }
+        } else {
+            DispatchQueue.main.async {
+                error()
+            }
+        }
+    }
+
     func getSheet() -> some View {
         print("self.activeSheet \(self.activeSheet)")
         if self.activeSheet == .saveOrShare {
@@ -54,6 +84,19 @@ struct ContentView: View {
                 onSaveStart: {
                     print("onSaveStart")
                     self.activeSheet = .saveProcess
+                    let change = self.sliderChange!
+                    do {
+                        let startTime = CMTimeGetSeconds(change.startPositionSeconds)
+                        let endTime = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
+                        print("calc setBottomPart \(startTime), \(endTime)")
+                        // todo move calculation to view
+                        _ = try self.montageInstance.setBottomPart(
+                            startTime: startTime,
+                            endTime: endTime)
+                    } catch {
+
+                    }
+
                     self.montageInstance.saveToFile(
                         completion: { resultUrl in
                             print("Save OK \(resultUrl)")
@@ -64,21 +107,16 @@ struct ContentView: View {
                                 print("PHPhotoLibrary \(saved) \(String(describing: error))")
                                 self.activeSheet = .none
                                 if saved {
-//                                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
-//                                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//                                    alertController.addAction(defaultAction)
-                                    //self.present(alertController, animated: true, completion: nil)
+                                    // todo do smth
                                 }
                             }
                         }, error: { result in
                             print("Save error \(result)")
-                            //self.saveInProgress = false
                             self.saveError = result
                         })
                 },
                 onCancel: {
                     print("onCancel")
-                    //self.showModalSheet = false
                     self.activeSheet = .none
                 }))
         } else if self.activeSheet == .saveProcess {
@@ -157,6 +195,7 @@ struct ContentView: View {
                     SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
                         print("SelectContentView result", result)
                         do {
+                            self.sliderChange = nil
                             self.previewAsset = AVAsset(url: result)
                             self.videoUrl = result
 //                            self.playerModel.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
@@ -173,29 +212,7 @@ struct ContentView: View {
                     HStack {
                         Button(action: {
                             print("Btn export clicked")
-
-                            func requestAuthorization(complete: @escaping () -> Void, error: @escaping () -> Void) {
-                                let authorizationStatus = PHPhotoLibrary.authorizationStatus()
-                                //print("authorizationStatus \(authorizationStatus.rawValue)")
-                                if authorizationStatus == .notDetermined {
-                                    PHPhotoLibrary.requestAuthorization { (status) in
-                                        print("requestAuthorization status \(status)")
-                                        DispatchQueue.main.async {
-                                            complete()
-                                        }
-                                    }
-                                } else if PHPhotoLibrary.authorizationStatus() == .authorized {
-                                    DispatchQueue.main.async {
-                                        complete()
-                                    }
-                                } else {
-                                    DispatchQueue.main.async {
-                                        error()
-                                    }
-                                }
-                            }
-
-                            requestAuthorization(
+                            self.requestAuthorization(
                                 complete: {
                                     //print("requestAuthorization complete")
                                     // todo show export/share modal
@@ -216,26 +233,29 @@ struct ContentView: View {
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
-                                //.font(.system(size: 18))
-                                .foregroundColor(.white)
-                                //.padding(5)
+                                    .foregroundColor(.white)
                                 Text("Export")
-                                //.padding(5)
-                                //.font(.system(size: 18))
+
                             }
-                            //.frame(minWidth: 0, maxWidth: 300)
-                            .padding(8)
+                                .padding(8)
                                 .foregroundColor(.white)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 10)
                                         .stroke(Color.white, lineWidth: 1)
                                 )
-
+                            Spacer()
                         }
                             .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
                                 set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
                                 getSheet()
+                            }
+                            .padding()
+
+                        CloseVideoView() {
+                            print("Close clicked")
+                            self.resetEditor()
                         }
+                            .padding()
                     }
 
                     ZStack {
@@ -245,7 +265,7 @@ struct ContentView: View {
                             montage: $montageInstance,
                             playerModel: $playerModel,
                             onSeek: { (result: CMTime) in
-                                print("CustomPlayerView result seek", result)
+//                                print("CustomPlayerView result seek", result)
                                 self.cursorTimeSeconds = result.seconds
                                 return ()
                             })
@@ -257,17 +277,33 @@ struct ContentView: View {
                         cursorTimeSeconds: self.$cursorTimeSeconds,
                         effectState: self.$effectState,
                         onResize: { (result: SliderChange) in
-                            print("VideoRangeSliderView cursorPositionSeconds \(result.cursorPositionSeconds)")
+                            self.sliderChange = result
+                            print("VideoRangeSliderView startPositionSeconds \(CMTimeGetSeconds(result.startPositionSeconds)) \(CMTimeGetSeconds(result.sizeSeconds))")
+//                            print("VideoRangeSliderView cursorPositionSeconds \(result.cursorPositionSeconds)")
+//                            do {
+//                                _ = try self.montageInstance.setBottomPart(
+//                                    startTime: CMTimeGetSeconds(result.startPositionSeconds),
+//                                    endTime: CMTimeGetSeconds(result.sizeSeconds)
+//                                )
+//
+//                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo?.videoUrl, overlayOffset: self.overlayOffset))
+//                            } catch {
+//
+//                            }
+
                             if self.playerModel.playerController.player != nil {
-                                //self.isPlay = false
-                                //self.playerController.player!.pause()
-                                print("VideoRangeSliderView Seek \(String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())) \(result.cursorPositionSeconds)")
-                                self.playerModel.playerController.player!.seek(to: result.cursorPositionSeconds, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                                let currentTime = String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())
+                                print("VideoRangeSliderView Seek \(currentTime) \(result.cursorPositionSeconds)")
+                                self.playerModel.playerController.player!.seek(
+                                    to: result.cursorPositionSeconds,
+                                    toleranceBefore: CMTime.zero,
+                                    toleranceAfter: CMTime.zero)
                             }
 
                             return ()
                         },
                         onEffectMoved: { (result: Float64) in
+                            self.overlayOffset = result
                             print("onEffectMoved \(result)")
                             if self.effectInfo == nil {
                                 print("empty self.effectInfo")
@@ -275,10 +311,8 @@ struct ContentView: View {
                             }
 
                             do {
-                                //_ = try self.montageInstance.setOverlayPart(offsetTime: result)
-                                //self.playerModel.playerController.player!.currentItem?.videoComposition = self.montageInstance.getPreparedComposition()
-                                //self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
-                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo!.videoUrl, overlayOffset: result))
+                                let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo!.videoUrl, overlayOffset: result)
+                                self.playerModel.setPlayer(player: player)
                             } catch {
                                 print("onEffectMoved error \(error)")
                             }
@@ -296,7 +330,7 @@ struct ContentView: View {
                                 //playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
                                 self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
                             } else {
-                                self.effectState = EffectState(result.previewUrl)
+                                self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
 //                                playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
                                 self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl))
                             }

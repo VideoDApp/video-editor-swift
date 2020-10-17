@@ -222,4 +222,56 @@ class MontageTest: XCTestCase {
 
         waitForExpectations(timeout: 100, handler: nil)
     }
+
+    func testOverlaySmallVideo() {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+
+        let url = documentDirectory.appendingPathComponent("test-files/iphone-zoo-encoded.mov")
+//        let url = documentDirectory.appendingPathComponent("test-files/mouth_mask_480.mov")
+//        let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
+        let destinationUrl = documentDirectory.appendingPathComponent(DownloadTestContent.generateFileName(mainName: "video_result_test", nameExtension: "mov"))
+        let overlayUrl = documentDirectory.appendingPathComponent("test-files/transparent-spider.mov")
+        print("MontageTest documentDirectory \(documentDirectory)")
+        print("MontageTest url \(url)")
+        let montage = Montage()
+        let expectation = self.expectation(description: "testOverlaySmallVideo")
+        do {
+            _ = try montage
+                .setBottomVideoSource(url: url)
+                .setOverlayVideoSource(url: overlayUrl)
+                .setBottomPart(startTime: 0, endTime: 3)
+                .setOverlayPart(offsetTime: 0)
+                .saveToFile(
+                    completion: { result in
+                        print("saveToFile OUT file \(result)")
+                        do {
+                            try FileManager.default.moveItem(at: result, to: destinationUrl)
+                        } catch {
+                            print("Error when file move")
+                        }
+
+                        expectation.fulfill()
+                    },
+                    error: { error in
+                        print("saveToFile error \(error)")
+                        XCTAssertTrue(false, "Error on save")
+                        expectation.fulfill()
+                    })
+
+//            _ = try montage
+//                .testExport(documentsDirectoryURL: destinationUrl, url: url){(result, error) in
+//                    print("result \(result)")
+//                    print("error \(error)")
+//                    expectation.fulfill()
+//                }
+        } catch {
+            print("Failed to run \(error)")
+            expectation.fulfill()
+            XCTAssertTrue(false, "Something wrong")
+        }
+
+        waitForExpectations(timeout: 100, handler: nil)
+    }
 }

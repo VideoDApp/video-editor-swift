@@ -10,7 +10,7 @@ struct SavingModalView: View {
         VStack {
             ActivityIndicator()
                 .frame(width: 200, height: 200)
-                .foregroundColor(.orange)
+                .foregroundColor(.white)
 
             Text("Saving video...")
                 .foregroundColor(Color.white)

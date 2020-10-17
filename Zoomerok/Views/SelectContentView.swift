@@ -49,6 +49,11 @@ struct SelectContentView: View {
                             print("Local test file", fileUrl)
                             self.onContentChanged(fileUrl)
                         }, at: 0)
+                    buttons.insert(.default(Text("LOCAL TEST 1")) {
+                            let fileUrl = DownloadTestContent.getFilePath("test-files/mouth_mask.mov")
+                            print("Local test file", fileUrl)
+                            self.onContentChanged(fileUrl)
+                        }, at: 1)
                 } else {
                     buttons.insert(.default(Text("Camera")) {
                             self.showImagePicker = true

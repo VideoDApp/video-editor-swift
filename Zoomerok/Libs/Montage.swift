@@ -393,7 +393,8 @@ public class Montage {
             })
     }
 
-    func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
+    func saveAnyToFile(mixComposition: AVMutableComposition, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
+        //func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
         // 4 - Get path
         //guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
         //return}

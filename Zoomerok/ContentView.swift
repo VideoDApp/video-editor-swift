@@ -88,11 +88,11 @@ struct ContentView: View {
                     do {
                         let startTime = CMTimeGetSeconds(change.startPositionSeconds)
                         let endTime = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
-                        print("calc setBottomPart \(startTime), \(endTime)")
-                        // todo move calculation to view
-                        _ = try self.montageInstance.setBottomPart(
-                            startTime: startTime,
-                            endTime: endTime)
+                        print("Save params startTime \(startTime), endTime \(endTime), self.overlayOffset \(self.overlayOffset)")
+                        // todo optimize beacuse already exists in makeOverlayPlayer
+                        _ = try self.montageInstance
+                            .setBottomPart(startTime: startTime, endTime: endTime)
+                            .setOverlayPart(offsetTime: self.overlayOffset - startTime)
                     } catch {
 
                     }
@@ -179,9 +179,11 @@ struct ContentView: View {
             )
 
         if overlayUrl != nil {
+            let change = self.sliderChange!
+
             _ = try self.montageInstance
                 .setOverlayVideoSource(url: overlayUrl!)
-                .setOverlayPart(offsetTime: overlayOffset)
+                .setOverlayPart(offsetTime: overlayOffset - CMTimeGetSeconds(change.startPositionSeconds))
         }
 
         let item = self.montageInstance.getAVPlayerItem()

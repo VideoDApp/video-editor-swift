@@ -10,6 +10,7 @@ public enum MontageError: Error {
     case fileNotFound
     case exporterError
     case requiredBottomPart
+    case failedLoadTrack
 }
 
 public class VideoPart {
@@ -22,6 +23,8 @@ public class VideoPart {
 public class Montage {
     let preferredTimescale: Int32 = 600
 
+    var realBottomVideoDuration: Float64 = 0
+
     var bottomVideoSource: AVAsset?
     var bottomVideoTrack: AVAssetTrack?
     var bottomAudioTrack: AVAssetTrack?
@@ -30,14 +33,16 @@ public class Montage {
     var overlayVideoTrack: AVAssetTrack?
     var overlayAudioTrack: AVAssetTrack?
 
+    var watermarkVideoSource: AVAsset?
+    var watermarkVideoTrack: AVAssetTrack?
+
     var sourcePart = VideoPart()
     var topPart = VideoPart()
     var bottomPart = VideoPart()
     var overlayPart = VideoPart()
+    var watermarkPart = VideoPart()
     var mutableMixComposition = AVMutableComposition()
     var videoComposition = AVMutableVideoComposition()
-
-    var bottomVideoLength: Float64?
 
 //    init() {
 //
@@ -99,14 +104,22 @@ public class Montage {
 //    }
 
     func reset() {
-        bottomVideoSource = nil
-        bottomVideoTrack = nil
-        bottomAudioTrack = nil
-        overlayVideoTrack = nil
-        overlayAudioTrack = nil
-        topPart = VideoPart()
-        bottomPart = VideoPart()
-        mutableMixComposition = AVMutableComposition()
+        self.bottomVideoSource = nil
+        self.bottomVideoTrack = nil
+        self.bottomAudioTrack = nil
+
+        self.overlayVideoSource = nil
+        self.overlayVideoTrack = nil
+        self.overlayAudioTrack = nil
+
+        self.watermarkVideoSource = nil
+        self.watermarkVideoTrack = nil
+
+        self.topPart = VideoPart()
+        self.bottomPart = VideoPart()
+        self.overlayPart = VideoPart()
+        self.watermarkPart = VideoPart()
+        self.mutableMixComposition = AVMutableComposition()
     }
 
     func setBottomVideoSource(url: URL) throws -> Montage {
@@ -144,6 +157,63 @@ public class Montage {
         return self
     }
 
+    func setWatermark(url: URL) throws -> Montage {
+        if !FileManager.default.fileExists(atPath: url.path) {
+            throw MontageError.fileNotFound
+        }
+
+        self.watermarkVideoSource = AVAsset(url: url)
+        self.watermarkVideoTrack = self.watermarkVideoSource!.tracks(withMediaType: .video)[0]
+
+        if self.watermarkPart.tracks != nil {
+            self.watermarkPart.tracks!.forEach { track in
+                self.mutableMixComposition.removeTrack(track)
+            }
+        }
+
+        let watermarkDuration = self.watermarkVideoTrack!.asset!.duration
+        let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
+        self.watermarkPart.tracks = [videoMutableCompositionTrack!]
+
+        do {
+            // watermark length equal of real bottom video duration
+            let timeRange = CMTimeRangeMake(
+                start: .zero,
+                //duration: CMTimeMakeWithSeconds(self.realBottomVideoDuration, preferredTimescale: preferredTimescale)
+                duration: watermarkDuration
+            )
+            try videoMutableCompositionTrack?.insertTimeRange(
+                timeRange,
+                of: self.watermarkVideoTrack!,
+                at: .zero)
+
+//            try videoMutableCompositionTrack?.insertTimeRange(
+//                timeRange,
+//                of: self.watermarkVideoTrack!,
+//                at: watermarkDuration)
+
+            self.watermarkPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.watermarkVideoSource!)
+            let maxWidth = self.getVideoSize(self.bottomVideoTrack!).width / 3
+            let margins = maxWidth / 9
+            let coeff = maxWidth / self.getVideoSize(videoMutableCompositionTrack!).width
+            var transform = videoMutableCompositionTrack!.preferredTransform.scaledBy(x: coeff, y: coeff)
+            transform.tx = margins
+            transform.ty = margins
+            self.watermarkPart.layerInstruction!.setTransform(transform, at: .zero)
+
+        } catch {
+            throw MontageError.failedLoadTrack
+        }
+
+        return self
+    }
+
+    func removeWatermark() {
+        self.watermarkVideoSource = nil
+        self.watermarkVideoTrack = nil
+        self.watermarkPart = VideoPart()
+    }
+
     func setTopPart(startTime: Float64, endTime: Float64) throws -> Montage {
         topPart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         do {
@@ -172,6 +242,7 @@ public class Montage {
             }
         }
 
+        // Int32(kCMPersistentTrackID_Invalid)
         let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         let audioMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         self.bottomPart.tracks = [videoMutableCompositionTrack!, audioMutableCompositionTrack!]
@@ -181,15 +252,16 @@ public class Montage {
                 start: CMTimeMakeWithSeconds(startTime, preferredTimescale: preferredTimescale),
                 duration: CMTimeMakeWithSeconds(endTime - startTime, preferredTimescale: preferredTimescale)
             )
+            self.realBottomVideoDuration = endTime - startTime
             try videoMutableCompositionTrack?.insertTimeRange(
                 timeRange,
                 of: self.bottomVideoTrack!,
-                at: CMTime.zero)
+                at: .zero)
 
             try audioMutableCompositionTrack?.insertTimeRange(
                 timeRange,
                 of: self.bottomAudioTrack!,
-                at: CMTime.zero)
+                at: .zero)
 
             self.bottomPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
         } catch {
@@ -323,6 +395,18 @@ public class Montage {
         return instruction
     }
 
+//    func getWatermarkInstruction() throws -> AVMutableVideoCompositionLayerInstruction {
+//        if self.watermarkVideoTrack == nil {
+//            throw MontageError.fileNotFound
+//        }
+//
+//        let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: self.watermarkVideoTrack!)
+//        instruction.setTransform(self.watermarkVideoTrack!.preferredTransform, at: .zero)
+//        // todo calculate position and proportions
+//
+//        return instruction
+//    }
+
     func prepareComposition() -> Montage {
         let mainInstruction = AVMutableVideoCompositionInstruction()
         mainInstruction.timeRange = CMTimeRangeMake(start: CMTime.zero, duration: self.bottomVideoSource!.duration)
@@ -335,7 +419,25 @@ public class Montage {
 //        mainInstruction.layerInstructions.append(testInstruction)
 //        self.showMixTracks(mix: self.mutableMixComposition)
 
-        if (self.overlayPart.layerInstruction !== nil) {
+
+        [
+            self.bottomPart.layerInstruction,
+            self.overlayPart.layerInstruction,
+            self.watermarkPart.layerInstruction
+        ].reversed().forEach({ (item) in
+            if item == nil {
+                return
+            }
+
+            mainInstruction.layerInstructions.append(item!)
+            print("Instruction \(item!.trackID)")
+        })
+
+        /*if self.watermarkPart.layerInstruction !== nil {
+//            try? mainInstruction.layerInstructions.append(self.getWatermarkInstruction())
+        }
+
+        if self.overlayPart.layerInstruction !== nil {
             mainInstruction.layerInstructions.append(self.overlayPart.layerInstruction!)
         }
 //
@@ -343,9 +445,10 @@ public class Montage {
 //            mainInstruction.layerInstructions.append(self.topPart.layerInstruction!)
 //        }
 //
-        if (self.bottomPart.layerInstruction !== nil) {
+
+        if self.bottomPart.layerInstruction !== nil {
             mainInstruction.layerInstructions.append(self.bottomPart.layerInstruction!)
-        }
+        }*/
 
         self.videoComposition = AVMutableVideoComposition()
         self.videoComposition.instructions = [mainInstruction]
@@ -382,6 +485,7 @@ public class Montage {
     }
 
     func saveToFile(completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
+        // todo merge this method with saveAnyToFile
         _ = prepareComposition()
         self.saveAnyToFile(
             mixComposition: self.mutableMixComposition,
@@ -395,16 +499,12 @@ public class Montage {
 
     func saveAnyToFile(mixComposition: AVMutableComposition, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
         //func saveAnyToFile(mixComposition: AVAsset, completion: @escaping (URL) -> Void, error: @escaping (String) -> Void) {
-        // 4 - Get path
-        //guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        //return}
         let documentDirectory = FileManager.default.temporaryDirectory
 
         print("Montage documentDirectory \(documentDirectory)")
         let name = DownloadTestContent.generateFileName(mainName: "Zoomerok", nameExtension: "mov")
         let url = documentDirectory.appendingPathComponent(name)
 
-        // 5 - Create Exporter
         guard let exporter = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality) else {
             return
         }

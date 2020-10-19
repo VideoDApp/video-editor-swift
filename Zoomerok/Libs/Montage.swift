@@ -171,7 +171,9 @@ public class Montage {
             }
         }
 
-        let watermarkDuration = self.watermarkVideoTrack!.asset!.duration
+        let watermarkDuration = self.watermarkVideoTrack!.asset!.duration.seconds
+        let rangeDuration = watermarkDuration > self.realBottomVideoDuration ? self.realBottomVideoDuration : watermarkDuration
+        //print("Watermark duration: rangeDuration \(rangeDuration), watermarkDuration: \(watermarkDuration), self.realBottomVideoDuration: \(self.realBottomVideoDuration)")
         let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         self.watermarkPart.tracks = [videoMutableCompositionTrack!]
 
@@ -179,8 +181,8 @@ public class Montage {
             // watermark length equal of real bottom video duration
             let timeRange = CMTimeRangeMake(
                 start: .zero,
-                //duration: CMTimeMakeWithSeconds(self.realBottomVideoDuration, preferredTimescale: preferredTimescale)
-                duration: watermarkDuration
+                duration: CMTimeMakeWithSeconds(rangeDuration, preferredTimescale: preferredTimescale)
+                //duration: watermarkDuration
             )
             try videoMutableCompositionTrack?.insertTimeRange(
                 timeRange,
@@ -430,7 +432,7 @@ public class Montage {
             }
 
             mainInstruction.layerInstructions.append(item!)
-            print("Instruction \(item!.trackID)")
+            //print("Instruction \(item!.trackID)")
         })
 
         /*if self.watermarkPart.layerInstruction !== nil {

@@ -48,16 +48,6 @@ struct VideoRangeSliderView: View {
         self.onTimelineResize()
         //self.printVars()
         //print("asset", self.asset )
-//        if self.asset != nil {
-//            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
-//                DispatchQueue.main.async {
-//                    print("image received")
-//                    print(image as Any)
-//                    //guard let image = image else { return }
-//                    //self?.imageView.image = image
-//                }
-//            }
-//        }
     }
 
     func getCursorPosition() -> CGFloat {
@@ -82,7 +72,7 @@ struct VideoRangeSliderView: View {
         self.activeTimelineWidth = self.offsetRightLimit - self.offsetLeftLimit + self.timelineBorderWidth * 2
         self.activeTimelineOffsetX = self.margins / 2 + self.offsetLeftLimit - self.timelineBorderWidth
 
-        // todo check that cursor fully inside in active timeline
+        // todo check that cursor fully inside in active timeline, not out cut
         if changeType == .leftControl {
             self.offsetCursor = self.offsetLeftLimit
             if self.effectPosition.x < self.offsetCursor {
@@ -271,17 +261,21 @@ struct VideoRangeSliderView: View {
                                         self.tempCurX = value.location.x
 
                                         let duration = self.asset!.duration.seconds
+                                        let effectDuration = self.effectState!.seconds
                                         let onePercent = self.totalWidth / 100
 //                                        let time = CMTimeMakeWithSeconds(  duration / 100 * Float64(self.effectPosition.x / onePercent), preferredTimescale: timescale)
 
-                                        let newEffectTime = duration / 100 * Float64(self.effectPosition.x / onePercent)
+                                        var newEffectTime = duration / 100 * Float64(self.effectPosition.x / onePercent)
+                                        let endVideoTime = duration / 100 * Float64(self.offsetRightLimit / onePercent)
+                                        print("newEffectTime \(newEffectTime), endVideoTime \(endVideoTime), duration: \(duration), effectDuration: \(effectDuration)")
                                         // check is effect in bottom video timeline
-                                        if self.effectState != nil && newEffectTime + self.effectState!.seconds > duration {
-                                            // the same state
-                                        } else {
-                                            self.effectTime = newEffectTime
-                                            self.onEffectMove(newEffectTime)
+                                        if newEffectTime + effectDuration > endVideoTime {
+                                            newEffectTime = endVideoTime - effectDuration
+                                            print("Set max newEffectTime \(newEffectTime)")
                                         }
+
+                                        self.effectTime = newEffectTime
+                                        self.onEffectMove(newEffectTime)
                                     })
                                     .onEnded({ result in
                                         self.onEffectMoveEnd(self.effectTime)
@@ -369,6 +363,17 @@ struct TimelineLimitBase: Shape {
 }
 
 extension AVAsset {
+    // Example using
+    //        if self.asset != nil {
+    //            self.asset!.generateThumbnail { /*[weak self]*/ (image) in
+    //                DispatchQueue.main.async {
+    //                    print("image received")
+    //                    print(image as Any)
+    //                    //guard let image = image else { return }
+    //                    //self?.imageView.image = image
+    //                }
+    //            }
+    //        }
     func generateThumbnail(completion: @escaping (UIImage?) -> Void) {
         print("generateThumbnail")
         DispatchQueue.global().async {

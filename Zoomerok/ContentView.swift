@@ -86,34 +86,40 @@ struct ContentView: View {
                     self.activeSheet = .saveProcess
                     let change = self.sliderChange!
                     do {
+                        let watermarkUrl = Bundle.main.url(forResource: "Watermark2", withExtension: "mov")!
                         let startTime = CMTimeGetSeconds(change.startPositionSeconds)
                         let endTime = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
-                        print("Save params startTime \(startTime), endTime \(endTime), self.overlayOffset \(self.overlayOffset)")
+                        print("Save params startTime \(startTime), endTime \(endTime), self.overlayOffset \(self.overlayOffset), diff: \(self.overlayOffset - startTime)")
                         // todo optimize beacuse already exists in makeOverlayPlayer
                         _ = try self.montageInstance
                             .setBottomPart(startTime: startTime, endTime: endTime)
                             .setOverlayPart(offsetTime: self.overlayOffset - startTime)
-                    } catch {
+                            .setWatermark(url: watermarkUrl)
 
+                        self.montageInstance.saveToFile(
+                            completion: { resultUrl in
+                                self.montageInstance.removeWatermark()
+                                print("Save OK \(resultUrl)")
+                                //self.saveInProgress = false
+                                PHPhotoLibrary.shared().performChanges({
+                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
+                                }) { saved, error in
+                                    print("PHPhotoLibrary \(saved) \(String(describing: error))")
+                                    self.activeSheet = .none
+                                    if saved {
+                                        // todo do smth
+                                    }
+                                }
+                            }, error: { result in
+                                self.montageInstance.removeWatermark()
+                                print("Save error \(result)")
+                                self.saveError = result
+                            })
+                    } catch {
+                        print("Error onSaveStart \(error)")
                     }
 
-                    self.montageInstance.saveToFile(
-                        completion: { resultUrl in
-                            print("Save OK \(resultUrl)")
-                            //self.saveInProgress = false
-                            PHPhotoLibrary.shared().performChanges({
-                                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
-                            }) { saved, error in
-                                print("PHPhotoLibrary \(saved) \(String(describing: error))")
-                                self.activeSheet = .none
-                                if saved {
-                                    // todo do smth
-                                }
-                            }
-                        }, error: { result in
-                            print("Save error \(result)")
-                            self.saveError = result
-                        })
+
                 },
                 onCancel: {
                     print("onCancel")
@@ -200,7 +206,6 @@ struct ContentView: View {
                             self.sliderChange = nil
                             self.previewAsset = AVAsset(url: result)
                             self.videoUrl = result
-//                            self.playerModel.playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
                             self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
                             self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                         } catch {
@@ -281,17 +286,6 @@ struct ContentView: View {
                         onResize: { (result: SliderChange) in
                             self.sliderChange = result
                             print("VideoRangeSliderView startPositionSeconds \(CMTimeGetSeconds(result.startPositionSeconds)) \(CMTimeGetSeconds(result.sizeSeconds))")
-//                            print("VideoRangeSliderView cursorPositionSeconds \(result.cursorPositionSeconds)")
-//                            do {
-//                                _ = try self.montageInstance.setBottomPart(
-//                                    startTime: CMTimeGetSeconds(result.startPositionSeconds),
-//                                    endTime: CMTimeGetSeconds(result.sizeSeconds)
-//                                )
-//
-//                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo?.videoUrl, overlayOffset: self.overlayOffset))
-//                            } catch {
-//
-//                            }
 
                             if self.playerModel.playerController.player != nil {
                                 let currentTime = String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())
@@ -312,7 +306,7 @@ struct ContentView: View {
                         },
                         onEffectMoveEnd: { (result: Float64) in
                             self.overlayOffset = result
-                            print("onEffectMoved \(result)")
+                            print("onEffectMoveEnd \(result)")
                             if self.effectInfo == nil {
                                 print("empty self.effectInfo")
                                 return ()
@@ -336,14 +330,14 @@ struct ContentView: View {
                             let playerController = self.playerModel.playerController
                             if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
                                 self.effectState = nil
-                                //playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
                                 self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
                             } else {
+                                self.cursorTimeSeconds = 0
                                 self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
-//                                playerController.player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl)
-                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl))
+                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: 0))
                             }
-                            playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                            
+                            playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
                         } catch {
                             print("EffectSelectorView error \(error)")
                         }

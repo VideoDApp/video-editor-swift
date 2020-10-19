@@ -294,8 +294,8 @@ class MontageTest: XCTestCase {
             _ = try montage
                 .setBottomVideoSource(url: url)
                 .setOverlayVideoSource(url: overlayUrl)
-                .setBottomPart(startTime: 0, endTime: 4)
-                .setOverlayPart(offsetTime: 1)
+                .setBottomPart(startTime: 0, endTime: 1.5)
+                .setOverlayPart(offsetTime: 0)
                 .setWatermark(url: watermarkUrl)
                 .saveToFile(
                     completion: { result in

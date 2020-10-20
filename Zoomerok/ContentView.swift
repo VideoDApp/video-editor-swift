@@ -185,11 +185,9 @@ struct ContentView: View {
             )
 
         if overlayUrl != nil {
-            let change = self.sliderChange!
-
             _ = try self.montageInstance
                 .setOverlayVideoSource(url: overlayUrl!)
-                .setOverlayPart(offsetTime: overlayOffset - CMTimeGetSeconds(change.startPositionSeconds))
+                .setOverlayPart(offsetTime: overlayOffset)
         }
 
         let item = self.montageInstance.getAVPlayerItem()
@@ -324,19 +322,21 @@ struct ContentView: View {
                         })
 
                     EffectSelectorView(onEffectSelected: { (result: EffectInfo) in
-                        //print(result)
+                        print("EffectSelectorView clicked \(result)")
                         self.effectInfo = result
                         do {
                             let playerController = self.playerModel.playerController
-                            if self.effectState != nil && self.effectState!.previewUrl == result.previewUrl {
+                            if self.effectState?.previewUrl == result.previewUrl {
                                 self.effectState = nil
                                 self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
                             } else {
                                 self.cursorTimeSeconds = 0
                                 self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
-                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: 0))
+                                let overlayOffset = CMTimeGetSeconds(self.sliderChange!.startPositionSeconds)
+                                let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: overlayOffset)
+                                self.playerModel.setPlayer(player: player)
                             }
-                            
+
                             playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
                         } catch {
                             print("EffectSelectorView error \(error)")

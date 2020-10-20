@@ -40,14 +40,12 @@ struct VideoRangeSliderView: View {
         self._asset = asset
         self._cursorTimeSeconds = cursorTimeSeconds
 
-        //self.cursorPosition = cursorPosition
         self.onResize = onResize
         self.onEffectMoveEnd = onEffectMoveEnd
         self.onEffectMove = onEffectMove
 
         self.onTimelineResize()
         //self.printVars()
-        //print("asset", self.asset )
     }
 
     func getCursorPosition() -> CGFloat {

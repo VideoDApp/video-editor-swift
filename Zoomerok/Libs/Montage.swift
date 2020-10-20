@@ -267,7 +267,7 @@ public class Montage {
 
             self.bottomPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
         } catch {
-            print("Failed to load main track")
+            print("Failed to load bottom track \(error)")
         }
 
         return self
@@ -275,6 +275,7 @@ public class Montage {
 
     func setOverlayPart(offsetTime: Float64) throws -> Montage {
 //        func setOverlayPart(startTime: Float64, endTime: Float64) throws -> Montage {
+        print("Montage setOverlayPart offsetTime \(offsetTime)")
         let startTime: Float64 = 0
         let endTime: Float64 = CMTimeGetSeconds(overlayVideoTrack!.asset!.duration)
 
@@ -307,7 +308,6 @@ public class Montage {
                 of: overlayAudioTrack!,
                 at: atTime)
 
-
             self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
             // optmize overlay to bottom video
             let coeff = self.getVideoSize(self.bottomVideoTrack!).width / self.getVideoSize(videoMutableCompositionTrack!).width
@@ -315,7 +315,7 @@ public class Montage {
             // hide last freezed frame
             self.overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: self.preferredTimescale))
         } catch {
-            print("Failed to load main track")
+            print("Failed to load overlay track \(error)")
         }
 
         return self

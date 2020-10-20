@@ -11,7 +11,7 @@ struct EffectInfo {
         // src from resource
         self.previewUrl = name + "-preview"
         // src from file
-        self.videoUrl = Bundle.main.url(forResource: name + "-video", withExtension: "mov")!//URL(string: name + "/video.mov")!
+        self.videoUrl = Bundle.main.url(forResource: name + "-video", withExtension: "mov")!
     }
 }
 
@@ -19,7 +19,6 @@ struct EffectSelectorView: View {
     private var onEffectSelected: (EffectInfo) -> ()
     private let effects: [EffectInfo] = [
         EffectInfo("Spider Attack", "SpiderAttack"),
-        //EffectInfo("SC2", URL(string: "https://ya.ru/3")!, URL(string: "https://ya.ru/4")!)
     ]
 
     init(@ViewBuilder onEffectSelected: @escaping (EffectInfo) -> ()) {
@@ -32,13 +31,11 @@ struct EffectSelectorView: View {
                 HStack(spacing: 0) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 3) {
-
                             ForEach(effects, id: \.title) { item in
                                 Image(item.previewUrl)
                                     .resizable()
                                     .frame(width: 60, height: 60)
                                     .onTapGesture {
-                                        print("Effect button clicked \(item.title)")
                                         self.onEffectSelected(item)
                                 }
                             }

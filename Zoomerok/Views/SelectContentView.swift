@@ -45,7 +45,7 @@ struct SelectContentView: View {
 
                 if self.isSimulator {
                     buttons.insert(.default(Text("LOCAL TEST")) {
-                            let fileUrl = DownloadTestContent.getFilePath("test-files/2VideoBig.mov")
+                            let fileUrl = DownloadTestContent.getFilePath("test-files/3Big.mov")
                             print("Local test file", fileUrl)
                             self.onContentChanged(fileUrl)
                         }, at: 0)

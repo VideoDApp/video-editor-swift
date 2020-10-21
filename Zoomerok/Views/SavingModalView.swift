@@ -1,29 +1,41 @@
 import SwiftUI
 
 struct SavingModalView: View {
-    //@Binding var showModal: Bool
-
+    var errorText: String = ""
     var onCancel: () -> Void
+    var onClose: () -> Void
 
     var body: some View {
-
         VStack {
-            ActivityIndicator()
-                .frame(width: 200, height: 200)
-                .foregroundColor(.white)
+            if errorText.isEmpty {
+                ActivityIndicator()
+                    .frame(width: 200, height: 200)
+                    .foregroundColor(.white)
 
-            Text("Saving video...")
-                .foregroundColor(Color.white)
-                .padding()
+                Text("Saving video...")
+                    .foregroundColor(Color.white)
+                    .padding()
 
-            Text("Please do not close the app")
-                .foregroundColor(Color.white)
-                .padding()
+                Text("Please do not close the app")
+                    .foregroundColor(Color.white)
+                    .padding()
+                //            Button("Cancel") {
+                //                self.showModal.toggle()
+                //            }
+            } else {
+                Text("Save error: \(self.errorText)")
+                    .foregroundColor(Color.white)
+                    .padding()
 
-
-//            Button("Cancel") {
-//                self.showModal.toggle()
-//            }
+                Color.black.edgesIgnoringSafeArea(.all)
+                Spacer()
+                
+                Button("Close") {
+                    self.onClose()
+                }
+                    .padding()
+                    .foregroundColor(.white)
+            }
 
             Color.black.edgesIgnoringSafeArea(.all)
         }
@@ -36,9 +48,11 @@ struct SavingModalView_Previews: PreviewProvider {
 
     static var previews: some View {
         SavingModalView(
-            //showModal: self.$isShow,
             onCancel: {
                 print("Cancel")
+            },
+            onClose: {
+                print("Close")
             })
     }
 }

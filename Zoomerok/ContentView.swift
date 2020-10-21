@@ -78,7 +78,7 @@ struct ContentView: View {
     }
 
     func getSheet() -> some View {
-        print("self.activeSheet \(self.activeSheet)")
+//        print("self.activeSheet \(self.activeSheet)")
         if self.activeSheet == .saveOrShare {
             return AnyView(ExportShareModalView(
                 onSaveStart: {
@@ -91,44 +91,59 @@ struct ContentView: View {
                         let endTime = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
                         print("Save params startTime \(startTime), endTime \(endTime), self.overlayOffset \(self.overlayOffset), diff: \(self.overlayOffset - startTime)")
                         // todo optimize beacuse already exists in makeOverlayPlayer
+                        self.montageInstance = Montage()
                         _ = try self.montageInstance
+                            .setBottomVideoSource(url: self.videoUrl!)
                             .setBottomPart(startTime: startTime, endTime: endTime)
-                            .setOverlayPart(offsetTime: self.overlayOffset - startTime)
-                            .setWatermark(url: watermarkUrl)
+                        if self.effectState != nil {
+                            _ = try self.montageInstance
+                                .setOverlayVideoSource(url: self.effectInfo!.videoUrl)
+                                .setOverlayPart(offsetTime: self.overlayOffset - startTime)
+                        }
+
+                        _ = try self.montageInstance.setWatermark(url: watermarkUrl)
 
                         self.montageInstance.saveToFile(
                             completion: { resultUrl in
                                 self.montageInstance.removeWatermark()
                                 print("Save OK \(resultUrl)")
-                                //self.saveInProgress = false
                                 PHPhotoLibrary.shared().performChanges({
                                     PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
-                                }) { saved, error in
-                                    print("PHPhotoLibrary \(saved) \(String(describing: error))")
-                                    self.activeSheet = .none
+                                }) { (saved, error) in
+                                    print("PHPhotoLibrary saved \(saved), error \(String(describing: error))")
                                     if saved {
-                                        // todo do smth
+                                        self.activeSheet = .none
+                                        return ()
+                                    }
+
+                                    if error != nil {
+                                        self.saveError = "PHPhotoLibrary error - \(error!)"
                                     }
                                 }
-                            }, error: { result in
+                            },
+                            error: { result in
                                 self.montageInstance.removeWatermark()
                                 print("Save error \(result)")
-                                self.saveError = result
+                                self.saveError = "Montage save to file error - \(result)"
                             })
                     } catch {
                         print("Error onSaveStart \(error)")
+                        self.saveError = "Montage prepare error - \(error)"
                     }
-
-
                 },
                 onCancel: {
                     print("onCancel")
                     self.activeSheet = .none
                 }))
         } else if self.activeSheet == .saveProcess {
-            return AnyView(SavingModalView(onCancel: {
-                print("Cancel saving here")
-            }))
+            return AnyView(SavingModalView(
+                errorText: self.saveError,
+                onCancel: {
+                    print("Cancel saving here")
+                },
+                onClose: {
+                    self.activeSheet = .none
+                }))
         } else if self.activeSheet == .none {
             return AnyView(Text("None"))
         }
@@ -198,20 +213,22 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 if self.videoUrl == nil {
-                    SelectContentView(isSimulator: self.isSimulator, onContentChanged: { result in
-                        print("SelectContentView result", result)
-                        do {
-                            self.sliderChange = nil
-                            self.previewAsset = AVAsset(url: result)
-                            self.videoUrl = result
-                            self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
-                            self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-                        } catch {
-                            print("SelectContentView error \(error)")
-                        }
+                    SelectContentView(isSimulator: self.isSimulator,
+                        onContentChanged: { result in
+                            print("SelectContentView result", result)
+                            do {
+                                self.sliderChange = nil
+                                self.previewAsset = AVAsset(url: result)
+                                self.videoUrl = result
+                                let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                                self.playerModel.setPlayer(player: player)
+                                self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
+                            } catch {
+                                print("SelectContentView error \(error)")
+                            }
 
-                        return ()
-                    })
+                            return ()
+                        })
                         .frame(width: UIScreen.main.bounds.width / 1.5, height: UIScreen.main.bounds.height / 2)
                 } else {
                     HStack {
@@ -219,15 +236,7 @@ struct ContentView: View {
                             print("Btn export clicked")
                             self.requestAuthorization(
                                 complete: {
-                                    //print("requestAuthorization complete")
-                                    // todo show export/share modal
-                                    //self.showSaveShareModal = true
-
-//                                    self.showModalSheet = true
-
-//                                    print("set activeSheet")
                                     self.activeSheet = .saveOrShare
-//                                    print("new  self.activeSheet \(self.activeSheet)")
                                 }, error: {
                                     print("requestAuthorization error")
                                     // todo show error (try to reinstall app)
@@ -287,7 +296,7 @@ struct ContentView: View {
 
                             if self.playerModel.playerController.player != nil {
                                 let currentTime = String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())
-                                print("VideoRangeSliderView Seek \(currentTime) \(result.cursorPositionSeconds)")
+//                                print("VideoRangeSliderView Seek \(currentTime) \(result.cursorPositionSeconds)")
                                 self.playerModel.playerController.player!.seek(
                                     to: result.cursorPositionSeconds,
                                     toleranceBefore: CMTime.zero,
@@ -311,7 +320,6 @@ struct ContentView: View {
                             }
 
                             do {
-//                                try _ = self.montageInstance.setOverlayPart(offsetTime: result)
                                 let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: self.effectInfo!.videoUrl, overlayOffset: result)
                                 self.playerModel.setPlayer(player: player)
                             } catch {

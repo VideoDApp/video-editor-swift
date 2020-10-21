@@ -13,16 +13,16 @@ struct ContentView: View {
     @State var player: AVPlayer?
     @State var previewAsset: AVAsset?
     @State var isPlay: Bool = false
-    
+
     @State var playerModel: CustomPlayerModel = CustomPlayerModel()
     // todo merge EffectState and EffectInfo?
     @State var effectState: EffectState?
     @State var effectInfo: EffectInfo?
     @State var sliderChange: SliderChange?
-    
+
     @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
-    
+
     @State var montageInstance = Montage()
     @State var videoUrl: URL?
     @State var overlaySeconds: Float64 = 0
@@ -84,6 +84,7 @@ struct ContentView: View {
                 onSaveStart: {
                     print("onSaveStart")
                     self.saveError = ""
+                    self.playerModel.playerController.player!.pause()
                     self.activeSheet = .saveProcess
                     let change = self.sliderChange!
                     do {
@@ -228,6 +229,7 @@ struct ContentView: View {
 
                         CloseVideoView() {
                             print("Close clicked")
+                            self.playerModel.playerController.player!.pause()
                             self.resetEditor()
                         }
                             .padding()
@@ -260,8 +262,8 @@ struct ContentView: View {
 //                                print("VideoRangeSliderView Seek \(currentTime) \(result.cursorPositionSeconds)")
                                 self.playerModel.playerController.player!.seek(
                                     to: result.cursorPositionSeconds,
-                                    toleranceBefore: CMTime.zero,
-                                    toleranceAfter: CMTime.zero)
+                                    toleranceBefore: .zero,
+                                    toleranceAfter: .zero)
                             }
 
                             return ()

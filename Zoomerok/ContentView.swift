@@ -10,22 +10,22 @@ enum ActiveSheet {
 
 struct ContentView: View {
     @State var cursorTimeSeconds: Double = 0
-    @State var videoUrl: URL?
     @State var player: AVPlayer?
-    @State var montageInstance = Montage()
     @State var previewAsset: AVAsset?
     @State var isPlay: Bool = false
-    @State var effectState: EffectState?
-    @State var activeSheet: ActiveSheet = ActiveSheet.none
-    @State var saveError = ""
+    
     @State var playerModel: CustomPlayerModel = CustomPlayerModel()
+    // todo merge EffectState and EffectInfo?
+    @State var effectState: EffectState?
     @State var effectInfo: EffectInfo?
     @State var sliderChange: SliderChange?
-    @State var overlayOffset: Float64 = 0
-
-    @State private var currentPosition: CGSize = .zero
-    @State private var newPosition: CGSize = .zero
-    @State private var offset: CGFloat = .zero
+    
+    @State var activeSheet: ActiveSheet = ActiveSheet.none
+    @State var saveError = ""
+    
+    @State var montageInstance = Montage()
+    @State var videoUrl: URL?
+    @State var overlaySeconds: Float64 = 0
 
     private var isSimulator: Bool = false
 
@@ -52,7 +52,7 @@ struct ContentView: View {
         self.videoUrl = nil
         self.effectState = nil
         self.sliderChange = nil
-        self.overlayOffset = 0
+        self.overlaySeconds = 0
         self.montageInstance = Montage()
     }
 
@@ -83,22 +83,23 @@ struct ContentView: View {
             return AnyView(ExportShareModalView(
                 onSaveStart: {
                     print("onSaveStart")
+                    self.saveError = ""
                     self.activeSheet = .saveProcess
                     let change = self.sliderChange!
                     do {
                         let watermarkUrl = Bundle.main.url(forResource: "Watermark2", withExtension: "mov")!
-                        let startTime = CMTimeGetSeconds(change.startPositionSeconds)
-                        let endTime = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
-                        print("Save params startTime \(startTime), endTime \(endTime), self.overlayOffset \(self.overlayOffset), diff: \(self.overlayOffset - startTime)")
+                        let startTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds)
+                        let endTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
+                        print("Save params startTimeSeconds \(startTimeSeconds), endTimeSeconds \(endTimeSeconds), self.overlaySeconds \(self.overlaySeconds), diff: \(self.overlaySeconds - startTimeSeconds)")
                         // todo optimize beacuse already exists in makeOverlayPlayer
                         self.montageInstance = Montage()
                         _ = try self.montageInstance
                             .setBottomVideoSource(url: self.videoUrl!)
-                            .setBottomPart(startTime: startTime, endTime: endTime)
+                            .setBottomPart(startTime: startTimeSeconds, endTime: endTimeSeconds)
                         if self.effectState != nil {
                             _ = try self.montageInstance
                                 .setOverlayVideoSource(url: self.effectInfo!.videoUrl)
-                                .setOverlayPart(offsetTime: self.overlayOffset - startTime)
+                                .setOverlayPart(offsetTime: self.overlaySeconds - startTimeSeconds)
                         }
 
                         _ = try self.montageInstance.setWatermark(url: watermarkUrl)
@@ -150,46 +151,6 @@ struct ContentView: View {
 
         return AnyView(Text("Hello"))
     }
-
-//    func initTestVideoForSimulator() {
-//        let testFileName = "test-files/1VideoBig.mov"
-//        let fileUrl = DownloadTestContent.getFilePath(testFileName)
-//        if !DownloadTestContent.isFileExists(testFileName) {
-//            print("Test file not found in simulator mode")
-//            return
-//        }
-//
-//        print("initTestVideoForSimulator")
-//        // todo check is file exists
-//        self.previewAsset = AVAsset(url: fileUrl)
-//        self.videoUrl = fileUrl
-//        self.playerController.player = self.makeSimplePlayer(url: fileUrl)
-//    }
-
-//    func getSliderValue() -> Float {
-//        return Float(self.playerController.player!.currentTime().seconds / (self.playerController.player!.currentItem?.duration.seconds)!)
-//    }
-
-//    func makeCropPlayer(url: URL) -> AVPlayer {
-//        _ = montageInstance.setVideoSource(url: url)
-//        let size = montageInstance.getCorrectSourceSize()
-//        //print("size", size)
-//        let rect = CGRect(x: (size.width / 2) + 180, y: 0, width: (size.width / 2) - 180, height: size.height)
-//        var player: AVPlayer?
-//        do {
-//            let item = try montageInstance
-//                .setTopPart(startTime: 1, endTime: 3)
-//                .setBottomPart(startTime: 3, endTime: 12)
-//                .cropTopPart(rect: rect)
-//                .getAVPlayerItem()
-//
-//            player = AVPlayer(playerItem: item)
-//        } catch {
-//            print("Smth not ok")
-//        }
-//
-//        return player!
-//    }
 
     func makeOverlayPlayer(mainUrl: URL, overlayUrl: URL? = nil, overlayOffset: Float64 = 0) throws -> AVPlayer {
         self.montageInstance = Montage()
@@ -312,7 +273,7 @@ struct ContentView: View {
                             return ()
                         },
                         onEffectMoveEnd: { (result: Float64) in
-                            self.overlayOffset = result
+                            self.overlaySeconds = result
                             print("onEffectMoveEnd \(result)")
                             if self.effectInfo == nil {
                                 print("empty self.effectInfo")
@@ -329,29 +290,32 @@ struct ContentView: View {
                             return ()
                         })
 
-                    EffectSelectorView(onEffectSelected: { (result: EffectInfo) in
-                        print("EffectSelectorView clicked \(result)")
-                        self.effectInfo = result
-                        do {
-                            let playerController = self.playerModel.playerController
-                            if self.effectState?.previewUrl == result.previewUrl {
-                                self.effectState = nil
-                                self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
-                            } else {
-                                self.cursorTimeSeconds = 0
-                                self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
-                                let overlayOffset = CMTimeGetSeconds(self.sliderChange!.startPositionSeconds)
-                                let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: overlayOffset)
-                                self.playerModel.setPlayer(player: player)
+                    EffectSelectorView(
+                        onEffectSelected: { (result: EffectInfo) in
+                            print("EffectSelectorView clicked \(result)")
+                            self.effectInfo = result
+                            do {
+                                let playerController = self.playerModel.playerController
+                                if self.effectState?.previewUrl == result.previewUrl {
+                                    self.effectState = nil
+                                    self.playerModel.setPlayer(player: try self.makeOverlayPlayer(mainUrl: self.videoUrl!))
+                                    playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
+                                } else {
+                                    let startCMTime = self.sliderChange!.startPositionSeconds
+                                    let startTime = CMTimeGetSeconds(startCMTime)
+                                    self.overlaySeconds = startTime
+                                    self.cursorTimeSeconds = startTime
+                                    self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
+                                    let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: startTime)
+                                    self.playerModel.setPlayer(player: player)
+                                    playerController.player!.seek(to: startCMTime, toleranceBefore: .zero, toleranceAfter: .zero)
+                                }
+                            } catch {
+                                print("EffectSelectorView error \(error)")
                             }
 
-                            playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
-                        } catch {
-                            print("EffectSelectorView error \(error)")
-                        }
-
-                        return ()
-                    })
+                            return ()
+                        })
                 }
 
                 Color.black.edgesIgnoringSafeArea(.all)

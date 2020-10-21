@@ -4,7 +4,6 @@ struct SelectContentView: View {
     @State private var showSheet: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera
-    //@State private var image: UIImage?
 
     var onContentChanged: (URL) -> ()
     var isSimulator: Bool = false
@@ -20,15 +19,15 @@ struct SelectContentView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(Color.gray)
+                .foregroundColor(.primary)
                 
-
             VStack {
-                Text("Choose a video")
-                    .foregroundColor(Color.white)
+                Text("Choose a video for montage")
+                    .foregroundColor(.white)
+                    .padding()
 
                 Image(systemName: "plus.square")
-                    .foregroundColor(Color.white)
+                    .foregroundColor(.white)
                     .font(.system(size: 60))
             }
         }
@@ -66,7 +65,6 @@ struct SelectContentView: View {
             .foregroundColor(SwiftUI.Color.white)
             .sheet(isPresented: $showImagePicker) {
                 ImagePicker(
-                    //image: self.$image,
                     isShown: self.$showImagePicker,
                     sourceType: self.sourceType,
                     onPicked: { result in

@@ -172,7 +172,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationView {
+//        NavigationView {
             VStack {
                 if self.videoUrl == nil {
                     SelectContentView(isSimulator: self.isSimulator,
@@ -323,14 +323,14 @@ struct ContentView: View {
                 Color.black.edgesIgnoringSafeArea(.all)
                 Spacer()
             }
-
+            
                 .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
 
             // for NavigationView. Two properties for removing space from top
             // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview
-            .navigationBarTitle("")
-                .navigationBarHidden(true)
-        }
+//            .navigationBarTitle("")
+//                .navigationBarHidden(true)
+        //}
     }
 }
 

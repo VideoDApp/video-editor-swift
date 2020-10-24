@@ -189,17 +189,13 @@ public class Montage {
                 of: self.watermarkVideoTrack!,
                 at: .zero)
 
-//            try videoMutableCompositionTrack?.insertTimeRange(
-//                timeRange,
-//                of: self.watermarkVideoTrack!,
-//                at: watermarkDuration)
-
             self.watermarkPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.watermarkVideoSource!)
-            let maxWidth = self.getVideoSize(self.bottomVideoTrack!).width / 3
-            let margins = maxWidth / 9
-            let coeff = maxWidth / self.getVideoSize(videoMutableCompositionTrack!).width
+            let watermarkMaxWidth = self.getVideoSize(self.bottomVideoTrack!).width / 3
+            let margins = watermarkMaxWidth / 9
+            let bottomVideoWidth = self.getVideoSize(videoMutableCompositionTrack!).width
+            let coeff = watermarkMaxWidth / bottomVideoWidth
             var transform = videoMutableCompositionTrack!.preferredTransform.scaledBy(x: coeff, y: coeff)
-            transform.tx = margins
+            transform.tx = bottomVideoWidth - margins
             transform.ty = margins
             self.watermarkPart.layerInstruction!.setTransform(transform, at: .zero)
 

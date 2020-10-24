@@ -10,6 +10,9 @@ ZOOMEROK_PATH_DEST="${ZOOMEROK_PATH}test-files" &&
 ln -s /Users/sdancer/ZoomerokContent/ $ZOOMEROK_PATH &&
 mv $ZOOMEROK_PATH_FROM $ZOOMEROK_PATH_DEST
 
-Instruction for video creation for app
+Instruction for app effect creation
 
 Create video effects with Adobe After Effects and save ProRes 4444, then encode with default mac encoder (mouse right click by file and select Services->Encode Selected Video Files), then select HEVC 1080p, check Preserve Transparency
+
+Effect size: 720x1280
+Codec: HEVC 1080p (with or without alpha)

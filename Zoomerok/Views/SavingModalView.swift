@@ -23,13 +23,13 @@ struct SavingModalView: View {
                 //                self.showModal.toggle()
                 //            }
             } else {
-                Text("Save error: \(self.errorText)")
+                Text("Action error: \(self.errorText)")
                     .foregroundColor(Color.white)
                     .padding()
 
                 Color.black.edgesIgnoringSafeArea(.all)
                 Spacer()
-                
+
                 Button("Close") {
                     self.onClose()
                 }
@@ -44,8 +44,6 @@ struct SavingModalView: View {
 }
 
 struct SavingModalView_Previews: PreviewProvider {
-    @State static var isShow: Bool = true
-
     static var previews: some View {
         SavingModalView(
             onCancel: {

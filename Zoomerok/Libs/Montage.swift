@@ -190,9 +190,9 @@ public class Montage {
                 at: .zero)
 
             self.watermarkPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.watermarkVideoSource!)
-            let watermarkMaxWidth = self.getVideoSize(self.bottomVideoTrack!).width / 3
+            let watermarkMaxWidth = Montage.getVideoSize(self.bottomVideoTrack!).width / 3
             let margins = watermarkMaxWidth / 9
-            let bottomVideoWidth = self.getVideoSize(videoMutableCompositionTrack!).width
+            let bottomVideoWidth = Montage.getVideoSize(videoMutableCompositionTrack!).width
             let coeff = watermarkMaxWidth / bottomVideoWidth
             var transform = videoMutableCompositionTrack!.preferredTransform.scaledBy(x: coeff, y: coeff)
             transform.tx = bottomVideoWidth - margins
@@ -306,7 +306,7 @@ public class Montage {
 
             self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
             // optmize overlay to bottom video
-            let coeff = self.getVideoSize(self.bottomVideoTrack!).width / self.getVideoSize(videoMutableCompositionTrack!).width
+            let coeff = Montage.getVideoSize(self.bottomVideoTrack!).width / Montage.getVideoSize(videoMutableCompositionTrack!).width
             self.overlayPart.layerInstruction?.setTransform(videoMutableCompositionTrack!.preferredTransform.scaledBy(x: coeff, y: coeff), at: .zero)
             // hide last freezed frame
             self.overlayPart.layerInstruction?.setOpacity(0, at: CMTimeMakeWithSeconds(offsetTime + endTime, preferredTimescale: self.preferredTimescale))
@@ -324,28 +324,35 @@ public class Montage {
         return CGRect(x: secondDot.y, y: screenSize.width - secondDot.x, width: rect.height, height: rect.width)
     }
 
-    func getCorrectSourceSize() -> CGSize {
-        var size = bottomVideoTrack!.naturalSize
-        //print("getCorrectSourceSize", size)
-        if size.width > size.height {
-            size = CGSize(width: size.height, height: size.width)
-        }
+    static func getVideoSize(url: URL) -> CGSize {
+        let asset = AVAsset(url: url)
+        let track = asset.tracks(withMediaType: .video)[0]
 
-        return size
+        return self.getVideoSize(track)
     }
 
-    func cropTopPart(rect: CGRect) -> Montage {
-        // todo how to optimize it? here crop before transformation for iPhone recorded videos
-        var correctRect = rect
-        let correctSize = getCorrectSourceSize();
-        if correctSize.width != bottomVideoTrack!.naturalSize.width {
-            correctRect = calcCorrectRect(rect: rect, screenSize: correctSize)
-        }
-
-        bottomPart.layerInstruction!.setCropRectangle(correctRect, at: .zero)
-
-        return self
-    }
+    // work incorrect with some cases
+//    static func getCorrectSourceSize(track: AVAssetTrack) -> CGSize {
+//        var size = track.naturalSize
+//        if size.width > size.height {
+//            size = CGSize(width: size.height, height: size.width)
+//        }
+//
+//        return size
+//    }
+//
+//    func cropTopPart(rect: CGRect) -> Montage {
+//        // todo how to optimize it? here crop before transformation for iPhone recorded videos
+//        var correctRect = rect
+//        let correctSize = Montage.getCorrectSourceSize(track: self.bottomVideoTrack!);
+//        if correctSize.width != bottomVideoTrack!.naturalSize.width {
+//            correctRect = calcCorrectRect(rect: rect, screenSize: correctSize)
+//        }
+//
+//        bottomPart.layerInstruction!.setCropRectangle(correctRect, at: .zero)
+//
+//        return self
+//    }
 
     func showMixTracks(mix: AVMutableComposition) {
         print("Mix tracks: \(mix.tracks.count)")
@@ -451,13 +458,13 @@ public class Montage {
         self.videoComposition = AVMutableVideoComposition()
         self.videoComposition.instructions = [mainInstruction]
         self.videoComposition.frameDuration = CMTimeMake(value: 1, timescale: 30)
-        self.videoComposition.renderSize = self.getVideoSize(self.bottomVideoTrack!)
+        self.videoComposition.renderSize = Montage.getVideoSize(self.bottomVideoTrack!)
 
         return self
     }
 
-    private func getVideoSize(_ track: AVAssetTrack) -> CGSize {
-        let videoInfo = self.orientation(from: track.preferredTransform)
+    static func getVideoSize(_ track: AVAssetTrack) -> CGSize {
+        let videoInfo = Montage.orientation(from: track.preferredTransform)
         let videoSize: CGSize
         if videoInfo.isPortrait {
             videoSize = CGSize(width: track.naturalSize.height, height: track.naturalSize.width)
@@ -528,7 +535,7 @@ public class Montage {
         }
     }
 
-    private func orientation(from transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
+    static func orientation(from transform: CGAffineTransform) -> (orientation: UIImage.Orientation, isPortrait: Bool) {
         var assetOrientation = UIImage.Orientation.up
         var isPortrait = false
         if transform.a == 0 && transform.b == 1.0 && transform.c == -1.0 && transform.d == 0 {

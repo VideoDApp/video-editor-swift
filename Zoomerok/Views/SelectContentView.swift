@@ -54,7 +54,7 @@ struct SelectContentView: View {
                         buttons.insert(.default(Text("Camera")) {
                                 self.showImagePicker = true
                                 self.sourceType = .camera
-                            }, at: buttons.count - 2)
+                            }, at: buttons.count - 1)
                     }
 
                     return ActionSheet(title: Text("Choose a video source"), buttons: buttons)

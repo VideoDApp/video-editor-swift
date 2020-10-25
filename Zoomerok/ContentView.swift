@@ -4,7 +4,6 @@ import Photos
 
 enum ActiveSheet {
     case none
-    case error
     case saveOrShare
     case saveProcess
 }
@@ -23,6 +22,8 @@ struct ContentView: View {
 
     @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
+    @State var showGeneralError = false
+    @State var generalError = ""
 
     @State var montageInstance = Montage()
     @State var videoUrl: URL?
@@ -147,15 +148,6 @@ struct ContentView: View {
                 onClose: {
                     self.activeSheet = .none
                 }))
-        } else if self.activeSheet == .error {
-            return AnyView(SavingModalView(
-                errorText: self.saveError,
-                onCancel: {
-                    print("Cancel saving here")
-                },
-                onClose: {
-                    self.activeSheet = .none
-                }))
         } else if self.activeSheet == .none {
             return AnyView(Text("None"))
         }
@@ -190,10 +182,9 @@ struct ContentView: View {
                         print("SelectContentView result", result)
                         do {
                             let size = Montage.getVideoSize(url: result)
-                            print("www size \(size)")
                             if size.width > size.height {
-                                self.saveError = "Only vertical video format is supported. Try to select a different video."
-                                self.activeSheet = .error
+                                self.showGeneralError = true
+                                self.generalError = "Only vertical video format is supported. Try to select a different video."
                                 print("User select Horizontal video! Skip")
                                 return ()
                             }
@@ -212,6 +203,9 @@ struct ContentView: View {
 
                         return ()
                     })
+                    .alert(isPresented: self.$showGeneralError) {
+                        Alert(title: Text("Incorrect video"), message: Text(self.generalError), dismissButton: .default(Text("OK")))
+                    }
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
             } else {
                 HStack {
@@ -240,7 +234,10 @@ struct ContentView: View {
                             )
                         Spacer()
                     }
-
+                        .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
+                            set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
+                            getSheet()
+                        }
                         .padding()
 
                     CloseVideoView() {
@@ -274,7 +271,7 @@ struct ContentView: View {
                         print("VideoRangeSliderView startPositionSeconds \(CMTimeGetSeconds(result.startPositionSeconds)) \(CMTimeGetSeconds(result.sizeSeconds))")
 
                         if self.playerModel.playerController.player != nil {
-                            let currentTime = String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())
+//                            let currentTime = String(describing: self.playerModel.playerController.player!.currentItem?.currentTime())
 //                                print("VideoRangeSliderView Seek \(currentTime) \(result.cursorPositionSeconds)")
                             self.playerModel.playerController.player!.seek(
                                 to: result.cursorPositionSeconds,
@@ -341,10 +338,6 @@ struct ContentView: View {
         }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
-            .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
-                set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
-                getSheet()
-        }
 
         // for NavigationView. Two properties for removing space from top
         // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview

@@ -3,26 +3,23 @@ import SwiftUI
 import MobileCoreServices
 
 class ImagePickerCoordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-
-    //@Binding var image: UIImage?
     @Binding var isShown: Bool
     var onPicked: (URL) -> ()
 
-    init(//image: Binding<UIImage?>,
+    init(
         isShown: Binding<Bool>,
         @ViewBuilder onPicked: @escaping (URL) -> ()) {
-        //_image = image
         _isShown = isShown
         self.onPicked = onPicked
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-
         let url = info[UIImagePickerController.InfoKey.mediaURL] as? URL
         print("imagePickerController picked \(String(describing: url))")
-
-        self.onPicked(url!)
-        isShown = false
+        picker.dismiss(animated: true, completion: {
+            self.isShown = false
+            self.onPicked(url!)
+        })
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -31,12 +28,10 @@ class ImagePickerCoordinator: NSObject, UINavigationControllerDelegate, UIImageP
     }
 }
 
-
 struct ImagePicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIImagePickerController
     typealias Coordinator = ImagePickerCoordinator
 
-    //@Binding var image: UIImage?
     @Binding var isShown: Bool
     var sourceType: UIImagePickerController.SourceType = .camera
     var onPicked: (URL) -> ()
@@ -46,17 +41,17 @@ struct ImagePicker: UIViewControllerRepresentable {
 
     func makeCoordinator() -> ImagePicker.Coordinator {
         return ImagePickerCoordinator(
-            //image: $image,
             isShown: $isShown,
             onPicked: onPicked)
     }
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
-
         let picker = UIImagePickerController()
         picker.sourceType = sourceType
         picker.mediaTypes = [kUTTypeMovie as String]
-        picker.videoQuality = .typeIFrame1280x720
+//        picker.videoQuality = .typeIFrame1280x720
+        picker.videoQuality = .typeHigh
+        picker.allowsEditing = true
         picker.delegate = context.coordinator
 
         return picker

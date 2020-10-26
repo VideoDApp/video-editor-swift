@@ -19,6 +19,8 @@ struct EffectSelectorView: View {
     private var onEffectSelected: (EffectInfo) -> ()
     private let effects: [EffectInfo] = [
         EffectInfo("Spider Attack", "SpiderAttack"),
+//        EffectInfo("Soccer Ball", "SoccerBall"),
+//        EffectInfo("Directed By", "DirectedBy"),
     ]
 
     init(@ViewBuilder onEffectSelected: @escaping (EffectInfo) -> ()) {

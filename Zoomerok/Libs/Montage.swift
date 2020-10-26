@@ -148,7 +148,7 @@ public class Montage {
 
         self.overlayVideoSource = AVAsset(url: url)
         self.overlayVideoTrack = self.overlayVideoSource!.tracks(withMediaType: .video)[0]
-        self.overlayAudioTrack = self.overlayVideoSource!.tracks(withMediaType: .audio)[0]
+        self.overlayAudioTrack = self.overlayVideoSource!.tracks(withMediaType: .audio).first
         //let overlayMixComposition = AVMutableComposition()
         //self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         //self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
@@ -173,7 +173,6 @@ public class Montage {
 
         let watermarkDuration = self.watermarkVideoTrack!.asset!.duration.seconds
         let rangeDuration = watermarkDuration > self.realBottomVideoDuration ? self.realBottomVideoDuration : watermarkDuration
-        //print("Watermark duration: rangeDuration \(rangeDuration), watermarkDuration: \(watermarkDuration), self.realBottomVideoDuration: \(self.realBottomVideoDuration)")
         let videoMutableCompositionTrack = self.mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
         self.watermarkPart.tracks = [videoMutableCompositionTrack!]
 
@@ -182,7 +181,6 @@ public class Montage {
             let timeRange = CMTimeRangeMake(
                 start: .zero,
                 duration: CMTimeMakeWithSeconds(rangeDuration, preferredTimescale: preferredTimescale)
-                //duration: watermarkDuration
             )
             try videoMutableCompositionTrack?.insertTimeRange(
                 timeRange,
@@ -190,15 +188,17 @@ public class Montage {
                 at: .zero)
 
             self.watermarkPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.watermarkVideoSource!)
-            let watermarkMaxWidth = Montage.getVideoSize(self.bottomVideoTrack!).width / 3
-            let margins = watermarkMaxWidth / 9
-            let bottomVideoWidth = Montage.getVideoSize(videoMutableCompositionTrack!).width
-            let coeff = watermarkMaxWidth / bottomVideoWidth
+            let bottomVideoWidth = Montage.getVideoSize(self.bottomVideoTrack!).width
+            let watermarkVideoWidth = Montage.getVideoSize(videoMutableCompositionTrack!).width
+            let watermarkMaxWidth = bottomVideoWidth / 3
+            let margins = bottomVideoWidth / 10
+            let coeff = watermarkMaxWidth / watermarkVideoWidth
             var transform = videoMutableCompositionTrack!.preferredTransform.scaledBy(x: coeff, y: coeff)
-            transform.tx = bottomVideoWidth - margins
+            let transformX = bottomVideoWidth - watermarkMaxWidth - margins
+            transform.tx = transformX
             transform.ty = margins
             self.watermarkPart.layerInstruction!.setTransform(transform, at: .zero)
-
+            print("bottomVideoWidth \(bottomVideoWidth), watermarkVideoWidth \(watermarkVideoWidth), margins \(margins), watermarkMaxWidth \(watermarkMaxWidth), bottomVideoWidth \(bottomVideoWidth), coeff \(coeff), transformX \(transformX)")
         } catch {
             throw MontageError.failedLoadTrack
         }
@@ -298,11 +298,13 @@ public class Montage {
                 of: overlayVideoTrack!,
                 at: atTime)
 
-//            try self.overlayPart.audioMutableCompositionTrack?.insertTimeRange(
-            try audioMutableCompositionTrack?.insertTimeRange(
-                timeRange,
-                of: overlayAudioTrack!,
-                at: atTime)
+            if self.overlayAudioTrack != nil {
+                //            try self.overlayPart.audioMutableCompositionTrack?.insertTimeRange(
+                try audioMutableCompositionTrack?.insertTimeRange(
+                    timeRange,
+                    of: self.overlayAudioTrack!,
+                    at: atTime)
+            }
 
             self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
             // optmize overlay to bottom video

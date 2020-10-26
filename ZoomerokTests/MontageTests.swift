@@ -282,9 +282,12 @@ class MontageTest: XCTestCase {
 
 //        let url = documentDirectory.appendingPathComponent("test-files/iphone-zoo-encoded.mov")
 //        let url = documentDirectory.appendingPathComponent("test-files/mouth_mask_480.mov")
-        let url = documentDirectory.appendingPathComponent("test-files/2VideoBig.mov")
+        let url = documentDirectory.appendingPathComponent("test-files/3Big.mov")
         let destinationUrl = documentDirectory.appendingPathComponent(DownloadTestContent.generateFileName(mainName: "video_result_test", nameExtension: "mov"))
-        let overlayUrl = documentDirectory.appendingPathComponent("test-files/transparent-spider.mov")
+//        let overlayUrl = documentDirectory.appendingPathComponent("test-files/transparent-spider.mov")
+        let overlayUrl = documentDirectory.appendingPathComponent("test-files/SoccerBall-video.mov")
+//        let overlayUrl = documentDirectory.appendingPathComponent("test-files/DirectedBy-video.mov")
+
         let watermarkUrl = Bundle.main.url(forResource: "Watermark2", withExtension: "mov")!
         print("MontageTest documentDirectory \(documentDirectory)")
         print("MontageTest url \(url)")
@@ -294,7 +297,7 @@ class MontageTest: XCTestCase {
             _ = try montage
                 .setBottomVideoSource(url: url)
                 .setOverlayVideoSource(url: overlayUrl)
-                .setBottomPart(startTime: 0, endTime: 1.5)
+                .setBottomPart(startTime: 0, endTime: 2)
                 .setOverlayPart(offsetTime: 0)
                 .setWatermark(url: watermarkUrl)
                 .saveToFile(

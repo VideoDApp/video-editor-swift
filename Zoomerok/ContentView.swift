@@ -182,14 +182,13 @@ struct ContentView: View {
                         print("SelectContentView result", result)
                         do {
                             let size = Montage.getVideoSize(url: result)
-                            if size.width > size.height {
+                            if size.width > size.height || size.width == size.height {
                                 self.showGeneralError = true
                                 self.generalError = "Only vertical video format is supported. Try to select a different video."
-                                print("User select Horizontal video! Skip")
+                                print("User select horizontal or square video! Skip \(size)")
                                 return ()
                             }
 
-                            // todo check is vertical video
                             // todo call resetEditor?
                             self.sliderChange = nil
                             self.previewAsset = AVAsset(url: result)
@@ -320,6 +319,7 @@ struct ContentView: View {
                                 let startTime = CMTimeGetSeconds(startCMTime)
                                 self.overlaySeconds = startTime
                                 self.cursorTimeSeconds = startTime
+                                // todo move getVideoDuration to Montage
                                 self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
                                 let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: startTime)
                                 self.playerModel.setPlayer(player: player)

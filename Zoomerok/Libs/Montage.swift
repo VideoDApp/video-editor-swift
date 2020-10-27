@@ -130,9 +130,8 @@ public class Montage {
         self.reset()
         self.bottomVideoSource = AVAsset(url: url)
         self.bottomVideoTrack = self.bottomVideoSource!.tracks(withMediaType: .video)[0]
+        // todo handle situation when video without audio
         self.bottomAudioTrack = self.bottomVideoSource!.tracks(withMediaType: .audio)[0]
-        //self.sourcePart.videoMutableCompositionTrack = mutableMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        //self.sourcePart.layerInstruction = compositionLayerInstruction(for: self.sourcePart.videoMutableCompositionTrack!, asset: self.bottomVideoSource!)
 
         return self
     }
@@ -149,10 +148,6 @@ public class Montage {
         self.overlayVideoSource = AVAsset(url: url)
         self.overlayVideoTrack = self.overlayVideoSource!.tracks(withMediaType: .video)[0]
         self.overlayAudioTrack = self.overlayVideoSource!.tracks(withMediaType: .audio).first
-        //let overlayMixComposition = AVMutableComposition()
-        //self.overlayPart.videoMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .video, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        //self.overlayPart.audioMutableCompositionTrack = overlayMixComposition.addMutableTrack(withMediaType: .audio, preferredTrackID: Int32(kCMPersistentTrackID_Invalid))
-        //self.overlayPart.layerInstruction = self.compositionLayerInstruction(for: overlayPart.videoMutableCompositionTrack!, asset: self.overlayVideoSource!)
 
         return self
     }

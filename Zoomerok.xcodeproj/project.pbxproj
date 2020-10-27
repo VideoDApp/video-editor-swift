@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 980B703F2545F09100DEF362 /* DirectedBy-video.mov */; };
+		980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 980B705A2547F82A00DEF362 /* SoccerBall-video.mov */; };
 		9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9839F6362503E430000DE7C0 /* GoogleService-Info.plist */; };
 		983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF5250FE4750061A4CD /* TestUI.swift */; };
 		983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF7250FFBD10061A4CD /* SelectContentView.swift */; };
@@ -66,6 +68,8 @@
 		7B6B3D27266BD941F7A7ADF7 /* Pods_Zoomerok.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F0EEFC076EA64A96E5DD261 /* Pods-ZoomerokTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZoomerokTests.debug.xcconfig"; path = "Target Support Files/Pods-ZoomerokTests/Pods-ZoomerokTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81F00608ECF44071EAF60C7D /* Pods-Zoomerok-ZoomerokUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; path = "Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		980B703F2545F09100DEF362 /* DirectedBy-video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "DirectedBy-video.mov"; sourceTree = "<group>"; };
+		980B705A2547F82A00DEF362 /* SoccerBall-video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "SoccerBall-video.mov"; sourceTree = "<group>"; };
 		9839F6362503E430000DE7C0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		983CEBF5250FE4750061A4CD /* TestUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUI.swift; sourceTree = "<group>"; };
 		983CEBF7250FFBD10061A4CD /* SelectContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectContentView.swift; sourceTree = "<group>"; };
@@ -149,6 +153,22 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		980B702D2545965F00DEF362 /* SoccerBall */ = {
+			isa = PBXGroup;
+			children = (
+				980B705A2547F82A00DEF362 /* SoccerBall-video.mov */,
+			);
+			path = SoccerBall;
+			sourceTree = "<group>";
+		};
+		980B70362545EC6400DEF362 /* DirectedBy */ = {
+			isa = PBXGroup;
+			children = (
+				980B703F2545F09100DEF362 /* DirectedBy-video.mov */,
+			);
+			path = DirectedBy;
+			sourceTree = "<group>";
+		};
 		984C5CE42501A2AD007DBAF4 = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +240,8 @@
 		9896B6E02506AB75007B7C40 /* Effects */ = {
 			isa = PBXGroup;
 			children = (
+				980B70362545EC6400DEF362 /* DirectedBy */,
+				980B702D2545965F00DEF362 /* SoccerBall */,
 				9896B6EF250B7E79007B7C40 /* SpiderAttack */,
 			);
 			path = Effects;
@@ -395,8 +417,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9896B6E82506CF8D007B7C40 /* 1024.png in Resources */,
+				980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */,
 				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
+				980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */,
 				98B49046253C490400C218F2 /* Watermark.mov in Resources */,
 				9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */,
 				9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */,

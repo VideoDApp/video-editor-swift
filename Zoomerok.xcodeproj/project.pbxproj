@@ -21,12 +21,13 @@
 		984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */; };
 		984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */; };
 		984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */; };
+		9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D810254C2E7300F7887A /* 1024_transparent.png */; };
+		9869D819254C2EB800F7887A /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D818254C2EB800F7887A /* 1024.png */; };
 		988CF512252758730003B673 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CF511252758730003B673 /* ActivityIndicator.swift */; };
 		988CF517252885BC0003B673 /* SavingModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CF516252885BC0003B673 /* SavingModalView.swift */; };
 		988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988DD41A251CA5FC00623601 /* CustomPlayerView.swift */; };
 		9896B6E22506ABCD007B7C40 /* SpiderAttack-video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E12506ABCD007B7C40 /* SpiderAttack-video.mov */; };
 		9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E52506C6E1007B7C40 /* Assets.xcassets */; };
-		9896B6E82506CF8D007B7C40 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E72506CF8C007B7C40 /* 1024.png */; };
 		9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */; };
 		9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6EB2508C637007B7C40 /* PreviewControlView.swift */; };
 		98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D72502A03F00240003 /* ImagePicker.swift */; };
@@ -88,12 +89,13 @@
 		984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokUITests.swift; sourceTree = "<group>"; };
 		984C5D142501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9869D810254C2E7300F7887A /* 1024_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024_transparent.png; sourceTree = "<group>"; };
+		9869D818254C2EB800F7887A /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
 		988CF511252758730003B673 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		988CF516252885BC0003B673 /* SavingModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingModalView.swift; sourceTree = "<group>"; };
 		988DD41A251CA5FC00623601 /* CustomPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPlayerView.swift; sourceTree = "<group>"; };
 		9896B6E12506ABCD007B7C40 /* SpiderAttack-video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "SpiderAttack-video.mov"; sourceTree = "<group>"; };
 		9896B6E52506C6E1007B7C40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9896B6E72506CF8C007B7C40 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1024.png; path = Zoomerok/Assets.xcassets/AppIcon.appiconset/1024.png; sourceTree = SOURCE_ROOT; };
 		9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectSelectorView.swift; sourceTree = "<group>"; };
 		9896B6EB2508C637007B7C40 /* PreviewControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewControlView.swift; sourceTree = "<group>"; };
 		98A5D3D72502A03F00240003 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -276,9 +278,10 @@
 		98A5D3E22502A13800240003 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				9869D810254C2E7300F7887A /* 1024_transparent.png */,
 				98B49045253C490400C218F2 /* Watermark.mov */,
+				9869D818254C2EB800F7887A /* 1024.png */,
 				98B4904D253C7AA200C218F2 /* Watermark2.mov */,
-				9896B6E72506CF8C007B7C40 /* 1024.png */,
 				9896B6E02506AB75007B7C40 /* Effects */,
 			);
 			path = Assets;
@@ -416,15 +419,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9896B6E82506CF8D007B7C40 /* 1024.png in Resources */,
 				980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */,
 				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
+				9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */,
 				980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */,
 				98B49046253C490400C218F2 /* Watermark.mov in Resources */,
 				9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */,
 				9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */,
 				98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */,
+				9869D819254C2EB800F7887A /* 1024.png in Resources */,
 				9896B6E22506ABCD007B7C40 /* SpiderAttack-video.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,6 +746,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -767,6 +772,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;

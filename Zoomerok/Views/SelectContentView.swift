@@ -22,6 +22,10 @@ struct SelectContentView: View {
                 .foregroundColor(.primary)
 
             VStack {
+                Text("Zoomerok")
+                    .font(.system(size: 60))
+                    .padding()
+
                 Text("Choose a video for montage")
                     .foregroundColor(.white)
                     .padding()

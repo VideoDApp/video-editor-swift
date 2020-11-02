@@ -19,7 +19,7 @@ struct SelectContentView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(.primary)
+                .foregroundColor(.black)
 
             VStack {
                 Text("Zoomerok")

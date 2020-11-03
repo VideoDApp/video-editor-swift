@@ -1,6 +1,7 @@
 import SwiftUI
 import AVKit
 import Photos
+import Firebase
 
 enum ActiveSheet {
     case none
@@ -85,6 +86,7 @@ struct ContentView: View {
             return AnyView(ExportShareModalView(
                 onSaveStart: {
                     print("onSaveStart")
+                    Analytics.logEvent("z_save_video_start", parameters: nil)
                     self.saveError = ""
                     self.playerModel.playerController.player!.pause()
                     self.activeSheet = .saveProcess
@@ -109,6 +111,7 @@ struct ContentView: View {
 
                         self.montageInstance.saveToFile(
                             completion: { resultUrl in
+                                Analytics.logEvent("z_save_video_end", parameters: nil)
                                 self.montageInstance.removeWatermark()
                                 print("Save OK \(resultUrl)")
                                 PHPhotoLibrary.shared().performChanges({
@@ -126,6 +129,7 @@ struct ContentView: View {
                                 }
                             },
                             error: { result in
+                                Analytics.logEvent("z_save_video_error", parameters: nil)
                                 self.montageInstance.removeWatermark()
                                 print("Save error \(result)")
                                 self.saveError = "Montage save to file error - \(result)"
@@ -179,6 +183,7 @@ struct ContentView: View {
             if self.videoUrl == nil {
                 SelectContentView(isSimulator: self.isSimulator,
                     onContentChanged: { (result: URL) in
+                        Analytics.logEvent("z_video_selected", parameters: nil)
                         print("SelectContentView result", result)
                         do {
                             let size = Montage.getVideoSize(url: result)

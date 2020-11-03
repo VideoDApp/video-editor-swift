@@ -557,4 +557,8 @@ public class Montage {
 
         return instruction
     }
+
+    static func getVideoDuration(_ url: URL) -> Double {
+        return AVAsset(url: url).duration.seconds
+    }
 }

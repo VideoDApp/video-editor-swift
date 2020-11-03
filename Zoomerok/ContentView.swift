@@ -187,10 +187,18 @@ struct ContentView: View {
                         print("SelectContentView result", result)
                         do {
                             let size = Montage.getVideoSize(url: result)
+                            let duration = Montage.getVideoDuration(result)
                             if size.width > size.height || size.width == size.height {
                                 self.showGeneralError = true
                                 self.generalError = "Only vertical video format is supported. Try to select a different video."
                                 print("User select horizontal or square video! Skip \(size)")
+                                return ()
+                            }
+                            
+                            if duration < 2 {
+                                self.showGeneralError = true
+                                self.generalError = "Video duration less than 2 seconds. Try to select a different video."
+                                print("User select short video! Duration \(duration)")
                                 return ()
                             }
 
@@ -324,8 +332,7 @@ struct ContentView: View {
                                 let startTime = CMTimeGetSeconds(startCMTime)
                                 self.overlaySeconds = startTime
                                 self.cursorTimeSeconds = startTime
-                                // todo move getVideoDuration to Montage
-                                self.effectState = EffectState(result.previewUrl, DownloadTestContent.getVideoDuration(result.videoUrl))
+                                self.effectState = EffectState(result.previewUrl, Montage.getVideoDuration(result.videoUrl))
                                 let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!, overlayUrl: result.videoUrl, overlayOffset: startTime)
                                 self.playerModel.setPlayer(player: player)
                                 playerController.player!.seek(to: startCMTime, toleranceBefore: .zero, toleranceAfter: .zero)

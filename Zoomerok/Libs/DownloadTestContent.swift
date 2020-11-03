@@ -104,8 +104,4 @@ class DownloadTestContent {
 
         return "\(mainName)-\(date)-\(Int.random(in: 1...100000)).\(nameExtension)"
     }
-
-    static func getVideoDuration(_ url: URL) -> Double {
-        return AVAsset(url: url).duration.seconds
-    }
 }

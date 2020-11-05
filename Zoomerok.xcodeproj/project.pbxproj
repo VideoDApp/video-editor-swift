@@ -21,6 +21,11 @@
 		984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */; };
 		984C5D082501A2AF007DBAF4 /* ZoomerokTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D072501A2AF007DBAF4 /* ZoomerokTests.swift */; };
 		984C5D132501A2AF007DBAF4 /* ZoomerokUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */; };
+		98607CB92552C13F00EA2B77 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98607CB82552C13E00EA2B77 /* StoreKit.framework */; };
+		98607CBD2552D0F900EA2B77 /* IAPHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98607CBC2552D0F900EA2B77 /* IAPHelper.swift */; };
+		98607CC52552D13900EA2B77 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98607CC12552D13900EA2B77 /* MasterViewController.swift */; };
+		98607CC62552D13900EA2B77 /* ZoomerokProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98607CC22552D13900EA2B77 /* ZoomerokProducts.swift */; };
+		98607CDC2553F5A000EA2B77 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98607CDB2553F5A000EA2B77 /* Store.swift */; };
 		9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D810254C2E7300F7887A /* 1024_transparent.png */; };
 		9869D819254C2EB800F7887A /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D818254C2EB800F7887A /* 1024.png */; };
 		988CF512252758730003B673 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CF511252758730003B673 /* ActivityIndicator.swift */; };
@@ -89,6 +94,12 @@
 		984C5D0E2501A2AF007DBAF4 /* ZoomerokUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZoomerokUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		984C5D122501A2AF007DBAF4 /* ZoomerokUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomerokUITests.swift; sourceTree = "<group>"; };
 		984C5D142501A2AF007DBAF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		98607CB82552C13E00EA2B77 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		98607CBC2552D0F900EA2B77 /* IAPHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPHelper.swift; sourceTree = "<group>"; usesTabs = 0; };
+		98607CC12552D13900EA2B77 /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
+		98607CC22552D13900EA2B77 /* ZoomerokProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomerokProducts.swift; sourceTree = "<group>"; };
+		98607CCC2553E38100EA2B77 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
+		98607CDB2553F5A000EA2B77 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		9869D810254C2E7300F7887A /* 1024_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024_transparent.png; sourceTree = "<group>"; };
 		9869D818254C2EB800F7887A /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
 		988CF511252758730003B673 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -120,6 +131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4B71E561A37268D3590C45E /* Pods_Zoomerok.framework in Frameworks */,
+				98607CB92552C13F00EA2B77 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +209,8 @@
 		984C5CEF2501A2AD007DBAF4 /* Zoomerok */ = {
 			isa = PBXGroup;
 			children = (
+				98607CDA2553F58E00EA2B77 /* WWDCIAP */,
+				98607CBB2552D0D700EA2B77 /* IAP */,
 				98D98CD42505472B006FB952 /* Libs */,
 				9839F6362503E430000DE7C0 /* GoogleService-Info.plist */,
 				98A5D3E22502A13800240003 /* Assets */,
@@ -237,6 +251,25 @@
 				984C5D142501A2AF007DBAF4 /* Info.plist */,
 			);
 			path = ZoomerokUITests;
+			sourceTree = "<group>";
+		};
+		98607CBB2552D0D700EA2B77 /* IAP */ = {
+			isa = PBXGroup;
+			children = (
+				98607CBC2552D0F900EA2B77 /* IAPHelper.swift */,
+				98607CCC2553E38100EA2B77 /* Configuration.storekit */,
+				98607CC12552D13900EA2B77 /* MasterViewController.swift */,
+				98607CC22552D13900EA2B77 /* ZoomerokProducts.swift */,
+			);
+			path = IAP;
+			sourceTree = "<group>";
+		};
+		98607CDA2553F58E00EA2B77 /* WWDCIAP */ = {
+			isa = PBXGroup;
+			children = (
+				98607CDB2553F5A000EA2B77 /* Store.swift */,
+			);
+			path = WWDCIAP;
 			sourceTree = "<group>";
 		};
 		9896B6E02506AB75007B7C40 /* Effects */ = {
@@ -302,6 +335,7 @@
 		C9E4C2C49A9D5E19D1C3358C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				98607CB82552C13E00EA2B77 /* StoreKit.framework */,
 				7B6B3D27266BD941F7A7ADF7 /* Pods_Zoomerok.framework */,
 				D3B50D178B12259BDDE63758 /* Pods_Zoomerok_ZoomerokUITests.framework */,
 				3F3B5646AFD4A7EED536B611 /* Pods_ZoomerokTests.framework */,
@@ -561,16 +595,20 @@
 				98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */,
 				988CF512252758730003B673 /* ActivityIndicator.swift in Sources */,
 				983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */,
+				98607CDC2553F5A000EA2B77 /* Store.swift in Sources */,
 				988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */,
+				98607CC52552D13900EA2B77 /* MasterViewController.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */,
 				98427857252CCD0500A553F9 /* ExportShareModalView.swift in Sources */,
+				98607CBD2552D0F900EA2B77 /* IAPHelper.swift in Sources */,
 				9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
 				983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */,
 				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
 				98A5D3DE2502A0B100240003 /* Montage.swift in Sources */,
 				98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */,
+				98607CC62552D13900EA2B77 /* ZoomerokProducts.swift in Sources */,
 				984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */,
 				984C5CF52501A2AD007DBAF4 /* ContentView.swift in Sources */,
 				98FDC6F0253A001C00D0FB58 /* ExperimentMontage.swift in Sources */,

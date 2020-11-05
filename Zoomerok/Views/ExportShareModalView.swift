@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ExportShareModalView: View {
     //@Binding var showModal: Bool
+    @State var isHideWatermark = false
 
     var onSaveStart: () -> Void
     var onCancel: () -> Void
@@ -11,6 +12,15 @@ struct ExportShareModalView: View {
             Text("Export or share video")
                 .foregroundColor(.gray)
                 .padding(.bottom, 150)
+
+            Toggle(isOn: self.$isHideWatermark) {
+                Text("Hide watermark (app name)")
+                    .foregroundColor(.white)
+            }
+                .padding()
+                .onReceive([self.isHideWatermark].publisher.first()) { (value) in
+                    print("New value is: \(value)")
+            }
 
             Button(action: {
                 self.onSaveStart()

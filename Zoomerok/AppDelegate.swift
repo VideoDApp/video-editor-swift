@@ -11,11 +11,10 @@ import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-            FirebaseApp.configure()
+        FirebaseApp.configure()
+        // add our IAP class to queue
+        _ = ZoomerokProducts.store
         // Override point for customization after application launch.
         return true
     }
@@ -34,6 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
-
+    // Called when the application is about to terminate.
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Remove the observer.
+        ZoomerokProducts.store.remove()
+    }
 }
 

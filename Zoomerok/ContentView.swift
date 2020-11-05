@@ -2,6 +2,7 @@ import SwiftUI
 import AVKit
 import Photos
 import Firebase
+import StoreKit
 
 enum ActiveSheet {
     case none
@@ -347,6 +348,11 @@ struct ContentView: View {
 
             Color.black.edgesIgnoringSafeArea(.all)
             Spacer()
+        }
+        .onAppear(){
+            ZoomerokProducts.store.requestProducts{  (success, products: [SKProduct]?) in
+                print("requestProducts \(success) \(products!.first)")
+            }
         }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))

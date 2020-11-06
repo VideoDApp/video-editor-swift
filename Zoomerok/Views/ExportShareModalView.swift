@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct ExportShareModalView: View {
-    //@Binding var showModal: Bool
-    @State var isHideWatermark = false
+    @Binding var isPaid: Bool
+    @Binding var isHideWatermark: Bool
 
     var onSaveStart: () -> Void
     var onCancel: () -> Void
+    var onOpenSubscription: () -> Void
 
     var body: some View {
         VStack {
@@ -19,7 +20,11 @@ struct ExportShareModalView: View {
             }
                 .padding()
                 .onReceive([self.isHideWatermark].publisher.first()) { (value) in
-                    print("New value is: \(value)")
+                    print("New value is: \(value) \(self.isHideWatermark)")
+                    if !self.isPaid {
+                        self.isHideWatermark = false
+                        self.onOpenSubscription()
+                    }
             }
 
             Button(action: {
@@ -52,16 +57,21 @@ struct ExportShareModalView: View {
 }
 
 struct ExportShareModalView_Previews: PreviewProvider {
-    //@State static var isShow: Bool = true
+    @State static var isPaid: Bool = false
+    @State static var isHideWatermark: Bool = true
 
     static var previews: some View {
         ExportShareModalView(
-            //showModal: self.$isShow,
+            isPaid: self.$isPaid,
+            isHideWatermark: $isHideWatermark,
             onSaveStart: {
                 print("onSaveStart")
             },
             onCancel: {
                 print("onCancel")
+            },
+            onOpenSubscription: {
+
             })
     }
 }

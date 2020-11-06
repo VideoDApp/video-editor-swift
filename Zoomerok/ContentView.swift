@@ -30,6 +30,8 @@ struct ContentView: View {
     @State var montageInstance = Montage()
     @State var videoUrl: URL?
     @State var overlaySeconds: Float64 = 0
+    @State var isPaid: Bool = false
+    @State var isHideWatermark: Bool = false
 
     private var isSimulator: Bool = false
 
@@ -85,6 +87,8 @@ struct ContentView: View {
 //        print("self.activeSheet \(self.activeSheet)")
         if self.activeSheet == .saveOrShare {
             return AnyView(ExportShareModalView(
+                isPaid: self.$isPaid,
+                isHideWatermark: self.$isHideWatermark,
                 onSaveStart: {
                     print("onSaveStart")
                     Analytics.logEvent("z_save_video_start", parameters: nil)
@@ -108,7 +112,9 @@ struct ContentView: View {
                                 .setOverlayPart(offsetTime: self.overlaySeconds - startTimeSeconds)
                         }
 
-                        _ = try self.montageInstance.setWatermark(url: watermarkUrl)
+                        if !self.isHideWatermark {
+                            _ = try self.montageInstance.setWatermark(url: watermarkUrl)
+                        }
 
                         self.montageInstance.saveToFile(
                             completion: { resultUrl in
@@ -143,6 +149,9 @@ struct ContentView: View {
                 onCancel: {
                     print("onCancel")
                     self.activeSheet = .none
+                },
+                onOpenSubscription: {
+                    print("Subscribtion window opened")
                 }))
         } else if self.activeSheet == .saveProcess {
             return AnyView(SavingModalView(
@@ -195,7 +204,7 @@ struct ContentView: View {
                                 print("User select horizontal or square video! Skip \(size)")
                                 return ()
                             }
-                            
+
                             if duration < 2 {
                                 self.showGeneralError = true
                                 self.generalError = "Video duration less than 2 seconds. Try to select a different video."
@@ -349,11 +358,11 @@ struct ContentView: View {
             Color.black.edgesIgnoringSafeArea(.all)
             Spacer()
         }
-        .onAppear(){
-            ZoomerokProducts.store.requestProducts{  (success, products: [SKProduct]?) in
-                print("requestProducts \(success) \(products!.first)")
+            .onAppear() {
+                ZoomerokProducts.store.requestProducts { (success, products: [SKProduct]?) in
+                    print("requestProducts \(success) \(products!.first)")
+                }
             }
-        }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
 

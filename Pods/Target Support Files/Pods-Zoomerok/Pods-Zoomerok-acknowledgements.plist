@@ -1595,6 +1595,16 @@ SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
+			<string>Copyright 2020 bytedance.com. All rights reserved.</string>
+			<key>License</key>
+			<string>Copyright</string>
+			<key>Title</key>
+			<string>TikTokOpenSDK</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
 			<string>Copyright (c) 2011 Petteri Aimonen &lt;jpa at nanopb.mail.kapsi.fi&gt;
 
 This software is provided 'as-is', without any express or 

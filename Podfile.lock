@@ -63,10 +63,12 @@ PODS:
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
   - PromisesObjC (1.2.10)
+  - TikTokOpenSDK (4.0.1)
 
 DEPENDENCIES:
   - Firebase/Analytics
   - KeychainAccess
+  - TikTokOpenSDK (~> 4.0.1)
 
 SPEC REPOS:
   trunk:
@@ -81,6 +83,7 @@ SPEC REPOS:
     - KeychainAccess
     - nanopb
     - PromisesObjC
+    - TikTokOpenSDK
 
 SPEC CHECKSUMS:
   Firebase: 47176280bfba198e531f909cfb1612dad216cb96
@@ -94,7 +97,8 @@ SPEC CHECKSUMS:
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  TikTokOpenSDK: 24a702702a64b5652f2a0bcf4ad1b11d08c6eb1b
 
-PODFILE CHECKSUM: e3546976762310927d443e7c4899bff3a74c6054
+PODFILE CHECKSUM: 4143b43a48424a219dfc313ae22d5dd6b51d42cc
 
 COCOAPODS: 1.10.0.rc.1

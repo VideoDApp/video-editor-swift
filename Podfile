@@ -6,9 +6,9 @@ target 'Zoomerok' do
   use_frameworks!
 
   # Pods for Zoomerok
-  #pod 'GoogleAnalytics'
   pod 'Firebase/Analytics'
   pod 'KeychainAccess'
+  pod 'TikTokOpenSDK', '~> 4.0.1'
 
   target 'ZoomerokTests' do
     inherit! :search_paths

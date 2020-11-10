@@ -1522,6 +1522,10 @@ SOFTWARE.
    limitations under the License.
 
 
+## TikTokOpenSDK
+
+Copyright 2020 bytedance.com. All rights reserved.
+
 ## nanopb
 
 Copyright (c) 2011 Petteri Aimonen <jpa at nanopb.mail.kapsi.fi>

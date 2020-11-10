@@ -359,9 +359,9 @@ struct ContentView: View {
             Spacer()
         }
             .onAppear() {
-                ZoomerokProducts.store.requestProducts { (success, products: [SKProduct]?) in
-                    print("requestProducts \(success) \(products!.first)")
-                }
+//                ZoomerokProducts.store.requestProducts { (success, products: [SKProduct]?) in
+//                    print("requestProducts \(success) \(String(describing: products!.first))")
+//                }
             }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))

@@ -4,6 +4,8 @@ struct ExportShareModalView: View {
     @Binding var isPaid: Bool
     @Binding var isHideWatermark: Bool
 
+    @State var isInit = false
+
     var onSaveStart: () -> Void
     var onCancel: () -> Void
     var onOpenSubscription: () -> Void
@@ -14,18 +16,27 @@ struct ExportShareModalView: View {
                 .foregroundColor(.gray)
                 .padding(.bottom, 150)
 
-            Toggle(isOn: self.$isHideWatermark) {
-                Text("Hide watermark (app name)")
-                    .foregroundColor(.white)
-            }
-                .padding()
-                .onReceive([self.isHideWatermark].publisher.first()) { (value) in
-                    print("New value is: \(value) \(self.isHideWatermark)")
-                    if !self.isPaid {
-                        self.isHideWatermark = false
-                        self.onOpenSubscription()
-                    }
-            }
+//            Toggle(isOn: self.$isHideWatermark) {
+//                Text("Hide watermark (app name)")
+//                    .foregroundColor(.white)
+//            }
+//                .padding()
+//                .onReceive([self.isHideWatermark].publisher.first()) { (value) in
+//                    if !self.isInit {
+//                        self.isInit = true
+//                        print("Jut init")
+//                        return
+//                    }
+//
+//                    print("Disable watermark New value is: \(value) \(self.isHideWatermark)")
+//                    if value {
+//                        if !self.isPaid {
+//                            self.isHideWatermark = false
+//                            self.onOpenSubscription()
+//                        }
+//                    }
+//            }
+
 
             Button(action: {
                 self.onSaveStart()

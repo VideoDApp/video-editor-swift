@@ -84,7 +84,7 @@ class MasterViewController: UITableViewController {
     @objc func handlePurchaseNotification(_ notification: Notification) {
         guard
             let productID = notification.object as? String,
-            let index = products.index(where: { product -> Bool in
+            let index = products.firstIndex(where: { product -> Bool in
                 product.productIdentifier == productID
             })
             else { return }

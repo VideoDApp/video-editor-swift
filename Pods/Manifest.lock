@@ -56,6 +56,7 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.7.2):
     - GoogleUtilities/Logger
+  - Just (0.8.0)
   - KeychainAccess (4.2.1)
   - nanopb (1.30906.0):
     - nanopb/decode (= 1.30906.0)
@@ -67,6 +68,7 @@ PODS:
 
 DEPENDENCIES:
   - Firebase/Analytics
+  - Just
   - KeychainAccess
   - TikTokOpenSDK (~> 4.0.1)
 
@@ -80,6 +82,7 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleUtilities
+    - Just
     - KeychainAccess
     - nanopb
     - PromisesObjC
@@ -94,11 +97,12 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 1a66f478c68ecd6c16ee63ee60c7c3a648e6b337
   GoogleDataTransport: e85fb700c9b027079ce182c3d08e12e0f9618bb4
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
+  Just: aef5105fb2c7069b65aa6f21aec8f429057f9c19
   KeychainAccess: 9b07f665298d13c3a85881bd3171f6f49b8151c1
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   TikTokOpenSDK: 24a702702a64b5652f2a0bcf4ad1b11d08c6eb1b
 
-PODFILE CHECKSUM: 4143b43a48424a219dfc313ae22d5dd6b51d42cc
+PODFILE CHECKSUM: 7c5e3f347253a89798de2021449912562de4c47f
 
 COCOAPODS: 1.10.0.rc.1

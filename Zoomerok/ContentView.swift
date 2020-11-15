@@ -7,8 +7,7 @@ import StoreKit
 enum ActiveSheet {
     case none
     case saveOrShare
-    case saveProcess
-}
+    case saveProcess}
 
 struct ContentView: View {
     @State var cursorTimeSeconds: Double = 0
@@ -25,6 +24,7 @@ struct ContentView: View {
     @State var activeSheet: ActiveSheet = ActiveSheet.none
     @State var saveError = ""
     @State var showGeneralError = false
+    @State var showAlertBeforeShare = false
     @State var generalError = ""
 
     @State var montageInstance = Montage()
@@ -62,6 +62,27 @@ struct ContentView: View {
         self.montageInstance = Montage()
     }
 
+//    func onOpenTiktok(localIdentifier: String) {
+//        //                    let req = TikTokOpenPlatformShareRequest()
+//        let req = TikTokOpenSDKShareRequest()
+//        req.mediaType = .video
+//        req.landedPageType = .clip
+//        req.hashtag = "#zoomerok"
+//        req.localIdentifiers = [localIdentifier]
+//        req.send(complete: { result in
+//            print("Share result: \(result)")
+//        })
+//    }
+
+    func openTiktok() {
+        guard let url = URL(string: "snssdk1233://") else { return }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
+    func openTiktokDescription() {
+        self.showAlertBeforeShare = true
+    }
+
     func requestAuthorization(complete: @escaping () -> Void, error: @escaping () -> Void) {
         let authorizationStatus = PHPhotoLibrary.authorizationStatus()
         //print("authorizationStatus \(authorizationStatus.rawValue)")
@@ -83,6 +104,70 @@ struct ContentView: View {
         }
     }
 
+    func onSaveStart(isTiktok: Bool = false) {
+        print("onSaveStart")
+        Analytics.logEvent("z_save_video_start", parameters: nil)
+        self.saveError = ""
+        self.playerModel.playerController.player!.pause()
+        self.activeSheet = .saveProcess
+        let change = self.sliderChange!
+        do {
+            let watermarkUrl = Bundle.main.url(forResource: "Watermark2", withExtension: "mov")!
+            let startTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds)
+            let endTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
+            print("Save params startTimeSeconds \(startTimeSeconds), endTimeSeconds \(endTimeSeconds), self.overlaySeconds \(self.overlaySeconds), diff: \(self.overlaySeconds - startTimeSeconds)")
+            // todo optimize beacuse already exists in makeOverlayPlayer
+            self.montageInstance = Montage()
+            _ = try self.montageInstance
+                .setBottomVideoSource(url: self.videoUrl!)
+                .setBottomPart(startTime: startTimeSeconds, endTime: endTimeSeconds)
+            if self.effectState != nil {
+                _ = try self.montageInstance
+                    .setOverlayVideoSource(url: self.effectInfo!.videoUrl)
+                    .setOverlayPart(offsetTime: self.overlaySeconds - startTimeSeconds)
+            }
+
+            if !self.isHideWatermark {
+                _ = try self.montageInstance.setWatermark(url: watermarkUrl)
+            }
+
+            self.montageInstance.saveToFile(
+                completion: { resultUrl in
+                    Analytics.logEvent("z_save_video_end", parameters: nil)
+                    self.montageInstance.removeWatermark()
+                    print("Save OK \(resultUrl)")
+                    var placeholder: PHObjectPlaceholder?
+                    PHPhotoLibrary.shared().performChanges({
+                        let req = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
+                        placeholder = req!.placeholderForCreatedAsset
+                    }) { (saved, error) in
+                        print("PHPhotoLibrary saved \(saved), error \(String(describing: error))")
+
+                        if error != nil {
+                            self.saveError = "PHPhotoLibrary error - \(error!)"
+                            return ()
+                        }
+
+                        print("local placeholder \(placeholder!)")
+//                        self.onOpenTiktok(localIdentifier: placeholder!.localIdentifier)
+                        self.activeSheet = .none
+                        if isTiktok {
+                            self.openTiktokDescription()
+                        }
+                    }
+                },
+                error: { result in
+                    Analytics.logEvent("z_save_video_error", parameters: nil)
+                    self.montageInstance.removeWatermark()
+                    print("Save error \(result)")
+                    self.saveError = "Montage save to file error - \(result)"
+                })
+        } catch {
+            print("Error onSaveStart \(error)")
+            self.saveError = "Montage prepare error - \(error)"
+        }
+    }
+
     func getSheet() -> some View {
 //        print("self.activeSheet \(self.activeSheet)")
         if self.activeSheet == .saveOrShare {
@@ -90,61 +175,7 @@ struct ContentView: View {
                 isPaid: self.$isPaid,
                 isHideWatermark: self.$isHideWatermark,
                 onSaveStart: {
-                    print("onSaveStart")
-                    Analytics.logEvent("z_save_video_start", parameters: nil)
-                    self.saveError = ""
-                    self.playerModel.playerController.player!.pause()
-                    self.activeSheet = .saveProcess
-                    let change = self.sliderChange!
-                    do {
-                        let watermarkUrl = Bundle.main.url(forResource: "Watermark2", withExtension: "mov")!
-                        let startTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds)
-                        let endTimeSeconds = CMTimeGetSeconds(change.startPositionSeconds + change.sizeSeconds)
-                        print("Save params startTimeSeconds \(startTimeSeconds), endTimeSeconds \(endTimeSeconds), self.overlaySeconds \(self.overlaySeconds), diff: \(self.overlaySeconds - startTimeSeconds)")
-                        // todo optimize beacuse already exists in makeOverlayPlayer
-                        self.montageInstance = Montage()
-                        _ = try self.montageInstance
-                            .setBottomVideoSource(url: self.videoUrl!)
-                            .setBottomPart(startTime: startTimeSeconds, endTime: endTimeSeconds)
-                        if self.effectState != nil {
-                            _ = try self.montageInstance
-                                .setOverlayVideoSource(url: self.effectInfo!.videoUrl)
-                                .setOverlayPart(offsetTime: self.overlaySeconds - startTimeSeconds)
-                        }
-
-                        if !self.isHideWatermark {
-                            _ = try self.montageInstance.setWatermark(url: watermarkUrl)
-                        }
-
-                        self.montageInstance.saveToFile(
-                            completion: { resultUrl in
-                                Analytics.logEvent("z_save_video_end", parameters: nil)
-                                self.montageInstance.removeWatermark()
-                                print("Save OK \(resultUrl)")
-                                PHPhotoLibrary.shared().performChanges({
-                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: resultUrl)
-                                }) { (saved, error) in
-                                    print("PHPhotoLibrary saved \(saved), error \(String(describing: error))")
-                                    if saved {
-                                        self.activeSheet = .none
-                                        return ()
-                                    }
-
-                                    if error != nil {
-                                        self.saveError = "PHPhotoLibrary error - \(error!)"
-                                    }
-                                }
-                            },
-                            error: { result in
-                                Analytics.logEvent("z_save_video_error", parameters: nil)
-                                self.montageInstance.removeWatermark()
-                                print("Save error \(result)")
-                                self.saveError = "Montage save to file error - \(result)"
-                            })
-                    } catch {
-                        print("Error onSaveStart \(error)")
-                        self.saveError = "Montage prepare error - \(error)"
-                    }
+                    self.onSaveStart()
                 },
                 onCancel: {
                     print("onCancel")
@@ -152,7 +183,12 @@ struct ContentView: View {
                 },
                 onOpenSubscription: {
                     print("Subscribtion window opened")
-                }))
+                },
+                onTiktokShare: {
+                    print("Tiktok share code here")
+                    self.onSaveStart(isTiktok: true)
+                }
+                ))
         } else if self.activeSheet == .saveProcess {
             return AnyView(SavingModalView(
                 errorText: self.saveError,
@@ -188,7 +224,6 @@ struct ContentView: View {
     }
 
     var body: some View {
-//        NavigationView {
         VStack {
             if self.videoUrl == nil {
                 SelectContentView(isSimulator: self.isSimulator,
@@ -224,7 +259,11 @@ struct ContentView: View {
                         }
 
                         return ()
-                    })
+                    },
+                    onOpenTiktokDownload: {
+                        print("onOpenTiktokDownload clicked")
+                        return ()
+                    } )
                     .alert(isPresented: self.$showGeneralError) {
                         Alert(title: Text("Incorrect video"), message: Text(self.generalError), dismissButton: .default(Text("OK")))
                     }
@@ -259,6 +298,15 @@ struct ContentView: View {
                         .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
                             set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
                             getSheet()
+                        }
+                        .alert(isPresented: Binding<Bool>(get: {
+                                return self.activeSheet == .none && self.showAlertBeforeShare
+                        },
+                            set: { p in self.showAlertBeforeShare = p }
+                                )) {
+                            Alert(title: Text("Info about sharing"), message: Text("After opening TikTok tap \"+\" button and choose \"Upload\". Use #zoomerok tag in title for promotion"), dismissButton: .default(Text("OK")) {
+                                    self.openTiktok()
+                                })
                         }
                         .padding()
 

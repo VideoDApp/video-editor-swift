@@ -3,17 +3,21 @@ import SwiftUI
 struct SelectContentView: View {
     @State private var showSheet: Bool = false
     @State private var showImagePicker: Bool = false
+    @State private var showTiktok: Bool = false
     @State private var sourceType: UIImagePickerController.SourceType = .camera
 
     var onContentChanged: (URL) -> ()
     var isSimulator: Bool = false
+    var onOpenTiktokDownload: () -> ()
 
     init(
         isSimulator: Bool,
-        @ViewBuilder onContentChanged: @escaping (URL) -> ()
+        @ViewBuilder onContentChanged: @escaping (URL) -> (),
+        @ViewBuilder onOpenTiktokDownload: @escaping () -> ()
     ) {
         self.onContentChanged = onContentChanged
         self.isSimulator = isSimulator
+        self.onOpenTiktokDownload = onOpenTiktokDownload
     }
 
     var body: some View {
@@ -26,17 +30,54 @@ struct SelectContentView: View {
                     .font(.system(size: 60))
                     .padding()
 
-                Text("Choose a video for montage")
-                    .foregroundColor(.white)
-                    .padding()
+                VStack {
+                    Text("Choose a video for montage")
+                        .foregroundColor(.white)
+                        .padding()
 
-                Image(systemName: "plus.square")
-                    .foregroundColor(.white)
-                    .font(.system(size: 60))
+                    Image(systemName: "plus.square")
+                        .foregroundColor(.white)
+                        .font(.system(size: 60))
+
+                }
+                .sheet(isPresented: $showImagePicker) {
+                    ImagePicker(
+                        isShown: self.$showImagePicker,
+                        sourceType: self.sourceType,
+                        onPicked: { result in
+                            print("ImagePicker picked \(result)")
+                            self.onContentChanged(result)
+                        })
+                }
+                    .onTapGesture {
+                        self.showSheet = true
+                }
+
+                VStack {
+                    Text("Download video from TikTok")
+                        .foregroundColor(.white)
+                        .padding()
+
+                    Image(systemName: "tray.and.arrow.down")
+                        .foregroundColor(.white)
+                        .font(.system(size: 60))
+                }
+                .sheet(isPresented: self.$showTiktok) {
+                    DownloadTiktokView(onCancel: {
+                        self.showTiktok = false
+                    })
+                }
+                .padding()
+                    .onTapGesture {
+                        //self.onOpenTiktokDownload()
+                        self.showTiktok = true
+                }
             }
+
                 .actionSheet(isPresented: $showSheet) {
                     var buttons: [ActionSheet.Button] = [
                             .default(Text("Video Library")) {
+                                print("Video library selected")
                                 self.showImagePicker = true
                                 self.sourceType = .photoLibrary
                         },
@@ -68,19 +109,8 @@ struct SelectContentView: View {
 
                     return ActionSheet(title: Text("Choose a video source"), buttons: buttons)
                 }
-                .sheet(isPresented: $showImagePicker) {
-                    ImagePicker(
-                        isShown: self.$showImagePicker,
-                        sourceType: self.sourceType,
-                        onPicked: { result in
-                            print("ImagePicker picked \(result)")
-                            self.onContentChanged(result)
-                        })
-            }
         }
-            .onTapGesture {
-                self.showSheet = true
-            }
+
             .foregroundColor(.white)
 
     }
@@ -88,10 +118,15 @@ struct SelectContentView: View {
 
 struct SelectContentView_Previews: PreviewProvider {
     static var previews: some View {
-        SelectContentView(isSimulator: true, onContentChanged: { result in
-            print(result)
+        SelectContentView(
+            isSimulator: true,
+            onContentChanged: { result in
+                print(result)
 
-            return ()
-        })
+                return ()
+            },
+            onOpenTiktokDownload: {
+                return ()
+            })
     }
 }

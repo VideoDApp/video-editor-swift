@@ -9,6 +9,7 @@ struct ExportShareModalView: View {
     var onSaveStart: () -> Void
     var onCancel: () -> Void
     var onOpenSubscription: () -> Void
+    var onTiktokShare: () -> Void
 
     var body: some View {
         VStack {
@@ -37,6 +38,23 @@ struct ExportShareModalView: View {
 //                    }
 //            }
 
+            Button(action: {
+                print("Share clicked")
+                self.onTiktokShare()
+            }) {
+                HStack {
+                    Image(systemName: "arrowshape.turn.up.left")
+                        .foregroundColor(.white)
+                    Text("Share to TikTok")
+                }
+                    .padding(8)
+                    .foregroundColor(.white)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.white, lineWidth: 1)
+                    )
+            }
+                .padding()
 
             Button(action: {
                 self.onSaveStart()
@@ -82,6 +100,9 @@ struct ExportShareModalView_Previews: PreviewProvider {
                 print("onCancel")
             },
             onOpenSubscription: {
+
+            },
+            onTiktokShare: {
 
             })
     }

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 980B703F2545F09100DEF362 /* DirectedBy-video.mov */; };
 		980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */ = {isa = PBXBuildFile; fileRef = 980B705A2547F82A00DEF362 /* SoccerBall-video.mov */; };
+		980EB9D3255DACCF00D311CC /* DownloadTiktokView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980EB9D2255DACCF00D311CC /* DownloadTiktokView.swift */; };
 		9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9839F6362503E430000DE7C0 /* GoogleService-Info.plist */; };
 		983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF5250FE4750061A4CD /* TestUI.swift */; };
 		983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CEBF7250FFBD10061A4CD /* SelectContentView.swift */; };
@@ -76,6 +77,7 @@
 		81F00608ECF44071EAF60C7D /* Pods-Zoomerok-ZoomerokUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; path = "Target Support Files/Pods-Zoomerok-ZoomerokUITests/Pods-Zoomerok-ZoomerokUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		980B703F2545F09100DEF362 /* DirectedBy-video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "DirectedBy-video.mov"; sourceTree = "<group>"; };
 		980B705A2547F82A00DEF362 /* SoccerBall-video.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "SoccerBall-video.mov"; sourceTree = "<group>"; };
+		980EB9D2255DACCF00D311CC /* DownloadTiktokView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTiktokView.swift; sourceTree = "<group>"; };
 		9839F6362503E430000DE7C0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		983CEBF5250FE4750061A4CD /* TestUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUI.swift; sourceTree = "<group>"; };
 		983CEBF7250FFBD10061A4CD /* SelectContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectContentView.swift; sourceTree = "<group>"; };
@@ -100,6 +102,7 @@
 		98607CC22552D13900EA2B77 /* ZoomerokProducts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomerokProducts.swift; sourceTree = "<group>"; };
 		98607CCC2553E38100EA2B77 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		98607CDB2553F5A000EA2B77 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		98607E5B255C4A0B00EA2B77 /* Zoomerok-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zoomerok-Bridging-Header.h"; sourceTree = "<group>"; };
 		9869D810254C2E7300F7887A /* 1024_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024_transparent.png; sourceTree = "<group>"; };
 		9869D818254C2EB800F7887A /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
 		988CF511252758730003B673 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -218,6 +221,7 @@
 				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
 				984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */,
 				984C5CF42501A2AD007DBAF4 /* ContentView.swift */,
+				98607E5B255C4A0B00EA2B77 /* Zoomerok-Bridging-Header.h */,
 				984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */,
 				9896B6E52506C6E1007B7C40 /* Assets.xcassets */,
 				984C5CFE2501A2AF007DBAF4 /* Info.plist */,
@@ -304,6 +308,7 @@
 				988CF516252885BC0003B673 /* SavingModalView.swift */,
 				98427856252CCD0500A553F9 /* ExportShareModalView.swift */,
 				9842785E2533226000A553F9 /* CloseVideoView.swift */,
+				980EB9D2255DACCF00D311CC /* DownloadTiktokView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -416,7 +421,7 @@
 				TargetAttributes = {
 					984C5CEC2501A2AD007DBAF4 = {
 						CreatedOnToolsVersion = 11.7;
-						LastSwiftMigration = 1170;
+						LastSwiftMigration = 1210;
 					};
 					984C5D022501A2AF007DBAF4 = {
 						CreatedOnToolsVersion = 11.7;
@@ -603,6 +608,7 @@
 				98427857252CCD0500A553F9 /* ExportShareModalView.swift in Sources */,
 				98607CBD2552D0F900EA2B77 /* IAPHelper.swift in Sources */,
 				9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */,
+				980EB9D3255DACCF00D311CC /* DownloadTiktokView.swift in Sources */,
 				984C5CF12501A2AD007DBAF4 /* AppDelegate.swift in Sources */,
 				983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */,
 				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
@@ -784,7 +790,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -794,9 +800,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -810,7 +817,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -820,9 +827,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

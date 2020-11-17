@@ -176,7 +176,7 @@ class DownloadTestContent {
         }
     }
 
-    static func downloadTiktok(_ videoUrl: String, onUrlSuccess: @escaping () -> (), onSuccess: @escaping () -> (), onError: @escaping (Error) -> ()) {
+    static func downloadTiktok(_ videoUrl: String, onUrlSuccess: @escaping () -> (), onSuccess: @escaping () -> (), onError: @escaping (String) -> ()) {
         let url = URL(string: self.tiktokDownalodUrl)!
 
         func downloadFile(_ videoUrl: String) {
@@ -188,7 +188,7 @@ class DownloadTestContent {
                     self.saveBinaryToGallery(r.content!)
                     onSuccess()
                 } else {
-                    onError(r.error!)
+                    onError(r.error!.localizedDescription)
                 }
             })
         }
@@ -198,18 +198,20 @@ class DownloadTestContent {
             data: ["url": videoUrl],
             asyncCompletionHandler: { r in
                 if r.ok {
-//                    print("conten \(r.content)")
-//                    print("json \(json)")
                     let json = r.json as! [String: Any]
                     let isError = json["is_error"] as! Int
                     let resultUrl = json["text"] as! String
+                    print("json \(isError) \(json)")
                     if isError == 0 && resultUrl.count > 0 {
                         onUrlSuccess()
                         print("Video url \(resultUrl)")
                         downloadFile(resultUrl)
+                    }else{
+//                        print("Error answer \(json)")
+                        onError(resultUrl)
                     }
                 } else {
-                    onError(r.error!)
+                    onError(r.error!.localizedDescription)
                 }
             })
     }

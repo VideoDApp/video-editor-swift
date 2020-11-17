@@ -51,8 +51,8 @@ struct DownloadTiktokView: View {
                         self.url = ""
                         Analytics.logEvent("z_tt_download_complete", parameters: nil)
                     },
-                    onError: { (error: Error) in
-                        self.status = error.localizedDescription
+                    onError: { (error: String) in
+                        self.status = error
                         self.isScreenLocked = false
                         Analytics.logEvent("z_tt_download_error", parameters: nil)
                     })

@@ -211,7 +211,7 @@ class DownloadTestContent {
                         onError(resultUrl)
                     }
                 } else {
-                    onError(r.error!.localizedDescription)
+                    onError(r.error != nil ? r.error!.localizedDescription : "Some problems with server. Try again later")
                 }
             })
     }

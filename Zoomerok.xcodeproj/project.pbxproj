@@ -29,6 +29,7 @@
 		98607CDC2553F5A000EA2B77 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98607CDB2553F5A000EA2B77 /* Store.swift */; };
 		9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D810254C2E7300F7887A /* 1024_transparent.png */; };
 		9869D819254C2EB800F7887A /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9869D818254C2EB800F7887A /* 1024.png */; };
+		9881EBCA256A788D00995942 /* face.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9881EBC9256A788D00995942 /* face.jpg */; };
 		988CF512252758730003B673 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CF511252758730003B673 /* ActivityIndicator.swift */; };
 		988CF517252885BC0003B673 /* SavingModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988CF516252885BC0003B673 /* SavingModalView.swift */; };
 		988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988DD41A251CA5FC00623601 /* CustomPlayerView.swift */; };
@@ -41,6 +42,8 @@
 		98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DB2502A08E00240003 /* OverlayData.swift */; };
 		98A5D3DE2502A0B100240003 /* Montage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DD2502A0B100240003 /* Montage.swift */; };
 		98A5D3E12502A0EE00240003 /* VideoRangeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */; };
+		98B22A212566AE1200DAFDB5 /* WarpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B22A202566AE1200DAFDB5 /* WarpView.swift */; };
+		98B22A262566B48900DAFDB5 /* MyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 98B22A252566B48900DAFDB5 /* MyScene.sks */; };
 		98B49046253C490400C218F2 /* Watermark.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98B49045253C490400C218F2 /* Watermark.mov */; };
 		98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98B4904D253C7AA200C218F2 /* Watermark2.mov */; };
 		98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD525054759006FB952 /* DownloadTestContent.swift */; };
@@ -105,6 +108,7 @@
 		98607E5B255C4A0B00EA2B77 /* Zoomerok-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Zoomerok-Bridging-Header.h"; sourceTree = "<group>"; };
 		9869D810254C2E7300F7887A /* 1024_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024_transparent.png; sourceTree = "<group>"; };
 		9869D818254C2EB800F7887A /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
+		9881EBC9256A788D00995942 /* face.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = face.jpg; sourceTree = "<group>"; };
 		988CF511252758730003B673 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		988CF516252885BC0003B673 /* SavingModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingModalView.swift; sourceTree = "<group>"; };
 		988DD41A251CA5FC00623601 /* CustomPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPlayerView.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 		98A5D3DB2502A08E00240003 /* OverlayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayData.swift; sourceTree = "<group>"; };
 		98A5D3DD2502A0B100240003 /* Montage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Montage.swift; sourceTree = "<group>"; };
 		98A5D3E02502A0EE00240003 /* VideoRangeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRangeSliderView.swift; sourceTree = "<group>"; };
+		98B22A202566AE1200DAFDB5 /* WarpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarpView.swift; sourceTree = "<group>"; };
+		98B22A252566B48900DAFDB5 /* MyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyScene.sks; sourceTree = "<group>"; };
 		98B49045253C490400C218F2 /* Watermark.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Watermark.mov; sourceTree = "<group>"; };
 		98B4904D253C7AA200C218F2 /* Watermark2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Watermark2.mov; sourceTree = "<group>"; };
 		98D98CD525054759006FB952 /* DownloadTestContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTestContent.swift; sourceTree = "<group>"; };
@@ -221,6 +227,7 @@
 				984C5CF02501A2AD007DBAF4 /* AppDelegate.swift */,
 				984C5CF22501A2AD007DBAF4 /* SceneDelegate.swift */,
 				984C5CF42501A2AD007DBAF4 /* ContentView.swift */,
+				98B22A252566B48900DAFDB5 /* MyScene.sks */,
 				98607E5B255C4A0B00EA2B77 /* Zoomerok-Bridging-Header.h */,
 				984C5CFB2501A2AF007DBAF4 /* LaunchScreen.storyboard */,
 				9896B6E52506C6E1007B7C40 /* Assets.xcassets */,
@@ -309,6 +316,7 @@
 				98427856252CCD0500A553F9 /* ExportShareModalView.swift */,
 				9842785E2533226000A553F9 /* CloseVideoView.swift */,
 				980EB9D2255DACCF00D311CC /* DownloadTiktokView.swift */,
+				98B22A202566AE1200DAFDB5 /* WarpView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -318,6 +326,7 @@
 			children = (
 				9869D810254C2E7300F7887A /* 1024_transparent.png */,
 				98B49045253C490400C218F2 /* Watermark.mov */,
+				9881EBC9256A788D00995942 /* face.jpg */,
 				9869D818254C2EB800F7887A /* 1024.png */,
 				98B4904D253C7AA200C218F2 /* Watermark2.mov */,
 				9896B6E02506AB75007B7C40 /* Effects */,
@@ -464,10 +473,12 @@
 				9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */,
 				980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */,
 				98B49046253C490400C218F2 /* Watermark.mov in Resources */,
+				9881EBCA256A788D00995942 /* face.jpg in Resources */,
 				9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */,
 				9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */,
 				98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */,
 				9869D819254C2EB800F7887A /* 1024.png in Resources */,
+				98B22A262566B48900DAFDB5 /* MyScene.sks in Resources */,
 				9896B6E22506ABCD007B7C40 /* SpiderAttack-video.mov in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -602,6 +613,7 @@
 				983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */,
 				98607CDC2553F5A000EA2B77 /* Store.swift in Sources */,
 				988DD41B251CA5FC00623601 /* CustomPlayerView.swift in Sources */,
+				98B22A212566AE1200DAFDB5 /* WarpView.swift in Sources */,
 				98607CC52552D13900EA2B77 /* MasterViewController.swift in Sources */,
 				98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */,
 				9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */,
@@ -790,7 +802,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -800,7 +812,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
@@ -817,7 +829,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -827,7 +839,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";

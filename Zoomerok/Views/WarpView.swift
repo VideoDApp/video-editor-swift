@@ -13,48 +13,53 @@ struct WarpView: View {
                 Text("#zoomerok")
                     .font(.system(size: 40))
                     .foregroundColor(.white)
-                    
-                
+
+
                 SpriteKitContainer(scene: self.$observed.scene)
                     .frame(width: geometry.size.width, height: geometry.size.width)
                 //                                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
 
-                HStack{
+                HStack {
                     Button(action: {
                         self.observed.showHideGrid(self.isGridHidden)
                         self.isGridHidden.toggle()
-                    }){
+                    }) {
                         Image(systemName: "circle.grid.3x3")
                             .foregroundColor(.white)
                             .font(.system(size: 40))
                     }
-                    .padding()
-                    
+                        .padding()
+
                     Button(action: {
                         self.observed.showHideMask(self.isMaskHidden)
                         self.isMaskHidden.toggle()
-                    }){
+                    }) {
                         Image(systemName: "person.crop.rectangle")
                             .foregroundColor(.white)
                             .font(.system(size: 40))
                     }
-                    .padding()
-                    
+                        .padding()
+
                     Button(action: {
                         self.observed.warpReset()
-                    }){
+                    }) {
                         Image(systemName: "clear")
                             .foregroundColor(.white)
                             .font(.system(size: 40))
                     }
-                    .padding()
-                    
+                        .padding()
+
 //                    Button("Animate") {
 //                        self.observed.warpAnimate()
 //                    }.padding()
+
+                    Button("Save") {
+                        self.observed.savePhoto()
+
+                    }.padding()
                 }
-                
-                
+
+
                 Spacer()
             }
         }
@@ -301,13 +306,14 @@ class SKObserved: ObservableObject {
         self.scene.onMoved = { result in
             self.warpPoints(result)
         }
-        
+
         self.scene.isUserInteractionEnabled = true
         self.photoWarpGridSource = self.makeVectorArray(self.cols, self.rows)
         self.photoWarpGridDestination = self.photoWarpGridSource
-        
+
         self.photo.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
         self.mask.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
+        self.mask.name = "mask"
         self.scene.addChild(self.photo)
         self.scene.addChild(self.mask)
 //        self.addGrid()
@@ -397,11 +403,11 @@ class SKObserved: ObservableObject {
 
         let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
-        photo.run(warpAction!)
+        self.photo.run(warpAction!)
     }
-    
-    func warpReset(){
-        self.points.forEach({item in
+
+    func warpReset() {
+        self.points.forEach({ item in
             item.position = item.initialPosition
         })
         self.photoWarpGridDestination = self.photoWarpGridSource
@@ -409,14 +415,14 @@ class SKObserved: ObservableObject {
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
         photo.run(warpAction!)
     }
-    
-    func warpAnimate(){
+
+    func warpAnimate() {
         let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: 10, rows: 10)
         let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.animate(withWarps: [warpGeometryGridNoWarp, warpGeometryGrid], times: [0, 3])
         photo.run(warpAction!)
     }
-    
+
     func showHideMask(_ isShow: Bool) {
         self.mask.isHidden = !isShow
     }
@@ -426,6 +432,56 @@ class SKObserved: ObservableObject {
         self.points.forEach({ item in
             item.isHidden = !isShow
         })
+    }
+
+    func savePhoto(_ withBeauty: Bool = false) {
+        var maskState = false
+        var pointsState = false
+
+        func prepareScene() {
+            self.scene.children.forEach({ item in
+                if item.name == "mask" {
+                    maskState = item.isHidden
+                    item.isHidden = true
+                } else if item.name != nil && item.name!.starts(with: "point_") {
+                    pointsState = item.isHidden
+                    item.isHidden = true
+                }
+            })
+        }
+
+        func returnScene() {
+            self.scene.children.forEach({ item in
+                if item.name == "mask" {
+                    item.isHidden = maskState
+                } else if item.name != nil && item.name!.starts(with: "point_") {
+                    item.isHidden = pointsState
+                }
+            })
+        }
+
+//        let container = SKSpriteNode(texture: self.photo.texture)
+//        let container = SKScene()
+//        container.addChild(self.photo.copy() as! SKSpriteNode)
+
+        if withBeauty {
+//            container.addChild()
+        }
+
+
+        prepareScene()
+        let view = SKView(frame: .zero)
+        let image = UIImage(cgImage: view.texture(from: self.scene)!.cgImage())
+
+//        let image = UIImage(cgImage: (self.photo.texture!.cgImage()))
+
+//        view.scene = self.scene
+//        let image = UIImage(cgImage: (view.texture(from: container)!.cgImage()))
+//        let image = UIImage(cgImage: (view.texture(from: self.photo.normalTexture)!.cgImage()))
+        let imData = image.pngData()!
+        let image2 = UIImage(data: imData)!
+        UIImageWriteToSavedPhotosAlbum(image2, nil, nil, nil)
+        returnScene()
     }
 }
 
@@ -448,7 +504,6 @@ struct SpriteKitContainer: UIViewRepresentable {
 //        view.showsFPS = true
 //        view.showsNodeCount = true
         context.coordinator.scene = self.scene
-
         return view
     }
 

@@ -32,6 +32,9 @@ struct ContentView: View {
     @State var overlaySeconds: Float64 = 0
     @State var isPaid: Bool = false
     @State var isHideWatermark: Bool = false
+    
+    @State var userPhoto: URL?
+    @State var warpPhoto: UIImage?
 
     private var isSimulator: Bool = false
 
@@ -225,50 +228,63 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            if self.videoUrl == nil {
-                WarpView()
-//                SelectContentView(isSimulator: self.isSimulator,
-//                    onContentChanged: { (result: URL) in
-//                        Analytics.logEvent("z_video_selected", parameters: nil)
-//                        print("SelectContentView result", result)
-//                        do {
-//                            let size = Montage.getVideoSize(url: result)
-//                            let duration = Montage.getVideoDuration(result)
-//                            if size.width > size.height || size.width == size.height {
-//                                self.showGeneralError = true
-//                                self.generalError = "Only vertical video format is supported. Try to select a different video."
-//                                print("User select horizontal or square video! Skip \(size)")
-//                                return ()
-//                            }
-//
-//                            if duration < 2 {
-//                                self.showGeneralError = true
-//                                self.generalError = "Video duration less than 2 seconds. Try to select a different video."
-//                                print("User select short video! Duration \(duration)")
-//                                return ()
-//                            }
-//
-//                            // todo call resetEditor?
-//                            self.sliderChange = nil
-//                            self.previewAsset = AVAsset(url: result)
-//                            self.videoUrl = result
-//                            let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
-//                            self.playerModel.setPlayer(player: player)
-//                            self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
-//                        } catch {
-//                            print("SelectContentView error \(error)")
-//                        }
-//
-//                        return ()
-//                    },
-//                    onOpenTiktokDownload: {
+            if self.videoUrl == nil && self.warpPhoto == nil {
+//                WarpView(userPhoto: self.$userPhoto)
+                SelectContentView(isSimulator: self.isSimulator,
+                    onContentChanged: { (result: URL) in
+                        Analytics.logEvent("z_video_selected", parameters: nil)
+                        print("SelectContentView result", result)
+                        do {
+                            let size = Montage.getVideoSize(url: result)
+                            let duration = Montage.getVideoDuration(result)
+                            if size.width > size.height || size.width == size.height {
+                                self.showGeneralError = true
+                                self.generalError = "Only vertical video format is supported. Try to select a different video."
+                                print("User select horizontal or square video! Skip \(size)")
+                                return ()
+                            }
+
+                            if duration < 2 {
+                                self.showGeneralError = true
+                                self.generalError = "Video duration less than 2 seconds. Try to select a different video."
+                                print("User select short video! Duration \(duration)")
+                                return ()
+                            }
+
+                            // todo call resetEditor?
+                            self.sliderChange = nil
+                            self.previewAsset = AVAsset(url: result)
+                            self.videoUrl = result
+                            let player = try self.makeOverlayPlayer(mainUrl: self.videoUrl!)
+                            self.playerModel.setPlayer(player: player)
+                            self.playerModel.playerController.player!.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
+                        } catch {
+                            print("SelectContentView error \(error)")
+                        }
+
+                        return ()
+                    },
+                    onOpenWarp:{result in
+                        self.warpPhoto = result
+                        Analytics.logEvent("warp_photo_selected", parameters: nil)
+                        return ()
+                    }
+//                    ,onOpenTiktokDownload: {
 //                        print("onOpenTiktokDownload clicked")
 //                        return ()
-//                    } )
+//                    }
+                )
                     .alert(isPresented: self.$showGeneralError) {
                         Alert(title: Text("Incorrect video"), message: Text(self.generalError), dismissButton: .default(Text("OK")))
                     }
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+            } else if self.warpPhoto != nil {
+                VStack{
+                    WarpView(userPhoto: self.$warpPhoto, onClose: {
+                        self.warpPhoto = nil
+                    })
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                }
             } else {
                 HStack {
                     Button(action: {
@@ -411,6 +427,9 @@ struct ContentView: View {
 //                ZoomerokProducts.store.requestProducts { (success, products: [SKProduct]?) in
 //                    print("requestProducts \(success) \(String(describing: products!.first))")
 //                }
+//                self.userPhoto = Bundle.main.url(forResource: "face", withExtension: "jpg")!
+                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
+//                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
             }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))

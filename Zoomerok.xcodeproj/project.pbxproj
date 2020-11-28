@@ -48,6 +48,7 @@
 		98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98B4904D253C7AA200C218F2 /* Watermark2.mov */; };
 		98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD525054759006FB952 /* DownloadTestContent.swift */; };
 		98D98CD825063BC6006FB952 /* MontageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD725063BC6006FB952 /* MontageTests.swift */; };
+		98F53A22256D703D008F1247 /* face_horizontal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98F53A21256D703D008F1247 /* face_horizontal.jpg */; };
 		98FDC6F0253A001C00D0FB58 /* ExperimentMontage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */; };
 		B4B71E561A37268D3590C45E /* Pods_Zoomerok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6B3D27266BD941F7A7ADF7 /* Pods_Zoomerok.framework */; };
 		BB47A649FE3491E9E0087421 /* Pods_Zoomerok_ZoomerokUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B50D178B12259BDDE63758 /* Pods_Zoomerok_ZoomerokUITests.framework */; };
@@ -128,6 +129,7 @@
 		98D98CD525054759006FB952 /* DownloadTestContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTestContent.swift; sourceTree = "<group>"; };
 		98D98CD725063BC6006FB952 /* MontageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageTests.swift; sourceTree = "<group>"; };
 		98D98CD925065CA9006FB952 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		98F53A21256D703D008F1247 /* face_horizontal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = face_horizontal.jpg; sourceTree = "<group>"; };
 		98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentMontage.swift; sourceTree = "<group>"; };
 		9BBACA0FA61318BEC2F7C16C /* Pods-Zoomerok.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok.release.xcconfig"; path = "Target Support Files/Pods-Zoomerok/Pods-Zoomerok.release.xcconfig"; sourceTree = "<group>"; };
 		D3B50D178B12259BDDE63758 /* Pods_Zoomerok_ZoomerokUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok_ZoomerokUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -326,6 +328,7 @@
 			children = (
 				9869D810254C2E7300F7887A /* 1024_transparent.png */,
 				98B49045253C490400C218F2 /* Watermark.mov */,
+				98F53A21256D703D008F1247 /* face_horizontal.jpg */,
 				9881EBC9256A788D00995942 /* face.jpg */,
 				9869D818254C2EB800F7887A /* 1024.png */,
 				98B4904D253C7AA200C218F2 /* Watermark2.mov */,
@@ -469,6 +472,7 @@
 			files = (
 				980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */,
 				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
+				98F53A22256D703D008F1247 /* face_horizontal.jpg in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
 				9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */,
 				980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */,
@@ -802,7 +806,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -812,7 +816,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";
@@ -829,7 +833,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Zoomerok/Preview Content\"";
 				DEVELOPMENT_TEAM = 966L8B5X3V;
 				ENABLE_PREVIEWS = YES;
@@ -839,7 +843,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.icorp.Zoomerok;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Zoomerok/Zoomerok-Bridging-Header.h";

@@ -1,66 +1,188 @@
 import SwiftUI
 import SpriteKit
+import Firebase
 
 struct WarpView: View {
+    @Binding var userPhoto: UIImage?
+    var onClose: () -> ()
+
     @State var isGridHidden = true
-    @State var isMaskHidden = false
+    @State var maskStatus = "yes"
     @State var observed = SKObserved()
+    @State var showingResetAlert = false
+    @State var showingSavedAlert = false
+
+    func getMaskIcon() -> String {
+        var result = ""
+        if maskStatus == "no" {
+            result = "person.2"
+//        } else if maskStatus == "yes" {
+//            result = "skew"
+        } else {
+            result = "person"
+        }
+
+//        print("maskStatus \(maskStatus), result \(result)")
+        return result
+    }
 
     var body: some View {
         GeometryReader { geometry in
-            VStack {
+            Color.black.edgesIgnoringSafeArea(.all)
+            Spacer()
+            HStack {
                 Spacer()
-                Text("#zoomerok")
-                    .font(.system(size: 40))
-                    .foregroundColor(.white)
-
-
-                SpriteKitContainer(scene: self.$observed.scene)
-                    .frame(width: geometry.size.width, height: geometry.size.width)
-                //                                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-
-                HStack {
-                    Button(action: {
-                        self.observed.showHideGrid(self.isGridHidden)
-                        self.isGridHidden.toggle()
-                    }) {
-                        Image(systemName: "circle.grid.3x3")
-                            .foregroundColor(.white)
-                            .font(.system(size: 40))
-                    }
-                        .padding()
-
-                    Button(action: {
-                        self.observed.showHideMask(self.isMaskHidden)
-                        self.isMaskHidden.toggle()
-                    }) {
-                        Image(systemName: "person.crop.rectangle")
-                            .foregroundColor(.white)
-                            .font(.system(size: 40))
-                    }
-                        .padding()
-
-                    Button(action: {
-                        self.observed.warpReset()
-                    }) {
-                        Image(systemName: "clear")
-                            .foregroundColor(.white)
-                            .font(.system(size: 40))
-                    }
-                        .padding()
-
-//                    Button("Animate") {
-//                        self.observed.warpAnimate()
-//                    }.padding()
-
-                    Button("Save") {
-                        self.observed.savePhoto()
-
-                    }.padding()
+                CloseVideoView() {
+                    print("Close clicked")
+                    //                self.playerModel.playerController.player!.pause()
+                    //                self.resetEditor()
+                    self.onClose()
                 }
+                    .padding()
+            }
+            .padding()
 
 
-                Spacer()
+            if self.userPhoto != nil {
+                VStack {
+                    Spacer()
+                    Text("#zoomerok")
+                        .font(.system(size: 40))
+                        .foregroundColor(.white)
+
+                    SpriteKitContainer(scene: self.$observed.scene)
+                        .frame(width: geometry.size.width, height: geometry.size.width)
+
+                    VStack {
+                        HStack {
+                            Button(action: {
+                                self.observed.showHideGrid(self.isGridHidden)
+                                self.isGridHidden.toggle()
+                            }) {
+                                Image(systemName: "circle.grid.3x3")
+                                //                        Image(systemName: "grid")
+                                .foregroundColor(.white)
+                                    .font(.system(size: 40))
+                            }
+                                .padding()
+
+                            Button(action: {
+                                if self.maskStatus == "no" {
+                                    self.maskStatus = "yes"
+                                } else if(self.maskStatus == "yes") {
+//                                self.maskStatus = "skew"
+                                    self.maskStatus = "no"
+                                } else {
+                                    self.maskStatus = "no"
+                                }
+
+                                self.observed.showMask(self.maskStatus == "yes" || self.maskStatus == "skew")
+                            }) {
+                                Image(systemName: self.getMaskIcon())
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 40))
+                            }
+                                .padding()
+
+//                        Button(action: {
+//                            self.observed.warpReset()
+//                        }) {
+//                            Image(systemName: "clear")
+//                                .foregroundColor(.white)
+//                                .font(.system(size: 40))
+//                        }
+//                            .padding()
+
+                            Button(action: {
+                                self.showingResetAlert = true
+
+                            }) {
+                                HStack {
+//                                Image(systemName: "xmark.circle")
+                                    Image(systemName: "clear")
+//                                    .font(.title)
+                                    .font(.system(size: 40))
+                                        .foregroundColor(.white)
+
+                                }
+                                    .padding(8)
+                                    .foregroundColor(.white)
+                            }
+                                .alert(isPresented: $showingResetAlert) {
+                                Alert(
+                                    title: Text("Reset your progress?"),
+                                    message: Text("There is no undo"),
+                                    primaryButton: .destructive(Text("Reset")) {
+                                        self.observed.warpReset()
+                                    }, secondaryButton: .cancel())
+                            }
+
+
+
+
+                            //                    Button("Animate") {
+                            //                        self.observed.warpAnimate()
+                            //                    }.padding()
+
+
+//                        Button(action: {
+//                            self.observed.savePhoto()
+//                        }) {
+//                            Image(systemName: "arrow.down.doc")
+//                                .foregroundColor(.white)
+//                                .font(.system(size: 40))
+//                        }
+//                            .padding()
+
+
+                        }
+
+                        Button(action: {
+                            self.observed.savePhoto()
+                            self.showingSavedAlert = true
+                        }) {
+                            HStack {
+                                Image(systemName: "square.and.arrow.down")
+                                    .foregroundColor(.white)
+                                Text("Save to gallery")
+                            }
+                                .padding(8)
+                                .foregroundColor(.white)
+                                .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.white, lineWidth: 1)
+                            )
+                        }
+                            .alert(isPresented: $showingSavedAlert) {
+                            Alert(
+                                title: Text("Saved"),
+                                message: Text("Photo saved to gallery")
+//                                primaryButton: .destructive(Text("Reset")) {
+//                                    self.observed.warpReset()
+//                                },
+//                                secondaryButton: .cancel()
+                            )
+                        }
+
+                    }
+
+
+                    Spacer()
+                }
+                .onAppear() {
+                    print("Screen size \(geometry.size)")
+                }
+            } else {
+                ZStack(alignment: .leading) {
+                    Text("Loading...")
+                        .foregroundColor(.white)
+                        .padding(50)
+                }
+            }
+        }
+            .onAppear() {
+            if self.userPhoto != nil {
+                self.observed.setUserPhoto(self.userPhoto!)
             }
         }
     }
@@ -83,6 +205,7 @@ struct Background: UIViewRepresentable {
             self.tappedCallback = tappedCallback
         }
         @objc func tapped(gesture: UITapGestureRecognizer) {
+            print("Background tapped")
             let point = gesture.location(in: gesture.view)
             self.tappedCallback(point)
         }
@@ -175,7 +298,11 @@ class TouchableScene: SKScene
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let maxOffset: CGFloat = 30.0
+        let screenSize = UIScreen.main.bounds.size
+//        let maxOffset: CGFloat = 30.0
+   
+        let maxOffset: CGFloat = screenSize.width / 12
+        let maxDistance: CGFloat = screenSize.width / 11
         if let touch = touches.first {
             let touchLocation = touch.location(in: self)
 
@@ -204,7 +331,7 @@ class TouchableScene: SKScene
                 })
                 self.onMoved(self.points)
             } else {
-                let closest = self.closestChilds(point: touchLocation, maxDistance: 35)
+                let closest = self.closestChilds(point: touchLocation, maxDistance: maxDistance)
 //                print("Found closest \(closest.count)")
                 self.points = closest
 //                self.children.forEach({item in
@@ -279,11 +406,40 @@ extension SKScene {
     }
 }
 
+class PinchSprite: SKSpriteNode {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //self.onBegan()
+    }
+
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        print("PinchSprite touch \(touches.count)")
+
+        if let touch = touches.first {
+//            let touchLocation = touch.location(in: self.parent!)
+////            print("touchLocation \(touchLocation), self.position \(self.position)")
+//            self.position = touchLocation
+//
+//            self.onMoved(touchLocation)
+
+        }
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesEnded PinchSprite")
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesCancelled PinchSprite")
+    }
+}
+
 class SKObserved: ObservableObject {
     @Published var scene: TouchableScene
 
-    let photo = SKSpriteNode(imageNamed: "face-square")
-    let mask = SKSpriteNode(imageNamed: "warp-squid")
+//    var userPhotoUrl: URL?
+//    var photo = SKSpriteNode(imageNamed: "face-square")
+    var photo: SKSpriteNode?
+    var mask = PinchSprite(imageNamed: "warp-squid")
     let grid = Grid(blockSize: 30.0, rows: 10, cols: 10)!
     var points = [TouchableShapeNode]()
     var photoWarpGridSource = [SIMD2<Float>]()
@@ -299,7 +455,8 @@ class SKObserved: ObservableObject {
         let screenSize = UIScreen.main.bounds.size
         self.photoSize = CGSize(width: screenSize.width, height: screenSize.width)
         self.gridCellSize = Int(self.photoSize.width) / cols
-        self.pointSize = 10
+//        self.pointSize = 10
+        self.pointSize = Int(screenSize.width / 37.5)
         self.halfPointSize = pointSize / 2
 
         self.scene = TouchableScene(fileNamed: "MyScene")!
@@ -311,13 +468,52 @@ class SKObserved: ObservableObject {
         self.photoWarpGridSource = self.makeVectorArray(self.cols, self.rows)
         self.photoWarpGridDestination = self.photoWarpGridSource
 
-        self.photo.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
         self.mask.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
         self.mask.name = "mask"
-        self.scene.addChild(self.photo)
-        self.scene.addChild(self.mask)
+        self.mask.zPosition = 30
+
 //        self.addGrid()
         self.addPoints()
+//        mask.isUserInteractionEnabled = true
+    }
+
+    func setUserPhoto(_ userPhotoUrl: UIImage) {
+//        let data = NSData(contentsOf: userPhotoUrl)
+//        let theImage = UIImage(data: data! as Data)
+        let userPhotoTexture = SKTexture(image: userPhotoUrl)
+
+//        self.userPhotoUrl = userPhotoUrl
+        self.photo = SKSpriteNode(texture: userPhotoTexture)
+//        self.photo!.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
+//        self.photo!.
+//        self.scene.addChild(self.photo!)
+        let screenSize = CGSize(width: self.photoSize.width, height: self.photoSize.height)
+        let userPhoto = self.photo!
+        let photoSize = self.photo!.size
+//        var userPhotoSize = CGPoint(x: 0, y: 0)
+        if photoSize.height < photoSize.width {
+            // horizontal
+            print("horizontal")
+            userPhoto.setScale(screenSize.width / userPhoto.size.height)
+        } else if photoSize.height > photoSize.width {
+            // vertical
+            print("vertical")
+            userPhoto.setScale(screenSize.width / userPhoto.size.width)
+        } else {
+            // square
+            print("square")
+            userPhoto.size = screenSize
+        }
+
+        let cropNode = SKCropNode()
+        cropNode.position = CGPoint(x: 0, y: 0)
+        cropNode.zPosition = 10
+        cropNode.maskNode = nil
+        cropNode.addChild(userPhoto)
+//        cropNode. = CGSize(width: self.photoSize.width, height: self.photoSize.height)
+
+        self.scene.addChild(cropNode)
+        self.scene.addChild(self.mask)
     }
 
     func addGrid() {
@@ -344,6 +540,7 @@ class SKObserved: ObservableObject {
                 shape.fillColor = UIColor.yellow
                 shape.alpha = 0.5
                 shape.isHidden = true
+                shape.zPosition = 20
                 if i == 0 || j == 0 || i >= self.rows || j >= self.cols {
                     //                    print("Not added")
                 } else {
@@ -403,7 +600,7 @@ class SKObserved: ObservableObject {
 
         let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
-        self.photo.run(warpAction!)
+        self.photo!.run(warpAction!)
     }
 
     func warpReset() {
@@ -413,17 +610,17 @@ class SKObserved: ObservableObject {
         self.photoWarpGridDestination = self.photoWarpGridSource
         let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
-        photo.run(warpAction!)
+        photo!.run(warpAction!)
     }
 
     func warpAnimate() {
         let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: 10, rows: 10)
         let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.animate(withWarps: [warpGeometryGridNoWarp, warpGeometryGrid], times: [0, 3])
-        photo.run(warpAction!)
+        photo!.run(warpAction!)
     }
 
-    func showHideMask(_ isShow: Bool) {
+    func showMask(_ isShow: Bool) {
         self.mask.isHidden = !isShow
     }
 
@@ -481,6 +678,7 @@ class SKObserved: ObservableObject {
         let imData = image.pngData()!
         let image2 = UIImage(data: imData)!
         UIImageWriteToSavedPhotosAlbum(image2, nil, nil, nil)
+        Analytics.logEvent("warp_photo_saved", parameters: nil)
         returnScene()
     }
 }
@@ -593,8 +791,8 @@ class Grid: SKSpriteNode {
     }
 }
 
-struct WarpView_Previews: PreviewProvider {
-    static var previews: some View {
-        WarpView()
-    }
-}
+//struct WarpView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        WarpView()
+//    }
+//}

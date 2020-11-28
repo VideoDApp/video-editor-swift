@@ -7,7 +7,8 @@ import StoreKit
 enum ActiveSheet {
     case none
     case saveOrShare
-    case saveProcess}
+    case saveProcess
+}
 
 struct ContentView: View {
     @State var cursorTimeSeconds: Double = 0
@@ -32,7 +33,7 @@ struct ContentView: View {
     @State var overlaySeconds: Float64 = 0
     @State var isPaid: Bool = false
     @State var isHideWatermark: Bool = false
-    
+
     @State var userPhoto: URL?
     @State var warpPhoto: UIImage?
 
@@ -212,9 +213,9 @@ struct ContentView: View {
         self.montageInstance = Montage()
         _ = try self.montageInstance.setBottomVideoSource(url: mainUrl)
             .setBottomPart(
-                startTime: 0,
-                endTime: CMTimeGetSeconds(montageInstance.bottomVideoSource!.duration)
-            )
+            startTime: 0,
+            endTime: CMTimeGetSeconds(montageInstance.bottomVideoSource!.duration)
+        )
 
         if overlayUrl != nil {
             _ = try self.montageInstance
@@ -264,7 +265,7 @@ struct ContentView: View {
 
                         return ()
                     },
-                    onOpenWarp:{result in
+                    onOpenWarp: { result in
                         self.warpPhoto = result
                         Analytics.logEvent("warp_photo_selected", parameters: nil)
                         return ()
@@ -275,14 +276,16 @@ struct ContentView: View {
 //                    }
                 )
                     .alert(isPresented: self.$showGeneralError) {
-                        Alert(title: Text("Incorrect video"), message: Text(self.generalError), dismissButton: .default(Text("OK")))
-                    }
+                    Alert(title: Text("Incorrect video"), message: Text(self.generalError), dismissButton: .default(Text("OK")))
+                }
                     .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
             } else if self.warpPhoto != nil {
-                VStack{
-                    WarpView(userPhoto: self.$warpPhoto, onClose: {
-                        self.warpPhoto = nil
-                    })
+                VStack {
+                    WarpView(userPhoto: self.$warpPhoto,
+                        onClose: {
+                            self.warpPhoto = nil
+                        }
+                    )
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                 }
             } else {
@@ -307,24 +310,24 @@ struct ContentView: View {
                             .padding(8)
                             .foregroundColor(.white)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.white, lineWidth: 1)
-                            )
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white, lineWidth: 1)
+                        )
                         Spacer()
                     }
                         .sheet(isPresented: Binding<Bool>(get: { return self.activeSheet != .none },
-                            set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
-                            getSheet()
-                        }
+                        set: { p in self.activeSheet = p ? .saveOrShare : .none })) {
+                        getSheet()
+                    }
                         .alert(isPresented: Binding<Bool>(get: {
-                                return self.activeSheet == .none && self.showAlertBeforeShare
-                        },
-                            set: { p in self.showAlertBeforeShare = p }
-                                )) {
-                            Alert(title: Text("Info about sharing"), message: Text("After opening TikTok tap \"+\" button and choose \"Upload\". Use #zoomerok tag in title for promotion"), dismissButton: .default(Text("OK")) {
-                                    self.openTiktok()
-                                })
-                        }
+                        return self.activeSheet == .none && self.showAlertBeforeShare
+                    },
+                        set: { p in self.showAlertBeforeShare = p }
+                        )) {
+                        Alert(title: Text("Info about sharing"), message: Text("After opening TikTok tap \"+\" button and choose \"Upload\". Use #zoomerok tag in title for promotion"), dismissButton: .default(Text("OK")) {
+                                self.openTiktok()
+                            })
+                    }
                         .padding()
 
                     CloseVideoView() {
@@ -428,17 +431,11 @@ struct ContentView: View {
 //                    print("requestProducts \(success) \(String(describing: products!.first))")
 //                }
 //                self.userPhoto = Bundle.main.url(forResource: "face", withExtension: "jpg")!
-                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
+//            self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
 //                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
-            }
+        }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))
-
-        // for NavigationView. Two properties for removing space from top
-        // https://stackoverflow.com/questions/57517803/how-to-remove-the-default-navigation-bar-space-in-swiftui-navigiationview
-//            .navigationBarTitle("")
-//                .navigationBarHidden(true)
-        //}
     }
 }
 

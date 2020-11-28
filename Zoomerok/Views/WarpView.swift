@@ -34,13 +34,11 @@ struct WarpView: View {
                 Spacer()
                 CloseVideoView() {
                     print("Close clicked")
-                    //                self.playerModel.playerController.player!.pause()
-                    //                self.resetEditor()
                     self.onClose()
                 }
                     .padding()
             }
-            .padding()
+                .padding()
 
 
             if self.userPhoto != nil {
@@ -60,8 +58,7 @@ struct WarpView: View {
                                 self.isGridHidden.toggle()
                             }) {
                                 Image(systemName: "circle.grid.3x3")
-                                //                        Image(systemName: "grid")
-                                .foregroundColor(.white)
+                                    .foregroundColor(.white)
                                     .font(.system(size: 40))
                             }
                                 .padding()
@@ -84,24 +81,13 @@ struct WarpView: View {
                             }
                                 .padding()
 
-//                        Button(action: {
-//                            self.observed.warpReset()
-//                        }) {
-//                            Image(systemName: "clear")
-//                                .foregroundColor(.white)
-//                                .font(.system(size: 40))
-//                        }
-//                            .padding()
-
                             Button(action: {
                                 self.showingResetAlert = true
 
                             }) {
                                 HStack {
-//                                Image(systemName: "xmark.circle")
                                     Image(systemName: "clear")
-//                                    .font(.title)
-                                    .font(.system(size: 40))
+                                        .font(.system(size: 40))
                                         .foregroundColor(.white)
 
                                 }
@@ -116,9 +102,6 @@ struct WarpView: View {
                                         self.observed.warpReset()
                                     }, secondaryButton: .cancel())
                             }
-
-
-
 
                             //                    Button("Animate") {
                             //                        self.observed.warpAnimate()
@@ -169,7 +152,7 @@ struct WarpView: View {
 
                     Spacer()
                 }
-                .onAppear() {
+                    .onAppear() {
                     print("Screen size \(geometry.size)")
                 }
             } else {
@@ -300,7 +283,7 @@ class TouchableScene: SKScene
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let screenSize = UIScreen.main.bounds.size
 //        let maxOffset: CGFloat = 30.0
-   
+
         let maxOffset: CGFloat = screenSize.width / 12
         let maxDistance: CGFloat = screenSize.width / 11
         if let touch = touches.first {
@@ -791,8 +774,13 @@ class Grid: SKSpriteNode {
     }
 }
 
-//struct WarpView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WarpView()
-//    }
-//}
+struct WarpView_Previews: PreviewProvider {
+    @State static var userPhoto: UIImage? = UIImage()
+
+    static var previews: some View {
+        WarpView(userPhoto: $userPhoto,
+            onClose: {
+                return()
+            })
+    }
+}

@@ -82,6 +82,16 @@ struct WarpView: View {
                                 .padding()
 
                             Button(action: {
+                                self.observed.showMask(false)
+                                self.observed.warpAnimate()
+                            }) {
+                                Image(systemName: "play")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 40))
+                            }
+                                .padding()
+
+                            Button(action: {
                                 self.showingResetAlert = true
 
                             }) {
@@ -397,14 +407,14 @@ class PinchSprite: SKSpriteNode {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print("PinchSprite touch \(touches.count)")
 
-        if let touch = touches.first {
+//        if let touch = touches.first {
 //            let touchLocation = touch.location(in: self.parent!)
 ////            print("touchLocation \(touchLocation), self.position \(self.position)")
 //            self.position = touchLocation
 //
 //            self.onMoved(touchLocation)
 
-        }
+//        }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -419,11 +429,9 @@ class PinchSprite: SKSpriteNode {
 class SKObserved: ObservableObject {
     @Published var scene: TouchableScene
 
-//    var userPhotoUrl: URL?
-//    var photo = SKSpriteNode(imageNamed: "face-square")
     var photo: SKSpriteNode?
     var mask = PinchSprite(imageNamed: "warp-squid")
-    let grid = Grid(blockSize: 30.0, rows: 10, cols: 10)!
+//    let grid = Grid(blockSize: 30.0, rows: 10, cols: 10)!
     var points = [TouchableShapeNode]()
     var photoWarpGridSource = [SIMD2<Float>]()
     var photoWarpGridDestination = [SIMD2<Float>]()
@@ -438,7 +446,6 @@ class SKObserved: ObservableObject {
         let screenSize = UIScreen.main.bounds.size
         self.photoSize = CGSize(width: screenSize.width, height: screenSize.width)
         self.gridCellSize = Int(self.photoSize.width) / cols
-//        self.pointSize = 10
         self.pointSize = Int(screenSize.width / 37.5)
         self.halfPointSize = pointSize / 2
 
@@ -499,10 +506,10 @@ class SKObserved: ObservableObject {
         self.scene.addChild(self.mask)
     }
 
-    func addGrid() {
-        grid.position = CGPoint (x: 0, y: 0)
-        self.scene.addChild(grid)
-    }
+//    func addGrid() {
+//        grid.position = CGPoint (x: 0, y: 0)
+//        self.scene.addChild(grid)
+//    }
 
     func addPoints() {
         let halfPhotoWidth = self.photoSize.width / 2
@@ -581,7 +588,7 @@ class SKObserved: ObservableObject {
             self.photoWarpGridDestination[item.warpN] = moveNormalized
         })
 
-        let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
+        let warpGeometryGrid = SKWarpGeometryGrid(columns: self.cols, rows: self.rows, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
         self.photo!.run(warpAction!)
     }
@@ -591,16 +598,23 @@ class SKObserved: ObservableObject {
             item.position = item.initialPosition
         })
         self.photoWarpGridDestination = self.photoWarpGridSource
-        let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
+        let warpGeometryGrid = SKWarpGeometryGrid(columns: self.cols, rows: self.rows, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
         let warpAction = SKAction.warp(to: warpGeometryGrid, duration: 0)
-        photo!.run(warpAction!)
+        self.photo!.run(warpAction!)
     }
 
     func warpAnimate() {
-        let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: 10, rows: 10)
-        let warpGeometryGrid = SKWarpGeometryGrid(columns: 10, rows: 10, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
-        let warpAction = SKAction.animate(withWarps: [warpGeometryGridNoWarp, warpGeometryGrid], times: [0, 3])
-        photo!.run(warpAction!)
+//    func warpAnimate(onComplete: @escaping () -> ()) {
+        let animationTime: NSNumber = 2
+        let warpGeometryGridNoWarp = SKWarpGeometryGrid(columns: self.cols, rows: self.rows)
+        let warpGeometryGrid = SKWarpGeometryGrid(columns: self.cols, rows: self.rows, sourcePositions: self.photoWarpGridSource, destinationPositions: self.photoWarpGridDestination)
+        let warpAction = SKAction.animate(withWarps: [warpGeometryGridNoWarp, warpGeometryGrid], times: [0, animationTime])
+        self.photo!.run(warpAction!)
+        
+        // because animation complete not work here
+//        DispatchQueue.main.asyncAfter(deadline: .now() + animationTime) {
+//            onComplete()
+//        }
     }
 
     func showMask(_ isShow: Bool) {
@@ -608,7 +622,7 @@ class SKObserved: ObservableObject {
     }
 
     func showHideGrid(_ isShow: Bool) {
-        self.grid.isHidden = !isShow
+//        self.grid.isHidden = !isShow
         self.points.forEach({ item in
             item.isHidden = !isShow
         })

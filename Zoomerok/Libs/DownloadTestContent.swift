@@ -184,7 +184,7 @@ class DownloadTestContent {
             let url = URL(string: videoUrl)!
             Just.get(url, asyncCompletionHandler: { r in
                 if r.ok {
-                    print("total result \(r.content)")
+                    print("total result \(String(describing: r.content))")
                     self.saveBinaryToGallery(r.content!)
                     onSuccess()
                 } else {

@@ -46,9 +46,12 @@
 		98B22A262566B48900DAFDB5 /* MyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 98B22A252566B48900DAFDB5 /* MyScene.sks */; };
 		98B49046253C490400C218F2 /* Watermark.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98B49045253C490400C218F2 /* Watermark.mov */; };
 		98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 98B4904D253C7AA200C218F2 /* Watermark2.mov */; };
+		98BAFA102585363000AD34BB /* ChestWarpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BAFA0F2585363000AD34BB /* ChestWarpView.swift */; };
+		98BAFA152587575D00AD34BB /* woman.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA142587575D00AD34BB /* woman.jpg */; };
+		98BAFA1D2588B6DE00AD34BB /* face_square.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA1C2588B6DE00AD34BB /* face_square.jpg */; };
+		98BAFA222588B78C00AD34BB /* woman_square.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA212588B78C00AD34BB /* woman_square.jpg */; };
 		98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD525054759006FB952 /* DownloadTestContent.swift */; };
 		98D98CD825063BC6006FB952 /* MontageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD725063BC6006FB952 /* MontageTests.swift */; };
-		98F53A22256D703D008F1247 /* face_horizontal.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98F53A21256D703D008F1247 /* face_horizontal.jpg */; };
 		98FDC6F0253A001C00D0FB58 /* ExperimentMontage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */; };
 		B4B71E561A37268D3590C45E /* Pods_Zoomerok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6B3D27266BD941F7A7ADF7 /* Pods_Zoomerok.framework */; };
 		BB47A649FE3491E9E0087421 /* Pods_Zoomerok_ZoomerokUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B50D178B12259BDDE63758 /* Pods_Zoomerok_ZoomerokUITests.framework */; };
@@ -126,10 +129,13 @@
 		98B22A252566B48900DAFDB5 /* MyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyScene.sks; sourceTree = "<group>"; };
 		98B49045253C490400C218F2 /* Watermark.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Watermark.mov; sourceTree = "<group>"; };
 		98B4904D253C7AA200C218F2 /* Watermark2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = Watermark2.mov; sourceTree = "<group>"; };
+		98BAFA0F2585363000AD34BB /* ChestWarpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChestWarpView.swift; sourceTree = "<group>"; };
+		98BAFA142587575D00AD34BB /* woman.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = woman.jpg; sourceTree = "<group>"; };
+		98BAFA1C2588B6DE00AD34BB /* face_square.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = face_square.jpg; sourceTree = "<group>"; };
+		98BAFA212588B78C00AD34BB /* woman_square.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = woman_square.jpg; sourceTree = "<group>"; };
 		98D98CD525054759006FB952 /* DownloadTestContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTestContent.swift; sourceTree = "<group>"; };
 		98D98CD725063BC6006FB952 /* MontageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageTests.swift; sourceTree = "<group>"; };
 		98D98CD925065CA9006FB952 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		98F53A21256D703D008F1247 /* face_horizontal.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = face_horizontal.jpg; sourceTree = "<group>"; };
 		98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentMontage.swift; sourceTree = "<group>"; };
 		9BBACA0FA61318BEC2F7C16C /* Pods-Zoomerok.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Zoomerok.release.xcconfig"; path = "Target Support Files/Pods-Zoomerok/Pods-Zoomerok.release.xcconfig"; sourceTree = "<group>"; };
 		D3B50D178B12259BDDE63758 /* Pods_Zoomerok_ZoomerokUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Zoomerok_ZoomerokUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -319,6 +325,7 @@
 				9842785E2533226000A553F9 /* CloseVideoView.swift */,
 				980EB9D2255DACCF00D311CC /* DownloadTiktokView.swift */,
 				98B22A202566AE1200DAFDB5 /* WarpView.swift */,
+				98BAFA0F2585363000AD34BB /* ChestWarpView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,9 +333,11 @@
 		98A5D3E22502A13800240003 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				98BAFA142587575D00AD34BB /* woman.jpg */,
 				9869D810254C2E7300F7887A /* 1024_transparent.png */,
 				98B49045253C490400C218F2 /* Watermark.mov */,
-				98F53A21256D703D008F1247 /* face_horizontal.jpg */,
+				98BAFA212588B78C00AD34BB /* woman_square.jpg */,
+				98BAFA1C2588B6DE00AD34BB /* face_square.jpg */,
 				9881EBC9256A788D00995942 /* face.jpg */,
 				9869D818254C2EB800F7887A /* 1024.png */,
 				98B4904D253C7AA200C218F2 /* Watermark2.mov */,
@@ -472,7 +481,6 @@
 			files = (
 				980B70402545F09100DEF362 /* DirectedBy-video.mov in Resources */,
 				984C5CFD2501A2AF007DBAF4 /* LaunchScreen.storyboard in Resources */,
-				98F53A22256D703D008F1247 /* face_horizontal.jpg in Resources */,
 				984C5CFA2501A2AF007DBAF4 /* Preview Assets.xcassets in Resources */,
 				9869D811254C2E7300F7887A /* 1024_transparent.png in Resources */,
 				980B705B2547F82A00DEF362 /* SoccerBall-video.mov in Resources */,
@@ -481,7 +489,10 @@
 				9839F6372503E430000DE7C0 /* GoogleService-Info.plist in Resources */,
 				9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */,
 				98B4904E253C7AA200C218F2 /* Watermark2.mov in Resources */,
+				98BAFA152587575D00AD34BB /* woman.jpg in Resources */,
 				9869D819254C2EB800F7887A /* 1024.png in Resources */,
+				98BAFA1D2588B6DE00AD34BB /* face_square.jpg in Resources */,
+				98BAFA222588B78C00AD34BB /* woman_square.jpg in Resources */,
 				98B22A262566B48900DAFDB5 /* MyScene.sks in Resources */,
 				9896B6E22506ABCD007B7C40 /* SpiderAttack-video.mov in Resources */,
 			);
@@ -629,6 +640,7 @@
 				983CEBF8250FFBD10061A4CD /* SelectContentView.swift in Sources */,
 				98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */,
 				98A5D3DE2502A0B100240003 /* Montage.swift in Sources */,
+				98BAFA102585363000AD34BB /* ChestWarpView.swift in Sources */,
 				98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */,
 				98607CC62552D13900EA2B77 /* ZoomerokProducts.swift in Sources */,
 				984C5CF32501A2AD007DBAF4 /* SceneDelegate.swift in Sources */,

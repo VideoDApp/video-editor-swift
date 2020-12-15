@@ -34,8 +34,9 @@ struct ContentView: View {
     @State var isPaid: Bool = false
     @State var isHideWatermark: Bool = false
 
-    @State var userPhoto: URL?
+//    @State var userPhoto: URL?
     @State var warpPhoto: UIImage?
+    @State var chestWarpPhoto: UIImage?
 
     private var isSimulator: Bool = false
 
@@ -229,7 +230,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            if self.videoUrl == nil && self.warpPhoto == nil {
+            if self.videoUrl == nil && self.warpPhoto == nil && self.chestWarpPhoto == nil {
 //                WarpView(userPhoto: self.$userPhoto)
                 SelectContentView(isSimulator: self.isSimulator,
                     onContentChanged: { (result: URL) in
@@ -284,6 +285,15 @@ struct ContentView: View {
                     WarpView(userPhoto: self.$warpPhoto,
                         onClose: {
                             self.warpPhoto = nil
+                        }
+                    )
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                }
+            } else if self.chestWarpPhoto != nil {
+                VStack {
+                    ChestWarpView(userPhoto: self.$chestWarpPhoto,
+                        onClose: {
+                            self.chestWarpPhoto = nil
                         }
                     )
                         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -433,6 +443,17 @@ struct ContentView: View {
 //                self.userPhoto = Bundle.main.url(forResource: "face", withExtension: "jpg")!
 //            self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
 //                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
+                // todo check is cropped to square
+            let url = Bundle.main.url(forResource: "woman_square", withExtension: "jpg")!
+//                let url = Bundle.main.url(forResource: "face_square", withExtension: "jpg")!
+            do {
+                let imageData = try Data(contentsOf: url)
+                self.chestWarpPhoto = UIImage(data: imageData)
+            }
+            catch {
+
+            }
+
         }
 
             .background(SwiftUI.Color.black.edgesIgnoringSafeArea(.all))

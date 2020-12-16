@@ -1,6 +1,7 @@
 import SwiftUI
 import SpriteKit
 import Firebase
+import ReplayKit
 
 struct ChestWarpView: View {
     @Binding var userPhoto: UIImage?
@@ -98,6 +99,15 @@ struct ChestWarpView: View {
                                 .padding()
 
                             Button(action: {
+                                self.observed.chestRecordAnimation()
+                            }) {
+                                Image(systemName: "dot.square")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 40))
+                            }
+                                .padding()
+
+                            Button(action: {
                                 self.showingResetAlert = true
 
                             }) {
@@ -189,6 +199,7 @@ struct ChestWarpView: View {
 
 class ChestTouchableScene: SKScene, SKSceneDelegate
 {
+    public var isWarpEnabled = true
     private var points = [ChestTouchableShapeNode]()
     private var leftChestPoints = [ChestTouchableShapeNode]()
     private var rightChestPoints = [ChestTouchableShapeNode]()
@@ -197,22 +208,13 @@ class ChestTouchableScene: SKScene, SKSceneDelegate
     private var rightCirclePosition: CGPoint?
 
     func update(_ currentTime: TimeInterval, for scene: SKScene) {
-//        nodePosition = node.position
 //        print("update")
-//        self.leftCircle = self.childNode(withName: "left_circle")!.position
-//        self.rightCircle = self.childNode(withName: "right_circle")!.position
-//        print("left right: \(self.leftCircle), \(self.rightCircle)")
-
-//        let maxDistance: CGFloat = screenSize.width / 11
-//        let closest = self.closestChilds(point: touchLocation, maxDistance: maxDistance)
-////                print("Found closest \(closest.count)")
-//        self.points = closest
-//        closest.forEach({ item in
-//            item.startDragPosition = item.position
-//        })
     }
 
     func didEvaluateActions(for scene: SKScene) {
+        if !self.isWarpEnabled {
+            return
+        }
 //        print("didEvaluateActions")
         if self.leftCirclePosition == nil || self.rightCirclePosition == nil {
             return
@@ -238,8 +240,7 @@ class ChestTouchableScene: SKScene, SKSceneDelegate
             item.position.x = item.startDragPosition.x - rightOffset.x
             item.position.y = item.startDragPosition.y - rightOffset.y
         })
-        
-        
+
         self.onMoved(self.leftChestPoints + self.rightChestPoints)
     }
 
@@ -263,7 +264,7 @@ class ChestTouchableScene: SKScene, SKSceneDelegate
         self.leftChestPoints.forEach({ item in
             item.startDragPosition = item.position
         })
-        
+
         self.rightChestPoints = rightClosest
         self.rightChestPoints.forEach({ item in
             item.startDragPosition = item.position
@@ -347,30 +348,39 @@ class ChestTouchableScene: SKScene, SKSceneDelegate
 }
 
 class ChestPinchNode: SKShapeNode {
+    public var onBegan: () -> () = {
+
+    }
+
+    public var onComplete: () -> () = {
+
+    }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //self.onBegan()
+        print("touchesBegan \(touches.count)")
+        self.onBegan()
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print("PinchSprite touch \(touches.count)")
-
+        print("\(self.name) \(touches.count)")
         if let touch = touches.first {
             let touchLocation = touch.location(in: self.parent!)
-            print("touchLocation \(touchLocation)")
+//            print("touchLocation \(touchLocation)")
 //            print("touchLocation \(touchLocation), self.position \(self.position)")
             self.position = touchLocation
-
 //            self.onMoved(touchLocation)
-
         }
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("touchesEnded ChestPinchNode")
+        self.onComplete()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("touchesCancelled ChestPinchNode")
+        self.onComplete()
     }
 }
 
@@ -389,7 +399,6 @@ class ChestSKObserved: ObservableObject {
     @Published var scene: ChestTouchableScene
 
     var photo: SKSpriteNode?
-//    var mask = PinchSprite(imageNamed: "warp-squid")
     var leftCircle: ChestPinchNode?
     var rightCircle: ChestPinchNode?
     var points = [ChestTouchableShapeNode]()
@@ -420,10 +429,6 @@ class ChestSKObserved: ObservableObject {
         self.photoWarpGridSource = self.makeVectorArray(self.cols, self.rows)
         self.photoWarpGridDestination = self.photoWarpGridSource
 
-//        self.mask.size = CGSize(width: self.photoSize.width, height: self.photoSize.height)
-//        self.mask.name = "mask"
-//        self.mask.zPosition = 30
-
 //        self.addGrid()
         self.addPoints()
 //        mask.isUserInteractionEnabled = true
@@ -437,13 +442,19 @@ class ChestSKObserved: ObservableObject {
     func getCircle(x: CGFloat, y: CGFloat) -> ChestPinchNode {
 //        let screenSize = UIScreen.main.bounds.size
         let circle = ChestPinchNode(circleOfRadius: self.circleRadius)
-//        circle.isUserInteractionEnabled = true
+        circle.isUserInteractionEnabled = true
         circle.zPosition = 20
         circle.position = .init(x: x, y: y)
         circle.strokeColor = .black
         circle.glowWidth = 0.3
         circle.alpha = 0.2
         circle.fillColor = .white
+        circle.onBegan = {
+            self.scene.isWarpEnabled = false
+        }
+        circle.onComplete = {
+            self.scene.isWarpEnabled = true
+        }
 
         return circle
     }
@@ -496,8 +507,8 @@ class ChestSKObserved: ObservableObject {
                 let y = j * Int(self.gridCellSize) - Int(halfPhotoHeight)
                 //                print("=> n=\(n) x=\(x) y=\(y) i=\(i) j=\(j)")
                 let shape = ChestTouchableShapeNode()
-                shape.isUserInteractionEnabled = true
-                shape.setOnMoved({(result: CGPoint) in
+                shape.isUserInteractionEnabled = false
+                shape.setOnMoved({ (result: CGPoint) in
                     self.warpPoints([shape])
                 })
                 shape.warpN = n
@@ -510,7 +521,7 @@ class ChestSKObserved: ObservableObject {
                 shape.alpha = 0.5
                 shape.isHidden = true
                 shape.zPosition = 20
-                if  i > self.rows || j > self.cols {
+                if i > self.rows || j > self.cols {
                     //                    print("Not added")
                 } else {
                     //                    print("Added")
@@ -584,15 +595,8 @@ class ChestSKObserved: ObservableObject {
 //        }
     }
 
-    func chestAnimation() {
-        // todo reset warp before start or after end
-        self.leftCircle!.isHidden = true
-        self.rightCircle!.isHidden = true
-        let onComplete = {
-            self.scene.setCirclePositions(left: nil, right: nil, radius: self.circleRadius)
-            self.leftCircle!.isHidden = false
-            self.rightCircle!.isHidden = false
-        }
+    private func chestJustAnimate(onComplete: @escaping () -> ()) {
+        // todo reset warp before start or/and after end
         self.scene.setCirclePositions(left: self.leftCircle!.position, right: self.rightCircle!.position, radius: self.circleRadius)
 
         let maxY = 20
@@ -612,6 +616,7 @@ class ChestSKObserved: ObservableObject {
                     .sequence(actions)
                 ])
             ])) {
+            self.scene.setCirclePositions(left: nil, right: nil, radius: self.circleRadius)
             onComplete()
         }
         self.rightCircle!.run(.sequence([
@@ -619,8 +624,74 @@ class ChestSKObserved: ObservableObject {
                     .sequence(actions)
                 ])
             ])) {
+            self.scene.setCirclePositions(left: nil, right: nil, radius: self.circleRadius)
             onComplete()
         }
+    }
+
+    func chestAnimation() {
+        self.leftCircle!.isHidden = true
+        self.rightCircle!.isHidden = true
+        self.chestJustAnimate() {
+            self.leftCircle!.isHidden = false
+            self.rightCircle!.isHidden = false
+        }
+    }
+
+    func chestRecordAnimation() {
+        let screenRecorder = ScreenRecorder()
+        let recordCount = 3
+        var i = 0
+        var startRecord = { }
+        let playAnimation = {
+            var isRecorded = true
+            let onComplete = {
+                if isRecorded {
+                    isRecorded = false
+                    screenRecorder.stoprecording(
+                        errorHandler: { error in
+                            debugPrint("Error when stop recording \(error)")
+                        },
+                        completeHandler: { result in
+                            print("complete \(result)")
+                            if i < recordCount {
+//                                i = i + 1
+
+                                print("IS REC \(RPScreenRecorder.shared().isRecording), is ava \(RPScreenRecorder.shared().isAvailable)")
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                    startRecord()
+                                }
+                            } else {
+                                print("full complete")
+                            }
+                        })
+                }
+
+                
+            }
+
+            self.chestJustAnimate() {
+                self.leftCircle!.isHidden = false
+                self.rightCircle!.isHidden = false
+                onComplete()
+            }
+        }
+
+        startRecord = {
+            print("startRecord")
+            i = i + 1
+            self.leftCircle!.isHidden = true
+            self.rightCircle!.isHidden = true
+            screenRecorder.startRecording(saveToCameraRoll: true,
+                errorHandler: { error in
+                    debugPrint("Error when recording \(error)")
+                },
+                completeHandler: { result in
+                    playAnimation()
+                })
+        }
+
+        startRecord()
     }
 
     func showMask(_ isShow: Bool) {
@@ -761,6 +832,7 @@ struct ChestSpriteKitContainer: UIViewRepresentable {
     func makeUIView(context: Context) -> SKView {
         print("makeUIView")
         let view = SKView(frame: .zero)
+        view.isMultipleTouchEnabled = true
         view.preferredFramesPerSecond = 60
 //        view.showsFPS = true
 //        view.showsNodeCount = true

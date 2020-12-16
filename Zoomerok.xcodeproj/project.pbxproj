@@ -50,6 +50,7 @@
 		98BAFA152587575D00AD34BB /* woman.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA142587575D00AD34BB /* woman.jpg */; };
 		98BAFA1D2588B6DE00AD34BB /* face_square.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA1C2588B6DE00AD34BB /* face_square.jpg */; };
 		98BAFA222588B78C00AD34BB /* woman_square.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 98BAFA212588B78C00AD34BB /* woman_square.jpg */; };
+		98BAFA642588D3D100AD34BB /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BAFA632588D3D100AD34BB /* ScreenRecorder.swift */; };
 		98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD525054759006FB952 /* DownloadTestContent.swift */; };
 		98D98CD825063BC6006FB952 /* MontageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D98CD725063BC6006FB952 /* MontageTests.swift */; };
 		98FDC6F0253A001C00D0FB58 /* ExperimentMontage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */; };
@@ -133,6 +134,7 @@
 		98BAFA142587575D00AD34BB /* woman.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = woman.jpg; sourceTree = "<group>"; };
 		98BAFA1C2588B6DE00AD34BB /* face_square.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = face_square.jpg; sourceTree = "<group>"; };
 		98BAFA212588B78C00AD34BB /* woman_square.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = woman_square.jpg; sourceTree = "<group>"; };
+		98BAFA632588D3D100AD34BB /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
 		98D98CD525054759006FB952 /* DownloadTestContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTestContent.swift; sourceTree = "<group>"; };
 		98D98CD725063BC6006FB952 /* MontageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MontageTests.swift; sourceTree = "<group>"; };
 		98D98CD925065CA9006FB952 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 				98A5D3D92502A07900240003 /* OverlayVideo.swift */,
 				98A5D3DB2502A08E00240003 /* OverlayData.swift */,
 				98A5D3DD2502A0B100240003 /* Montage.swift */,
+				98BAFA632588D3D100AD34BB /* ScreenRecorder.swift */,
 				98D98CD525054759006FB952 /* DownloadTestContent.swift */,
 				98FDC6EF253A001C00D0FB58 /* ExperimentMontage.swift */,
 			);
@@ -624,6 +627,7 @@
 			files = (
 				988CF517252885BC0003B673 /* SavingModalView.swift in Sources */,
 				98D98CD625054759006FB952 /* DownloadTestContent.swift in Sources */,
+				98BAFA642588D3D100AD34BB /* ScreenRecorder.swift in Sources */,
 				988CF512252758730003B673 /* ActivityIndicator.swift in Sources */,
 				983CEBF6250FE4750061A4CD /* TestUI.swift in Sources */,
 				98607CDC2553F5A000EA2B77 /* Store.swift in Sources */,

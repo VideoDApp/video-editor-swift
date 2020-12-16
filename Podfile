@@ -10,7 +10,6 @@ target 'Zoomerok' do
   pod 'KeychainAccess'
   pod 'TikTokOpenSDK', '~> 4.0.1'
   pod 'Just'
-  pod 'Wyler'
 
   target 'ZoomerokTests' do
     inherit! :search_paths

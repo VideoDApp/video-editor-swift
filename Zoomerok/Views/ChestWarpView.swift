@@ -12,6 +12,12 @@ struct ChestWarpView: View {
     @State var observed = ChestSKObserved()
     @State var showingResetAlert = false
     @State var showingSavedAlert = false
+    @State var sliderValue: Double = 10
+    @State var mode = ""
+    @State var detectFiles = [String]()
+    @State var detectFileIndex = 0
+    @State var animationFiles = [ChestFileSettings]()
+    @State var animationFileIndex = 0
 
     func getMaskIcon() -> String {
         var result = ""
@@ -22,6 +28,43 @@ struct ChestWarpView: View {
         }
 
         return result
+    }
+
+    func drawNextChest() {
+        do {
+            let imageData = try Data(contentsOf: URL(fileURLWithPath: self.detectFiles[self.detectFileIndex]))
+            print("imageData \(imageData), self.detectFiles[self.detectFileIndex] \(self.detectFiles[self.detectFileIndex])")
+            self.userPhoto = UIImage(data: imageData)
+        } catch {
+
+        }
+
+        if self.userPhoto != nil {
+            self.observed.setUserPhoto(self.userPhoto!)
+        }
+    }
+
+    func drawNextChestPoints() {
+        do {
+            let settings = self.animationFiles[self.animationFileIndex]
+            print("settings.photoURL \(settings.photoURL)")
+            let imageData = try Data(contentsOf: settings.photoURL)
+            self.userPhoto = UIImage(data: imageData)
+
+            if self.userPhoto != nil {
+//                self.observed.warpReset()
+                self.observed.scene.isWarpEnabled = false
+                self.observed.setUserPhoto(self.userPhoto!)
+                self.observed.leftCircle!.position = settings.circlesInfo.leftCirclePosition
+                self.observed.rightCircle!.position = settings.circlesInfo.rightCirclePosition
+                self.observed.resizeCircles(radius: settings.circlesInfo.radius)
+//                self.observed.scene.setCirclePositions(left: settings.circlesInfo.leftCirclePosition, right: settings.circlesInfo.rightCirclePosition, radius: settings.circlesInfo.radius)
+                self.observed.warpReset()
+                self.observed.scene.isWarpEnabled = true
+            }
+        } catch {
+            print(error)
+        }
     }
 
     var body: some View {
@@ -42,9 +85,54 @@ struct ChestWarpView: View {
             if self.userPhoto != nil {
                 VStack {
                     Spacer()
-                    Text("#zoomerok")
+                    Text("Zoomerok")
                         .font(.system(size: 40))
                         .foregroundColor(.white)
+
+//                    Slider(value: self.$sliderValue, in: 5...25, step: 1)
+                    if self.mode == "chest_detect" && self.detectFiles.count > 0 {
+                        Text("Detect files: \(detectFileIndex + 1)/\(self.detectFiles.count)")
+                            .foregroundColor(.white)
+                        HStack {
+                            Button(action: {
+                                let circlesInfo = self.observed.getCirclesInfo()
+                                let filename = self.detectFiles[self.detectFileIndex]
+                                let personName = URL(fileURLWithPath: filename).deletingPathExtension().lastPathComponent
+                                let photoURL = URL(fileURLWithPath: URL(fileURLWithPath: filename).lastPathComponent)
+                                let settings = ChestFileSettings(circlesInfo: circlesInfo, personName: personName, photoURL: photoURL)
+                                let settingsFile = ChestUtils.getSettingsFile(filename)
+                                ChestUtils.saveFileSettings(to: settingsFile, settings: settings)
+                                if self.detectFileIndex >= self.detectFiles.count - 1 {
+                                    self.detectFileIndex = 0
+                                    self.mode = ""
+                                } else {
+                                    self.detectFileIndex += 1
+                                    self.drawNextChest()
+                                }
+                            }) {
+                                Text("Save & Next")
+                                    .foregroundColor(.white)
+                            }
+                                .padding()
+
+                            Button(action: {
+                                self.mode = ""
+                            }) {
+                                Text("Complete")
+                                    .foregroundColor(.white)
+                            }
+                                .padding()
+                        }
+                    }
+                    Slider(value: Binding(get: {
+                        self.sliderValue
+                    }, set: { (newVal) in
+                            let screenSize = UIScreen.main.bounds.size
+                            self.sliderValue = newVal
+                            print("slider changed \(newVal)")
+                            self.observed.resizeCircles(radius: screenSize.width / 100 * CGFloat(newVal))
+                        }), in: 5...25, step: 1)
+                        .padding()
 
                     ChestSpriteKitContainer(scene: self.$observed.scene)
                         .frame(width: geometry.size.width, height: geometry.size.width)
@@ -98,14 +186,16 @@ struct ChestWarpView: View {
                             }
                                 .padding()
 
-                            Button(action: {
-                                self.observed.chestRecordAnimation()
-                            }) {
-                                Image(systemName: "dot.square")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 40))
+                            if self.mode == "animate" && self.animationFiles.count > 0 {
+                                Button(action: {
+                                    self.observed.chestRecordAnimation()
+                                }) {
+                                    Image(systemName: "dot.square")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 40))
+                                }
+                                    .padding()
                             }
-                                .padding()
 
                             Button(action: {
                                 self.showingResetAlert = true
@@ -179,7 +269,7 @@ struct ChestWarpView: View {
                     Spacer()
                 }
                     .onAppear() {
-                    print("Screen size \(geometry.size)")
+//                    print("Screen size \(geometry.size)")
                 }
             } else {
                 ZStack(alignment: .leading) {
@@ -190,10 +280,137 @@ struct ChestWarpView: View {
             }
         }
             .onAppear() {
-            if self.userPhoto != nil {
-                self.observed.setUserPhoto(self.userPhoto!)
+            // todo move to async thread
+            ChestUtils.createHelloFile()
+                
+//            let result = ChestUtils.getDocumentPhotos(ChestUtils.directoryPreparePhotos)
+//            print("result \(result)")
+//            self.detectFiles = result
+//                self.mode = "chest_detect"
+//            if self.detectFiles.count > 0 {
+//                self.drawNextChest()
+//            }
+
+            self.animationFiles = ChestUtils.getDocumentSettings(ChestUtils.directoryPreparePhotos)
+            self.mode = "animate"
+            if self.animationFiles.count > 0 {
+                self.drawNextChestPoints()
             }
+
+//            print("result \(result)")
+//            ChestUtils.upgradeAllSettings()
         }
+    }
+}
+
+class ChestUtils {
+    static let directoryPreparePhotos = "PreparePhotos"
+
+    static func getDocumentsDirectory() -> NSString {
+        return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
+    }
+
+    static func createHelloFile() {
+        let fileURL = URL(fileURLWithPath: self.getDocumentsDirectory().appendingPathComponent("HelloWorld.txt"))
+        try? "This folder created by Zoomerok app".write(to: fileURL, atomically: true, encoding: .utf8)
+    }
+
+    static func getDocumentPhotos(_ path: String, _ isAll: Bool = false) -> [String] {
+        let findPath = self.getDocumentsDirectory().appendingPathComponent(path)
+        let enumerator = FileManager.default.enumerator(atPath: findPath)
+        if enumerator != nil {
+            let filePaths = enumerator?.allObjects as! [String]
+            return filePaths
+                .filter { file in
+                let lowerFile = file.lowercased()
+                return lowerFile.hasSuffix(".jpeg") || lowerFile.hasSuffix(".jpg") || lowerFile.hasSuffix(".png")
+            }
+                .map({ file in
+                return findPath + "/" + file
+            })
+                .filter({ file in
+                return isAll ? true : !FileManager.default.fileExists(atPath: ChestUtils.getSettingsFile(file).path)
+            })
+        } else {
+            return []
+        }
+    }
+
+    static func getDocumentSettings(_ path: String) -> [ChestFileSettings] {
+        do {
+            let findPath = self.getDocumentsDirectory().appendingPathComponent(path)
+            let enumerator = FileManager.default.enumerator(atPath: findPath)
+            if enumerator != nil {
+                let filePaths = enumerator?.allObjects as! [String]
+                return try filePaths
+                    .filter { file in
+                    let lowerFile = file.lowercased()
+                    return lowerFile.hasSuffix(".settings.txt")
+                }
+                    .map({ file in
+                    return findPath + "/" + file
+                })
+                    .filter({ file in
+                    // check is photos exists
+//                    return FileManager.default.fileExists(atPath: ChestUtils.getSettingsFile(file.replacingOccurrences(of: ".settings.txt", with: "")).path)
+                    return FileManager.default.fileExists(atPath: file.replacingOccurrences(of: ".settings.txt", with: ""))
+                })
+                    .map({ item in
+                    return try ChestUtils.getSettings(URL(fileURLWithPath: item))
+                })
+            }
+        } catch {
+
+        }
+
+        return []
+    }
+
+    static func getSettingsFile(_ path: String) -> URL {
+        return URL(fileURLWithPath: path + ".settings.txt")
+    }
+
+    static func saveFileSettings(to: URL, settings: ChestFileSettings) {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        do {
+            let data = try encoder.encode(settings)
+            let json = String(data: data, encoding: .utf8)!
+            try json.write(to: to, atomically: true, encoding: .utf8)
+        } catch {
+
+        }
+    }
+
+    static func getSettings(_ path: URL) throws -> ChestFileSettings {
+        var newPath = path
+        newPath.deleteLastPathComponent()
+        let jsonData = try Data(contentsOf: path)
+        let jsonDecoder = JSONDecoder()
+        let settings = try jsonDecoder.decode(ChestFileSettings.self, from: jsonData)
+        let url = newPath.appendingPathComponent(settings.photoURL.path)
+        settings.photoURL = url
+
+        return settings
+    }
+
+    static func upgradeAllSettings() {
+        let photos = self.getDocumentPhotos(self.directoryPreparePhotos, true)
+        photos.forEach({ item in
+            let settingFile = self.getSettingsFile(item)
+//            print("settingFile \(settingFile.path)")
+            if FileManager.default.fileExists(atPath: settingFile.path) {
+                print("exists \(settingFile.path)")
+                do {
+                    let settings = try self.getSettings(settingFile)
+                    print("settings -- \(settings)")
+                    settings.photoURL = URL(fileURLWithPath: URL(fileURLWithPath: item).lastPathComponent)
+                    self.saveFileSettings(to: settingFile, settings: settings)
+                } catch {
+
+                }
+            }
+        })
     }
 }
 
@@ -255,7 +472,6 @@ class ChestTouchableScene: SKScene, SKSceneDelegate
             return
         }
 
-//        let maxDistance: CGFloat = screenSize.width / 11
         let leftClosest = self.closestChestChilds(point: left!, maxDistance: radius)
         let rightClosest = self.closestChestChilds(point: right!, maxDistance: radius)
 //        print("Found closest \(closest.count)")
@@ -363,10 +579,10 @@ class ChestPinchNode: SKShapeNode {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print("PinchSprite touch \(touches.count)")
-        print("\(self.name) \(touches.count)")
+//        print("\(self.name) \(touches.count)")
         if let touch = touches.first {
             let touchLocation = touch.location(in: self.parent!)
-//            print("touchLocation \(touchLocation)")
+            print("touchLocation \(touchLocation)")
 //            print("touchLocation \(touchLocation), self.position \(self.position)")
             self.position = touchLocation
 //            self.onMoved(touchLocation)
@@ -395,10 +611,36 @@ extension SKScene {
     }
 }
 
+class ChestFileSettings: Encodable, Decodable {
+    public var circlesInfo: CirclesInfo
+    public var personName: String
+    public var photoURL: URL
+
+    init(circlesInfo: CirclesInfo, personName: String, photoURL: URL) {
+        self.circlesInfo = circlesInfo
+        self.personName = personName
+        self.photoURL = photoURL
+    }
+}
+
+class CirclesInfo: Encodable, Decodable {
+    public var leftCirclePosition: CGPoint
+    public var rightCirclePosition: CGPoint
+    public var radius: CGFloat
+
+    init(leftPosition: CGPoint, rightPosition: CGPoint, radius: CGFloat) {
+        self.leftCirclePosition = leftPosition
+        self.rightCirclePosition = rightPosition
+        self.radius = radius
+    }
+}
+
 class ChestSKObserved: ObservableObject {
     @Published var scene: ChestTouchableScene
 
     var photo: SKSpriteNode?
+    var cropNode: SKCropNode?
+    var photoSettings: ChestFileSettings?
     var leftCircle: ChestPinchNode?
     var rightCircle: ChestPinchNode?
     var points = [ChestTouchableShapeNode]()
@@ -433,15 +675,16 @@ class ChestSKObserved: ObservableObject {
         self.addPoints()
 //        mask.isUserInteractionEnabled = true
 
-        self.leftCircle = self.getCircle(x: -68, y: -58)
-        self.leftCircle!.name = "left_circle"
-        self.rightCircle = self.getCircle(x: 22, y: -54)
-        self.rightCircle!.name = "right_circle"
+        self.leftCircle = self.getCircle(name: "left_circle", radius: self.circleRadius, x: -100, y: -50)
+        self.rightCircle = self.getCircle(name: "right_circle", radius: self.circleRadius, x: 100, y: -50)
+
+        self.scene.addChild(self.leftCircle!)
+        self.scene.addChild(self.rightCircle!)
     }
 
-    func getCircle(x: CGFloat, y: CGFloat) -> ChestPinchNode {
-//        let screenSize = UIScreen.main.bounds.size
-        let circle = ChestPinchNode(circleOfRadius: self.circleRadius)
+    func getCircle(name: String, radius: CGFloat, x: CGFloat, y: CGFloat) -> ChestPinchNode {
+        let circle = ChestPinchNode(circleOfRadius: radius)
+        circle.name = name
         circle.isUserInteractionEnabled = true
         circle.zPosition = 20
         circle.position = .init(x: x, y: y)
@@ -457,6 +700,19 @@ class ChestSKObserved: ObservableObject {
         }
 
         return circle
+    }
+
+    func resizeCircles(radius: CGFloat) {
+        self.circleRadius = radius
+        self.scene.removeChildren(in: [self.leftCircle!, self.rightCircle!])
+        self.leftCircle = self.getCircle(name: "left_circle", radius: self.circleRadius, x: self.leftCircle!.position.x, y: self.leftCircle!.position.y)
+        self.rightCircle = self.getCircle(name: "right_circle", radius: self.circleRadius, x: self.rightCircle!.position.x, y: self.rightCircle!.position.y)
+        self.scene.addChild(self.leftCircle!)
+        self.scene.addChild(self.rightCircle!)
+    }
+
+    func getCirclesInfo() -> CirclesInfo {
+        return CirclesInfo(leftPosition: self.leftCircle!.position, rightPosition: self.rightCircle!.position, radius: self.circleRadius)
     }
 
     func setUserPhoto(_ userPhotoUrl: UIImage) {
@@ -479,7 +735,12 @@ class ChestSKObserved: ObservableObject {
             userPhoto.size = screenSize
         }
 
+        if self.cropNode != nil {
+            self.scene.removeChildren(in: [self.cropNode!])
+        }
+
         let cropNode = SKCropNode()
+        cropNode.name = "cropNode"
         cropNode.position = CGPoint(x: 0, y: 0)
         cropNode.zPosition = 10
         cropNode.maskNode = nil
@@ -487,9 +748,6 @@ class ChestSKObserved: ObservableObject {
 
         self.scene.delegate = self.scene
         self.scene.addChild(cropNode)
-        self.scene.addChild(self.leftCircle!)
-        self.scene.addChild(self.rightCircle!)
-//        self.scene.addChild(self.mask)
     }
 
 //    func addGrid() {
@@ -666,8 +924,6 @@ class ChestSKObserved: ObservableObject {
                             }
                         })
                 }
-
-                
             }
 
             self.chestJustAnimate() {

@@ -2,7 +2,8 @@ import SwiftUI
 
 struct SelectContentView: View {
     @State private var showSheet: Bool = false
-    @State private var showPhotoPicker: Bool = false
+    @State private var showShakePhotoPicker: Bool = false
+    @State private var showWarpPhotoPicker: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var showTiktok: Bool = false
     @State private var showWarp: Bool = false
@@ -13,11 +14,13 @@ struct SelectContentView: View {
     var isSimulator: Bool = false
 //    var onOpenTiktokDownload: () -> ()
     var onOpenWarp: (UIImage) -> ()
+    var onOpenChestShake: (UIImage) -> ()
 
     init(
         isSimulator: Bool,
         @ViewBuilder onContentChanged: @escaping (URL) -> (),
-        @ViewBuilder onOpenWarp: @escaping (UIImage) -> ()
+        @ViewBuilder onOpenWarp: @escaping (UIImage) -> (),
+        @ViewBuilder onOpenChestShake: @escaping (UIImage) -> ()
 //        ,
 //        @ViewBuilder onOpenTiktokDownload: @escaping () -> ()
     ) {
@@ -25,6 +28,7 @@ struct SelectContentView: View {
         self.isSimulator = isSimulator
         self.onOpenWarp = onOpenWarp
 //        self.onOpenTiktokDownload = onOpenTiktokDownload
+        self.onOpenChestShake = onOpenChestShake
     }
 
     var body: some View {
@@ -36,14 +40,43 @@ struct SelectContentView: View {
                 Text("Zoomerok")
                     .font(.system(size: 60))
                     .padding()
-
+                
                 VStack {
-                    Text("Choose a photo for warp")
+                    Text("Shake photo")
                         .foregroundColor(.white)
                         .padding()
-                        .sheet(isPresented: self.$showPhotoPicker) {
+                        .sheet(isPresented: self.$showShakePhotoPicker) {
                         ImagePicker(
-                            isShown: self.$showPhotoPicker,
+                            isShown: self.$showShakePhotoPicker,
+                            sourceType: UIImagePickerController.SourceType.photoLibrary,
+                            isVideo: false,
+                            onPicked: { (result: URL) in
+                                print("ImagePicker shake photo \(result)")
+                                return ()
+                            },
+                            onPickedImage: { (result: UIImage) in
+                                print("ImagePicker shake picked photo \(result)")
+                                self.onOpenChestShake(result)
+                            }
+                        )
+                    }
+
+                    Image(systemName: "hand.draw")
+                        .foregroundColor(.white)
+                        .font(.system(size: 60))
+                        
+                }
+                    .onTapGesture {
+                    self.showShakePhotoPicker = true
+                }
+
+                VStack {
+                    Text("Warp photo")
+                        .foregroundColor(.white)
+                        .padding()
+                        .sheet(isPresented: self.$showWarpPhotoPicker) {
+                        ImagePicker(
+                            isShown: self.$showWarpPhotoPicker,
                             sourceType: UIImagePickerController.SourceType.photoLibrary,
                             isVideo: false,
                             onPicked: { (result: URL) in
@@ -52,9 +85,6 @@ struct SelectContentView: View {
                             },
                             onPickedImage: { (result: UIImage) in
                                 print("ImagePicker warp picked photo \(result)")
-                                //self.onContentChanged(result)
-//                                self.warpPhoto = result
-//                                self.showWarp = true
                                 self.onOpenWarp(result)
                             }
                         )
@@ -63,18 +93,14 @@ struct SelectContentView: View {
                     Image(systemName: "person.crop.circle")
                         .foregroundColor(.white)
                         .font(.system(size: 60))
-                        .sheet(isPresented: self.$showWarp) {
-//                        WarpView(userPhoto: self.$warpPhoto)
-                    }
-
+                  
                 }
-
                     .onTapGesture {
-                    self.showPhotoPicker = true
+                    self.showWarpPhotoPicker = true
                 }
 
                 VStack {
-                    Text("Choose a video for montage")
+                    Text("Video montage")
                         .foregroundColor(.white)
                         .padding()
 
@@ -172,6 +198,9 @@ struct SelectContentView_Previews: PreviewProvider {
                 return ()
             },
             onOpenWarp: {result in
+                return ()
+            },
+            onOpenChestShake: {result in
                 return ()
             }
 //            ,

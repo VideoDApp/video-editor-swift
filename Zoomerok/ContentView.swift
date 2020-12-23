@@ -270,6 +270,11 @@ struct ContentView: View {
                         self.warpPhoto = result
                         Analytics.logEvent("warp_photo_selected", parameters: nil)
                         return ()
+                    },
+                    onOpenChestShake:{ result in
+                        self.chestWarpPhoto = result
+                        Analytics.logEvent("chest_photo_selected", parameters: nil)
+                        return ()
                     }
 //                    ,onOpenTiktokDownload: {
 //                        print("onOpenTiktokDownload clicked")
@@ -444,15 +449,15 @@ struct ContentView: View {
 //            self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
 //                self.userPhoto = Bundle.main.url(forResource: "face_horizontal", withExtension: "jpg")!
                 // todo check is cropped to square
-            let url = Bundle.main.url(forResource: "woman_square", withExtension: "jpg")!
-//                let url = Bundle.main.url(forResource: "face_square", withExtension: "jpg")!
-            do {
-                let imageData = try Data(contentsOf: url)
-                self.chestWarpPhoto = UIImage(data: imageData)
-            }
-            catch {
-
-            }
+//            let url = Bundle.main.url(forResource: "woman_square", withExtension: "jpg")!
+////                let url = Bundle.main.url(forResource: "face_square", withExtension: "jpg")!
+//            do {
+//                let imageData = try Data(contentsOf: url)
+//                self.chestWarpPhoto = UIImage(data: imageData)
+//            }
+//            catch {
+//
+//            }
 
         }
 

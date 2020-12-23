@@ -47,7 +47,7 @@ struct ChestWarpView: View {
     func drawNextChestPoints() {
         do {
             let settings = self.animationFiles[self.animationFileIndex]
-            print("settings.photoURL \(settings.photoURL)")
+            print("settings.photoURL \(settings.photoURL.path)")
             let imageData = try Data(contentsOf: settings.photoURL)
             self.userPhoto = UIImage(data: imageData)
 
@@ -178,7 +178,9 @@ struct ChestWarpView: View {
 //                                .padding()
 
                             Button(action: {
-                                self.observed.chestAnimation()
+                                self.observed.chestAnimation(isRecording: self.mode == "animate") {
+
+                                }
                             }) {
                                 Image(systemName: "play")
                                     .foregroundColor(.white)
@@ -188,7 +190,18 @@ struct ChestWarpView: View {
 
                             if self.mode == "animate" && self.animationFiles.count > 0 {
                                 Button(action: {
-                                    self.observed.chestRecordAnimation()
+                                    self.observed.chestRecordAnimation(recordCount: self.animationFiles.count) { outURL in
+                                        let settings = self.animationFiles[self.animationFileIndex]
+                                        settings.videoResultURL = outURL
+                                        ChestUtils.saveFileSettings(to: settings.settingsURL!, settings: settings)
+                                        self.animationFileIndex += 1
+                                        if self.animationFileIndex > self.animationFiles.count - 1 {
+                                            print("chestRecordAnimation complete")
+                                            self.animationFileIndex = 0
+                                        } else {
+                                            self.drawNextChestPoints()
+                                        }
+                                    }
                                 }) {
                                     Image(systemName: "dot.square")
                                         .foregroundColor(.white)
@@ -270,6 +283,9 @@ struct ChestWarpView: View {
                 }
                     .onAppear() {
 //                    print("Screen size \(geometry.size)")
+                        if self.userPhoto != nil{
+                            self.observed.setUserPhoto(self.userPhoto!)
+                        }
                 }
             } else {
                 ZStack(alignment: .leading) {
@@ -282,7 +298,7 @@ struct ChestWarpView: View {
             .onAppear() {
             // todo move to async thread
             ChestUtils.createHelloFile()
-                
+
 //            let result = ChestUtils.getDocumentPhotos(ChestUtils.directoryPreparePhotos)
 //            print("result \(result)")
 //            self.detectFiles = result
@@ -291,11 +307,14 @@ struct ChestWarpView: View {
 //                self.drawNextChest()
 //            }
 
-            self.animationFiles = ChestUtils.getDocumentSettings(ChestUtils.directoryPreparePhotos)
-            self.mode = "animate"
-            if self.animationFiles.count > 0 {
-                self.drawNextChestPoints()
-            }
+            // after save video broke image url
+//            ChestUtils.upgradeAllSettings()
+//
+//            self.animationFiles = ChestUtils.getDocumentSettings(ChestUtils.directoryPreparePhotos)
+//            self.mode = "animate"
+//            if self.animationFiles.count > 0 {
+//                self.drawNextChestPoints()
+//            }
 
 //            print("result \(result)")
 //            ChestUtils.upgradeAllSettings()
@@ -356,7 +375,10 @@ class ChestUtils {
                     return FileManager.default.fileExists(atPath: file.replacingOccurrences(of: ".settings.txt", with: ""))
                 })
                     .map({ item in
-                    return try ChestUtils.getSettings(URL(fileURLWithPath: item))
+                    let settingsURL = URL(fileURLWithPath: item)
+                    let settings = try ChestUtils.getSettings(settingsURL)
+                    settings.settingsURL = settingsURL
+                    return settings
                 })
             }
         } catch {
@@ -615,6 +637,8 @@ class ChestFileSettings: Encodable, Decodable {
     public var circlesInfo: CirclesInfo
     public var personName: String
     public var photoURL: URL
+    public var videoResultURL: URL? = nil
+    public var settingsURL: URL? = nil
 
     init(circlesInfo: CirclesInfo, personName: String, photoURL: URL) {
         self.circlesInfo = circlesInfo
@@ -887,18 +911,56 @@ class ChestSKObserved: ObservableObject {
         }
     }
 
-    func chestAnimation() {
-        self.leftCircle!.isHidden = true
-        self.rightCircle!.isHidden = true
-        self.chestJustAnimate() {
-            self.leftCircle!.isHidden = false
-            self.rightCircle!.isHidden = false
+    private func chestMoveCircles(onComplete: @escaping () -> ()) {
+        let newLeftPos = self.leftCircle!.position
+        let newRightPos = self.rightCircle!.position
+        self.leftCircle!.run(.move(to: CGPoint(x: -150, y: 150), duration: 0)) {
+            self.rightCircle!.run(.move(to: CGPoint(x: 150, y: 150), duration: 0)) {
+                self.leftCircle!.run(.move(to: newLeftPos, duration: 2)) {
+                    self.rightCircle!.run(.move(to: newRightPos, duration: 2)) {
+                        onComplete()
+                    }
+                }
+            }
         }
+
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//            onComplete()
+//        }
     }
 
-    func chestRecordAnimation() {
+    func chestAnimation(isRecording: Bool = false, onComplete: @escaping () -> ()) {
+        if isRecording {
+            self.leftCircle!.isHidden = false
+            self.rightCircle!.isHidden = false
+            self.chestMoveCircles() {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.leftCircle!.isHidden = true
+                    self.rightCircle!.isHidden = true
+                    self.chestJustAnimate() {
+                        self.leftCircle!.isHidden = false
+                        self.rightCircle!.isHidden = false
+                        onComplete()
+                    }
+                }
+            }
+        } else {
+            Analytics.logEvent("chest_animation_play", parameters: nil)
+            self.leftCircle!.isHidden = true
+            self.rightCircle!.isHidden = true
+
+            self.chestJustAnimate() {
+                self.leftCircle!.isHidden = false
+                self.rightCircle!.isHidden = false
+                onComplete()
+            }
+        }
+
+    }
+
+    func chestRecordAnimation(recordCount: Int, onNext: @escaping (URL?) -> ()) {
         let screenRecorder = ScreenRecorder()
-        let recordCount = 3
+//        let recordCount = 3
         var i = 0
         var startRecord = { }
         let playAnimation = {
@@ -907,15 +969,14 @@ class ChestSKObserved: ObservableObject {
                 if isRecorded {
                     isRecorded = false
                     screenRecorder.stoprecording(
+                        saveToCameraRoll: false,
                         errorHandler: { error in
                             debugPrint("Error when stop recording \(error)")
                         },
-                        completeHandler: { result in
-                            print("complete \(result)")
+                        completeHandler: { url, result in
+                            print("complete \(result), \(url)")
+                            onNext(url)
                             if i < recordCount {
-//                                i = i + 1
-
-                                print("IS REC \(RPScreenRecorder.shared().isRecording), is ava \(RPScreenRecorder.shared().isAvailable)")
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                     startRecord()
                                 }
@@ -926,7 +987,12 @@ class ChestSKObserved: ObservableObject {
                 }
             }
 
-            self.chestJustAnimate() {
+//            self.chestJustAnimate() {
+//                self.leftCircle!.isHidden = false
+//                self.rightCircle!.isHidden = false
+//                onComplete()
+//            }
+            self.chestAnimation(isRecording: true) {
                 self.leftCircle!.isHidden = false
                 self.rightCircle!.isHidden = false
                 onComplete()
@@ -938,11 +1004,11 @@ class ChestSKObserved: ObservableObject {
             i = i + 1
             self.leftCircle!.isHidden = true
             self.rightCircle!.isHidden = true
-            screenRecorder.startRecording(saveToCameraRoll: true,
+            screenRecorder.startRecording(saveToCameraRoll: false,
                 errorHandler: { error in
                     debugPrint("Error when recording \(error)")
                 },
-                completeHandler: { result in
+                completeHandler: { url, result in
                     playAnimation()
                 })
         }
@@ -1008,7 +1074,7 @@ class ChestSKObserved: ObservableObject {
         let imData = image.pngData()!
         let image2 = UIImage(data: imData)!
         UIImageWriteToSavedPhotosAlbum(image2, nil, nil, nil)
-        Analytics.logEvent("warp_chest_photo_saved", parameters: nil)
+        Analytics.logEvent("chest_photo_saved", parameters: nil)
         returnScene()
     }
 }

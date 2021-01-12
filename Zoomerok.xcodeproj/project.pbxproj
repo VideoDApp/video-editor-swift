@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,6 +37,7 @@
 		9896B6E62506C6E1007B7C40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9896B6E52506C6E1007B7C40 /* Assets.xcassets */; };
 		9896B6EA2508BCD3007B7C40 /* EffectSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6E92508BCD3007B7C40 /* EffectSelectorView.swift */; };
 		9896B6EC2508C637007B7C40 /* PreviewControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9896B6EB2508C637007B7C40 /* PreviewControlView.swift */; };
+		98A4ABEF25ADF160000409CE /* BeeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 98A4ABEE25ADF160000409CE /* BeeSwift */; };
 		98A5D3D82502A03F00240003 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D72502A03F00240003 /* ImagePicker.swift */; };
 		98A5D3DA2502A07900240003 /* OverlayVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3D92502A07900240003 /* OverlayVideo.swift */; };
 		98A5D3DC2502A08E00240003 /* OverlayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A5D3DB2502A08E00240003 /* OverlayData.swift */; };
@@ -151,6 +152,7 @@
 			files = (
 				B4B71E561A37268D3590C45E /* Pods_Zoomerok.framework in Frameworks */,
 				98607CB92552C13F00EA2B77 /* StoreKit.framework in Frameworks */,
+				98A4ABEF25ADF160000409CE /* BeeSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -390,6 +392,9 @@
 			dependencies = (
 			);
 			name = Zoomerok;
+			packageProductDependencies = (
+				98A4ABEE25ADF160000409CE /* BeeSwift */,
+			);
 			productName = Zoomerok;
 			productReference = 984C5CED2501A2AD007DBAF4 /* Zoomerok.app */;
 			productType = "com.apple.product-type.application";
@@ -466,6 +471,9 @@
 				Base,
 			);
 			mainGroup = 984C5CE42501A2AD007DBAF4;
+			packageReferences = (
+				98A4ABED25ADF160000409CE /* XCRemoteSwiftPackageReference "BeeSwift" */,
+			);
 			productRefGroup = 984C5CEE2501A2AD007DBAF4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -996,6 +1004,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		98A4ABED25ADF160000409CE /* XCRemoteSwiftPackageReference "BeeSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/VideoDApp/BeeSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		98A4ABEE25ADF160000409CE /* BeeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A4ABED25ADF160000409CE /* XCRemoteSwiftPackageReference "BeeSwift" */;
+			productName = BeeSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 984C5CE52501A2AD007DBAF4 /* Project object */;
 }

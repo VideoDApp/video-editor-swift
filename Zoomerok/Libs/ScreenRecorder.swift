@@ -64,7 +64,7 @@ final public class ScreenRecorder {
             newVideoOutputURL = passedVideoOutput
         } else {
             let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as NSString
-            newVideoOutputURL = URL(fileURLWithPath: documentsPath.appendingPathComponent("ScreenRec-\(Date().timeIntervalSince1970)-\(Int.random(in: 0..<1000000)).mp4"))
+            newVideoOutputURL = URL(fileURLWithPath: documentsPath.appendingPathComponent("ScreenRec-\(Date().timeIntervalSince1970)-\(Int.random(in: 0..<1000000)).mov"))
             self.videoOutputURL = newVideoOutputURL
         }
 
@@ -73,7 +73,7 @@ final public class ScreenRecorder {
         } catch { }
 
         do {
-            try videoWriter = AVAssetWriter(outputURL: newVideoOutputURL, fileType: AVFileType.mp4)
+            try videoWriter = AVAssetWriter(outputURL: newVideoOutputURL, fileType: AVFileType.mov)
         } catch let writerError as NSError {
             error(writerError)
             videoWriter = nil

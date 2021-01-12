@@ -13,7 +13,7 @@ struct ChestWarpView: View {
     @State var showingResetAlert = false
     @State var showingSavedAlert = false
     @State var sliderValue: Double = 10
-    @State var mode = ""
+    @State var mode = "" //animate, chest_detect
     @State var detectFiles = [String]()
     @State var detectFileIndex = 0
     @State var animationFiles = [ChestFileSettings]()
@@ -283,9 +283,9 @@ struct ChestWarpView: View {
                 }
                     .onAppear() {
 //                    print("Screen size \(geometry.size)")
-                        if self.userPhoto != nil{
-                            self.observed.setUserPhoto(self.userPhoto!)
-                        }
+                    if self.userPhoto != nil {
+                        self.observed.setUserPhoto(self.userPhoto!)
+                    }
                 }
             } else {
                 ZStack(alignment: .leading) {
@@ -298,26 +298,26 @@ struct ChestWarpView: View {
             .onAppear() {
             // todo move to async thread
             ChestUtils.createHelloFile()
+            ChestUtils.upgradeAllSettings()
+            if self.mode == "chest_detect" {
+                let result = ChestUtils.getDocumentPhotos(ChestUtils.directoryPreparePhotos)
+                print("result \(result)")
+                self.detectFiles = result
 
-//            let result = ChestUtils.getDocumentPhotos(ChestUtils.directoryPreparePhotos)
-//            print("result \(result)")
-//            self.detectFiles = result
-//                self.mode = "chest_detect"
-//            if self.detectFiles.count > 0 {
-//                self.drawNextChest()
-//            }
+                if self.detectFiles.count > 0 {
+                    self.drawNextChest()
+                }
+            }
 
-            // after save video broke image url
-//            ChestUtils.upgradeAllSettings()
-//
-//            self.animationFiles = ChestUtils.getDocumentSettings(ChestUtils.directoryPreparePhotos)
-//            self.mode = "animate"
-//            if self.animationFiles.count > 0 {
-//                self.drawNextChestPoints()
-//            }
+            if self.mode == "animate" {
+                // after save video broke image url
+                self.animationFiles = ChestUtils.getDocumentSettings(ChestUtils.directoryPreparePhotos)
+                self.mode = "animate"
+                if self.animationFiles.count > 0 {
+                    self.drawNextChestPoints()
+                }
+            }
 
-//            print("result \(result)")
-//            ChestUtils.upgradeAllSettings()
         }
     }
 }
@@ -1004,13 +1004,17 @@ class ChestSKObserved: ObservableObject {
             i = i + 1
             self.leftCircle!.isHidden = true
             self.rightCircle!.isHidden = true
-            screenRecorder.startRecording(saveToCameraRoll: false,
+            screenRecorder.startRecording(
+                // todo calc for device
+                size: .init(width: 828, height: 1792),
+                saveToCameraRoll: false,
                 errorHandler: { error in
                     debugPrint("Error when recording \(error)")
                 },
                 completeHandler: { url, result in
                     playAnimation()
-                })
+                }
+            )
         }
 
         startRecord()

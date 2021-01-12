@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
+        "state": {
+          "branch": null,
+          "revision": "eaf6e622dd41b07b251d8f01752eab31bc811493",
+          "version": "5.4.1"
+        }
+      },
+      {
+        "package": "BeeSwift",
+        "repositoryURL": "https://github.com/VideoDApp/BeeSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "7c59da1251be9c111703840d3eb59e5643f6de54",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
